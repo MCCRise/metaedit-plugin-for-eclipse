@@ -1,0 +1,15 @@
+#summary Getting started with the plugin in Eclipse.
+
+= Getting started =
+
+When you have eclipse and plugin installed run Eclipse. In workbench state open the plugin by clicking Window|Show view|Other|MetaEdit+|MetaEdit+ Plugin
+
+
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
