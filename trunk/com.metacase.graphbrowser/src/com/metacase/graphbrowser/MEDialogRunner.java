@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2011 MetaCase Consulting
+ * Released under the MIT license. See the file license.txt for details. 
+ */
+
+package com.metacase.graphbrowser;
+
+import java.rmi.RemoteException;
+import com.metacase.API.*;
+import com.metacase.objects.Graph;
+
+public class MEDialogRunner extends Thread {
+	
+	public static final int CREATE_NEW_GRAPH = 1;
+	//public static final int CREATE_NEW_GRAPH_OF_SAME_TYPE = 2;
+	public static final int EDIT_GRAPH_PROPERTIES = 3;
+	private int dialog;
+	private Graph selectedGraph;
+	
+	/**
+	 * Constructor.
+	 * @param dialogType integer showing the dialog type. Use CREATE_NEW_GRAPH or EDIT_GRAPH_PROPERTIES
+	 * @param selectedGraph graph that is selected in the treeview or null.
+	 */
+	public MEDialogRunner(int dialogType, Graph selectedGraph) {
+		this.dialog = dialogType;
+		this.selectedGraph = selectedGraph;
+	}
+
+	public void run() {
+		MetaEditAPIPortType port = Launcher.getPort();
+		switch (this.dialog) {
+			case CREATE_NEW_GRAPH:
+				// Opens "Create Graph" dialog in MetaEdit+
+				METype m  = null;
+				try {
+					if (selectedGraph == null) {
+						m = new METype();
+						m.setName("Graph");
+					}
+					else {
+						m = selectedGraph.getMEType(); 
+					}
+					port.createGraphDialog(m);
+				} catch (RemoteException e) { }
+				break;
+			case EDIT_GRAPH_PROPERTIES:
+				// Opens "Properties" dialog for the selected graph in MetaEdit+
+				try {
+					port.propertyDialog(this.selectedGraph.toMEOop());
+				} catch (RemoteException e) { }
+				break;
+		}
+	}
+}
