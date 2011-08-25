@@ -1,0 +1,10 @@
+#summary Short instructions how to install the MetaEdit+ plugin for Eclipse.
+
+= Download and install Eclipse =
+
+Download [http://eclipse.org/ Eclipse] (Classic or IDE for Java Developers should be fine). Look for instructions how to install Eclipse to your computer.
+
+
+= Installing the plugin =
+
+Download the plugin as a single JAR-file from [http://code.google.com/p/metaedit-plugin-for-eclipse/downloads/list Downloads] page. Place it to plugins folder under Eclipse installation folder.
