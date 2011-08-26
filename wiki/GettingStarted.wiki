@@ -4,7 +4,7 @@
 
 When you have eclipse and plugin installed run Eclipse. In workbench open the plugin by clicking Window | Show view | Other | !MetaEdit+ | !MetaEdit+ Plugin
 
-http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_show_view_4.png
+http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_show_view_3.png
 
 The plugin tries to connect to !MetaEdit+ API server at startup. If it doesn't find any available connection, it'll ask the user to allow it to launch !MetaEdit+ and start the API server. For that the plugin needs parameters for logging in to the right database and opening projects. These parameters are stored in 'default.mer' file that is saved in the root of Eclipse workspace.
 
