@@ -162,8 +162,8 @@ public class GraphView extends ViewPart {
 		}
 
 		public void initialize() {
-			graphs = GraphHandler.init();
 			invisibleRoot = new TreeObject();
+			graphs = GraphHandler.init();
 			invisibleRoot.populate(graphs, new ArrayList<Graph>());
 		}		
 	}
@@ -355,7 +355,7 @@ public class GraphView extends ViewPart {
 		actionUpdateGraphList = new Action() {
 			public void run() {
 				Object oldInput = viewer.getInput();
-				Launcher.initializeAPI();
+				Launcher.doInitialLaunch();
 				viewContentProvider.initialize();
 				viewContentProvider.inputChanged(viewer, oldInput, viewer.getInput());
 				viewer.expandToLevel(2);
