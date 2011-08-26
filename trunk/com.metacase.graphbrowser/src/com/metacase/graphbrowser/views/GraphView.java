@@ -282,7 +282,7 @@ public class GraphView extends ViewPart {
 		};
 		this.setActionDetails(actionOpenInMetaEdit,
 				"Open Graph in MetaEdit+",
-				"icons/open_graph_in_metaEdit_2_icon.png");
+				"icons/open_graph_in_metaedit_icon.png");
 		
 		actionGenerateGraph = new Action() {
 			public void run() {
@@ -336,7 +336,7 @@ public class GraphView extends ViewPart {
 		};
 		this.setActionDetails(actionGenerateGraph,
 				"Run Generator ...",
-				"icons/run_generator_icon_2.png");
+				"icons/run_generator_icon.png");
 		
 		actionOpenSettings = new Action() {
 			public void run() {
