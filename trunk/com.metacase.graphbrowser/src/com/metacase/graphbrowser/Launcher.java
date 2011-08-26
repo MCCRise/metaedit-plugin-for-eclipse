@@ -87,7 +87,6 @@ public class Launcher {
 			}
 			else DialogProvider.showMessageDialog("Start MetaEdit+ API and click OK to proceed.", "Start MetaEdit+");
 			poll(maxWaitMs);
-			if (!isInitialized) DialogProvider.showMessageDialog("MetaEdit+ API server not found.", "API not found");
 		}
 		return isInitialized;
 	}
