@@ -8,6 +8,6 @@ http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_show_view_4.p
 
 The plugin tries to connect to !MetaEdit+ API server at startup. If it doesn't find any available connection, it'll ask the user to allow it to launch !MetaEdit+ and start the API server. For that the plugin needs parameters for logging in to the right database and opening projects. These parameters are stored in 'default.mer' file that is saved in the root of Eclipse workspace.
 
-When running the plugin for the first time there is no 'default.mer' file. In this case the plugin tries to search some paths needed for launching !MetaEdit+ and shows them to user who can edit and accept them by clicking 'Open !MetaEdit+'.
+When running the plugin for the first time there is no 'default.mer' file. In this case the plugin tries to search some paths needed for launching !MetaEdit+ and shows them to user who can edit and accept them by clicking 'Open !MetaEdit+'. That will open !MetaEdit+. If the plugin doesn't show any models after launching !MetaEdit+ and API server try cliking the 'Update Graph List' on toolbar.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/metaedit_parameters_at_startup.png
