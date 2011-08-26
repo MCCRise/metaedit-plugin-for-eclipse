@@ -2,7 +2,7 @@
 
 = Getting started =
 
-When you have eclipse and plugin installed run Eclipse. In workbench state open the plugin by clicking Window | Show view | Other | !MetaEdit+ | !MetaEdit+ Plugin
+When you have eclipse and plugin installed run Eclipse. In workbench open the plugin by clicking Window | Show view | Other | !MetaEdit+ | !MetaEdit+ Plugin
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_show_view_4.png
 
