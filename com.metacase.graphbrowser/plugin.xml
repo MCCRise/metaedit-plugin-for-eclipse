@@ -9,7 +9,7 @@
             id="com.metacase.graphbrowser">
       </category>
       <view
-            name="MetaEdit+ Plugin"
+            name="Graph Browser"
             icon="icons/metaedit_logo.png"
             category="com.metacase.graphbrowser"
             class="com.metacase.graphbrowser.views.GraphView"
