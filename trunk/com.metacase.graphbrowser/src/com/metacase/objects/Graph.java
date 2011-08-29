@@ -123,7 +123,7 @@ public class Graph {
 					"MER file doesn't exist");
 			return;
 		}
-		Importer i = new Importer(workDir + "\\reports\\" + this.getName());
+		Importer i = new Importer(workDir + "\\reports\\Eclipse\\" + this.getName());
 		i.importProject();
 	}
 	

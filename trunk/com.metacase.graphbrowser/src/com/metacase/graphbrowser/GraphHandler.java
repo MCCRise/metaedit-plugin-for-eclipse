@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
-import org.eclipse.jface.window.Window;
-
 import com.metacase.API.MEOop;
 import com.metacase.API.METype;
 import com.metacase.API.MetaEditAPIPortType;
