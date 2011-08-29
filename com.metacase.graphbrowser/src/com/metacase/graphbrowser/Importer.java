@@ -65,9 +65,9 @@ public class Importer {
 	    	VMRunnerConfiguration config = new VMRunnerConfiguration("MainFrame", cp);
 	    	ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
 	    	vmr.run(config, launch, monitor);
-	    	} catch (CoreException e) { 	
+	    	}
+	    	catch (CoreException e) { 	
 	    		// 	No need to react because MetaEdit+ won't generate Eclipse project every time.
 	    	}
-
-	}
+		}
 }

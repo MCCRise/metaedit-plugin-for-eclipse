@@ -161,7 +161,11 @@ public class GraphView extends ViewPart {
 				return ((TreeObject)parent).hasChildren();
 			return false;
 		}
-
+		
+		/**
+		 * Initializes the tree by first calling the graphs from MetaEdit+ and
+		 * creating a tree from the graph set. Shows busy cursor while the work is done.
+		 */
 		public void initialize() {
 			Runnable init = new Runnable() {
 				public void run() {
