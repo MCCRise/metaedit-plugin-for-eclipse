@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
@@ -162,9 +163,14 @@ public class GraphView extends ViewPart {
 		}
 
 		public void initialize() {
-			invisibleRoot = new TreeObject();
-			graphs = GraphHandler.init();
-			invisibleRoot.populate(graphs, new ArrayList<Graph>());
+			Runnable init = new Runnable() {
+				public void run() {
+					invisibleRoot = new TreeObject();
+					graphs = GraphHandler.init();
+					invisibleRoot.populate(graphs, new ArrayList<Graph>());				
+					}
+			};
+	        BusyIndicator.showWhile(getSite().getShell().getDisplay(), init);
 		}		
 	}
 	
