@@ -5,6 +5,7 @@
 
 package com.metacase.objects;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -82,12 +83,15 @@ public class Graph {
 		return graph;
 	}
 	
+	
+	
 	/**
 	 * Runs generator for caller Graph. After calling ME+ to run generator, tries
 	 * to import project with same name as the graph to workspace. Used for MetaEdit+ 5.0 API
 	 * @param generator name of the generator to be run.
 	 */
 	public void runGenerator(String generator) {
+		this.writePluginIniFile();
 		MetaEditAPIPortType port = Launcher.getPort();
 		Settings s = Settings.getSettings();
 		try {
@@ -102,6 +106,7 @@ public class Graph {
 	 * Runs Autobuild generator for selected graph. This method is used for MetaEdit+ 4.5 API.
 	 */
 	public void runAutoBuildFor45() {
+		this.writePluginIniFile();
 		MetaEditAPIPortType port = Launcher.getPort();
 		MENull meNull = new MENull();
 		try {
@@ -123,8 +128,14 @@ public class Graph {
 					"MER file doesn't exist");
 			return;
 		}
-		Importer i = new Importer(workDir + "\\reports\\Eclipse\\" + this.getName());
+		Importer i = new Importer(new File(workDir + "\\reports\\" + this.getName()), this.getName());
 		i.importProject();
+	}
+	
+	private void writePluginIniFile() {
+		Settings s = Settings.getSettings();
+		Importer i = new Importer(new File(s.getWorkingDirectory()), this.getName());
+		i.writePluginIniFile();
 	}
 	
 	/**
