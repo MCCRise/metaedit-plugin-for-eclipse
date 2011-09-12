@@ -6,13 +6,9 @@
 package com.metacase.graphbrowser;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
+
 import java.util.Map;
-import java.util.Properties;
 import javax.swing.JFileChooser;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -159,98 +155,47 @@ public class Settings {
 	 * @param comment comment to be written in configurations file.
 	 */
 	public void writeConfigFile(String comment) {
-			Properties properties = new Properties();
+			IniHandler writer = new IniHandler(this.getMerFile().toString());
 			if (this.getProgramPath().contains("50")) this.setIs50(true);
 			else this.setIs50(false);
-			properties.setProperty("metaEditDir", this.getProgramPath());
-			properties.setProperty("workingDir", this.getWorkingDirectory());
-			properties.setProperty("database", this.getDatabase());
-			properties.setProperty("username", this.getUsername());
-			properties.setProperty("password", this.getPassword());
+			writer.AddSetting("metaEditDir", this.getProgramPath());
+			writer.AddSetting("workingDir", this.getWorkingDirectory());
+			writer.AddSetting("database", this.getDatabase());
+			writer.AddSetting("username", this.getUsername());
+			writer.AddSetting("password", this.getPassword());
 			String projects = "";
 			String separator = "";
 			for (String s : this.getProjects()) {
 				projects += separator + s;
 				separator = ";";
 			}
-			properties.setProperty("projects", projects);
-			properties.setProperty("hostname", this.getHostname());
-			properties.setProperty("port", String.valueOf(this.getPort()));
-			properties.setProperty("logging", String.valueOf(this.isLogging()));
-			this.writeToFile(properties, comment);
+			writer.AddSetting("projects", projects);
+			writer.AddSetting("hostname", this.getHostname());
+			writer.AddSetting("port", String.valueOf(this.getPort()));
+			writer.AddSetting("logging", String.valueOf(this.isLogging()));
+			writer.SaveSettings();
 			
 	    }
 	
 	/**
-	 * Method for IO actions when writing new properties to file.
-	 * @param newProperties new properties as key-value -pairs in HashTable
-	 * @param comment comment to be written in configurations file.
-	 */
-	private void writeToFile(Properties newProperties, String comment){
-		try {
-			if (!checkIfMerExists()) createEmptyMerFile();
-			Properties oldProperties = new Properties();
-            // First read all the existing properties
-            FileInputStream configFileIs = new FileInputStream(this.getMerFile());
-            oldProperties.load(configFileIs);
-            configFileIs.close();
-            
-            FileOutputStream configFileOs = new FileOutputStream(this.getMerFile());
-            // Merge existing and new properties
-            oldProperties.putAll(newProperties);
-            
-            // Write properties to configuration file
-            newProperties.store(configFileOs, comment);
-            configFileOs.close();
-        } catch (Exception ex) {
-        	DialogProvider.showMessageDialog("Error writing the configurations: " + ex.getMessage(),
-			"Error writing the configurations");
-        }
-	}
-	
-	/**
 	 * <p>
 	 * Method for reading the configuration file.
-	 * </p>
-	 * <p>
-	 * Properties with same key are stored in the XML file
-	 * as a single String with ';' separator. These are separated and read to list which is then added as
-	 * value in the hashtable.
-	 * </p>
-	 * <p>
 	 * Saves the values to attributes.
 	 * </p>
 	 */
 	private void readFromConfigFile(){
-		Properties properties = new Properties();
-		Hashtable<String, String> propertyTable = new Hashtable<String, String>();
-		String key;
-		String value;
-		try {
-			FileInputStream is = new FileInputStream(this.getMerFile());
-			properties.load(is);
-		} catch (Exception ex) { 
-			DialogProvider.showMessageDialog("Error reading the configurations: " + ex.getMessage(),
-					"Error reading the configurations");
-		}
-		Enumeration<?> e = properties.keys();
-		while (e.hasMoreElements()) {
-			key = (String) e.nextElement();
-			value = (String) properties.getProperty(key);
-			propertyTable.put(key, value);
-			key = value = "";
-		}
-		if (propertyTable.get("metaEditDir").contains("50")) this.setIs50(true);
+		IniHandler reader = new IniHandler(this.getMerFile().toString());	
+		if (reader.GetSetting("metaEditDir").contains("50")) this.setIs50(true);
 		else this.setIs50(false);
-		this.setProgramPath(propertyTable.get("metaEditDir"));
-		this.setWorkingDirectory(propertyTable.get("workingDir"));
-		this.setDatabase(propertyTable.get("database"));
-		this.setUsername(propertyTable.get("username"));
-		this.setPassword(propertyTable.get("password"));
-		this.setProjects(propertyTable.get("projects").split(";"));
-		this.setHostname(propertyTable.get("hostname"));
-		this.setPort(Integer.valueOf(propertyTable.get("port")));
-		this.setLogging(propertyTable.get("logging").equals("true"));
+		this.setProgramPath(new File(reader.GetSetting("metaEditDir")).toString());
+		this.setWorkingDirectory(new File(reader.GetSetting("workingDir")).toString());
+		this.setDatabase(reader.GetSetting("database"));
+		this.setUsername(reader.GetSetting("username"));
+		this.setPassword(reader.GetSetting("password"));
+		this.setProjects(reader.GetSetting("projects").split(";"));
+		this.setHostname(reader.GetSetting("hostname"));
+		this.setPort(Integer.valueOf(reader.GetSetting("port")));
+		this.setLogging(reader.GetSetting("logging").equals("true"));
 	}
 	
 	/**

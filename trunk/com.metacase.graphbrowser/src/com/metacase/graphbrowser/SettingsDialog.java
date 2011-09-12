@@ -368,7 +368,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
         add(buttonBox);
         
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        
+		
         SwingUtilities.invokeLater( new Runnable() 
         { 
         	public void run() { 
@@ -386,7 +386,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	 */
 	private JLabel createLabel(String title) {
 		JLabel lbl = new JLabel(title);
-		lbl.setPreferredSize(new Dimension(150, 25));
+		lbl.setPreferredSize(new Dimension(180, 25));
 		return lbl;
 	}
 	
