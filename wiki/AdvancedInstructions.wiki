@@ -1,0 +1,8 @@
+#Advanced instructions for using the plugin.
+
+= Advanced instructions of using the plugin =
+
+The plugin provides commands that may be used from buttons in the views toolbar or by selecting a graph from the tree and clicking the mouse right button.
+
+ * http://code.google.com/p/metaedit-plugin-for-eclipse/source/browse/trunk/com.metacase.graphbrowser/icons/open_graph_in_metaedit_icon.png *Open Graph in !MetaEdit+* opens the same graph in !MetaEdit+ that is selected in the treeview. If no graph is selected, no action is taken. This way user gets to edit the graphs quickly in !MetaEdit+.
+ * *Run Generator* runs generator in !MetaEdit+ to the selected graph. If no graph is selected, no action is taken. Since graph might have more than one generator the plugin first asks all the selected graphs generators from !MetaEdit+ and shows them in a list dialog to user from which the user can choose the one he/she wants to run.
