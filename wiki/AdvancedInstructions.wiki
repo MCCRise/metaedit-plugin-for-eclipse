@@ -21,3 +21,13 @@ In the popup menu (mouse right click) there are two commands that are not shown 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/edit_properties_icon.png *Edit Graph Properties* opens graph properties dialog in !MetaEdit+ and lets user to edit the graph's properties. This depends always on graph so the command is shown only when graph is selected in the treeview.
 
 == The generation and import process ==
+
+The generation and import process contains stages in which the plugin writes an ini file for !MetaEdit+, generator for selected graph is run, the (possibly) generated Eclipse project is imported in Eclipse, opened, built and launched in Eclipse automatically. To understand how this works the stages are explained in the following sections.
+
+The first stage is writing the ini file for !MetaEdit+. When user has confirmed running a generator for a graph the plugin writes a simple ini file for !MetaEdit+. The file contains only information from the application (Eclipse in this case) that calls !MetaEdit+. It also contains the Eclipse workspace path in which the !MetaEdit+ generator is supposed to generate the source code files. The file and it's 'correct' content shows !MetaEdit+ that it should only generate the files, not to run them as by default Autobuild.
+
+After !MetaEdit+ has generated the source code files, the plugin looks for the project in the Eclipse workspace that has the same name as the selected graph. If one is found, it is imported in Eclipse and opened. After this the project is built and run. Finally, as a generation result, user gets running program in Eclipse.
+
+The project import may seem a bit confusing at beginning. Normally user might choose new project from file menu and go through wizard to create a new project. To automate this !MetaEdit+ creates Eclipse project resource files that are needed for opening the project in Eclipse. Eclipse API provides the project import, build and launch commands. As these actions could be left for the user to make them manually, these are ment to provide a better integration example between !MetaEdit+ an Eclipse.
+
+So far, these actions only work for Java projects that have the same name that the selected graph in Eclipse plugin. It also needs a working generator in !MetaEdit+. 
