@@ -2,9 +2,11 @@
 
 == Download and install Eclipse ==
 
-Download [http://eclipse.org/ Eclipse Classic]. Look for instructions how to install Eclipse to your computer.
+Download [http://eclipse.org/ Eclipse Classic]. Look for instructions on how to install Eclipse to your computer.
 
 
 == Installing the plugin ==
 
-Download the plugin as a single JAR-file from [http://code.google.com/p/metaedit-plugin-for-eclipse/downloads/list Downloads] page. Place it to plugins folder under Eclipse installation folder.
+There are two ways for installing the plugin:
+ # Install the plugin from update site. Open Eclipse and choose Help | Install New Software and set the update site to http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser.site/ and follow the instruction in the wizard.
+ # Download the plugin as a single JAR-file from [http://code.google.com/p/metaedit-plugin-for-eclipse/downloads/list Downloads] page. Place it to plugins folder under Eclipse installation folder.
