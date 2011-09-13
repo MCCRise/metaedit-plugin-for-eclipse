@@ -2,5 +2,12 @@
 
 The plugin provides commands that may be used from buttons in the views toolbar or by selecting a graph from the tree and clicking the mouse right button.
 
- * http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/open_graph_in_metaedit_icon.png *Open Graph in !MetaEdit+* opens the same graph in !MetaEdit+ that is selected in the treeview. If no graph is selected, no action is taken. This way user gets to edit the graphs quickly in !MetaEdit+.
- * http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/run_generator_icon.png *Run Generator* runs generator in !MetaEdit+ to the selected graph. If no graph is selected, no action is taken. Since graph might have more than one generator the plugin first asks all the selected graphs generators from !MetaEdit+ and shows them in a list dialog to user from which the user can choose the one he/she wants to run.
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/open_graph_in_metaedit_icon.png *Open Graph in !MetaEdit+* opens the same graph in !MetaEdit+ that is selected in the treeview. If no graph is selected, no action is taken. This way user gets to edit the graphs quickly in !MetaEdit+.
+
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/run_generator_icon.png *Run Generator* runs generator in !MetaEdit+ to the selected graph. If no graph is selected, no action is taken. Since graph might have more than one generator the plugin first asks all the selected graphs generators from !MetaEdit+ and shows them in a list dialog to user from which the user can choose the one he/she wants to run.
+
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/update_graph_list_icon.png *Update Graph List* updates the treeview. Before asking the graphs from !MetaEdit+, it tests the API connection and tries to launch !MetaEdit+ as in the plugins startup. This command is useful for both updating the graph list and initializing the whole treeview if the plugin was started without API connection.
+
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/settings_icon.png *Open Settings* opens a dialog that contains the !MetaEdit+ launch parameters. The parameters are saved in 'default.mer' file in the Eclipse workspace root and are read when launching !MetaEdit+ or when initalizing the settings dialog. The dialog provides a tree step verifier for each text field. A green, yellow or red sign will show in front of each textfield showing if the content is correct (green sign), could not be verified (yellow sign) or is not correct.
+
+In the popup menu (mouse right click) there are two commands that are not shown in the view toolbar:
