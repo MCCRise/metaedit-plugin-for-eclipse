@@ -7,14 +7,9 @@ package com.metacase.graphbrowser;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 
-import com.metacase.API.MEOop;
-import com.metacase.API.METype;
-import com.metacase.API.MetaEditAPIPortType;
+import com.metacase.API.*;
 import com.metacase.objects.Graph;
 
 /**

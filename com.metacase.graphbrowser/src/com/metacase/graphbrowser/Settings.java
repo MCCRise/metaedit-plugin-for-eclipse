@@ -7,7 +7,6 @@ package com.metacase.graphbrowser;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.Map;
 import javax.swing.JFileChooser;
 import org.eclipse.core.resources.IWorkspace;

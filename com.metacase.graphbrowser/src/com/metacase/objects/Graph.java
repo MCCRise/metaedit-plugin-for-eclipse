@@ -7,13 +7,9 @@ package com.metacase.objects;
 
 import java.io.File;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
 import com.metacase.API.*;
-import com.metacase.graphbrowser.DialogProvider;
-import com.metacase.graphbrowser.Importer;
-import com.metacase.graphbrowser.Launcher;
-import com.metacase.graphbrowser.Settings;
+import com.metacase.graphbrowser.*;
 
 /**
  * Graph class represents a MetaEdit+ graph. Attributes name, type, area and object ID,
@@ -91,7 +87,7 @@ public class Graph {
 	 * @param generator name of the generator to be run.
 	 */
 	public void runGenerator(String generator) {
-		this.writePluginIniFile();
+	    	String pluginINIpath = this.writePluginIniFile();
 		MetaEditAPIPortType port = Launcher.getPort();
 		Settings s = Settings.getSettings();
 		try {
@@ -99,6 +95,7 @@ public class Graph {
 		} catch (RemoteException e) { 
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 		}
+		this.removeIniFile(pluginINIpath);
 		this.importProject(s);
 	}
 	
@@ -106,7 +103,7 @@ public class Graph {
 	 * Runs Autobuild generator for selected graph. This method is used for MetaEdit+ 4.5 API.
 	 */
 	public void runAutoBuildFor45() {
-		this.writePluginIniFile();
+		String pluginINIpath = this.writePluginIniFile();
 		MetaEditAPIPortType port = Launcher.getPort();
 		MENull meNull = new MENull();
 		try {
@@ -114,9 +111,15 @@ public class Graph {
 		} catch (RemoteException e) { 
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 		}
+		this.removeIniFile(pluginINIpath);
 		this.importProject(Settings.getSettings());
 	}
 		
+	private void removeIniFile(String pluginINIpath) {
+	    Importer i = new Importer(new File(pluginINIpath), "");
+	    i.removeIniFile();
+	}
+
 	/**
 	 * Imports generated project.
 	 * @param s Settings instance
@@ -132,10 +135,14 @@ public class Graph {
 		i.importProject();
 	}
 	
-	private void writePluginIniFile() {
+	/**
+	 * Method stub for importer's plugin.ini writer.
+	 * @return path of the written ini file.
+	 */
+	private String writePluginIniFile() {
 		Settings s = Settings.getSettings();
 		Importer i = new Importer(new File(s.getWorkingDirectory()), this.getName());
-		i.writePluginIniFile();
+		return i.writePluginIniFile();
 	}
 	
 	/**
