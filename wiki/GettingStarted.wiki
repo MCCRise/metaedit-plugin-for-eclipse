@@ -2,16 +2,16 @@
 
 = Getting started =
 
-When you have eclipse and plugin installed run Eclipse. In workbench open the plugin by clicking Window | Show view | Other | !MetaEdit+ | !MetaEdit+ Plugin
+When you have eclipse and plugin installed run Eclipse. In workbench open the plugin by clicking Window | Show view | Other | !MetaEdit+ | Graph Browser.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_show_view_3.png
 
-The plugin tries to connect to !MetaEdit+ API server at startup. If it doesn't find any available connection, it'll ask the user to allow it to launch !MetaEdit+ and start the API server. For that the plugin needs parameters for logging in to the right database and opening projects. These parameters are stored in 'default.mer' file that is saved in the root of Eclipse workspace.
+The plugin tries to connect to !MetaEdit+ API server at startup. If it doesn't find any available connection, it'll ask the user to allow launching !MetaEdit+ and starting the API server. For login the plugin needs parameters of the right database. These parameters are stored in 'default.mer' file that is saved in the root of Eclipse workspace.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/metaedit_parameters_at_startup.png
 
-When running the plugin for the first time there is no 'default.mer' file. In this case the plugin tries to search some paths needed for launching !MetaEdit+ and shows them to user who can edit and accept them by clicking 'Open !MetaEdit+'. That will open !MetaEdit+. If the plugin doesn't show any models after launching !MetaEdit+ and API server try cliking the 'Update Graph List' icon on toolbar.
+When running the plugin for the first time there is no 'default.mer' file. In this case the plugin tries to search some paths needed for launching !MetaEdit+ and shows them to user who can edit and accept them by clicking 'Open !MetaEdit+'. Accepting them will open !MetaEdit+. If the plugin doesn't show any models after launching !MetaEdit+ and API try cliking the 'Update Graph List' icon on Graph Browser toolbar.
 
-Finally you'll get Eclipse running a plugin showing the models from !MetaEdit+. Above you can see a picture with plugin showing the 'Digital watch' example models in Eclipse.
+When running you'll see in Graph Browser plugin the models from !MetaEdit+. Figure below shows the plugin listing the 'Digital watch' example models in Eclipse.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_running_plugin.PNG
