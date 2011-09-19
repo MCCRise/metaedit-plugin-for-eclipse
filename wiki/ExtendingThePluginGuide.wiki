@@ -31,4 +31,8 @@ The project import automates otherwise manual action like choosing a new project
 
 If you want to, you can still generate the source code files from !MetaEdit+, create a project in Eclipse and import the generated source code to that project manually.
 
-So far, these actions only work for Java projects that have the same name that the selected graph in Eclipse plugin. It also needs a working generator in !MetaEdit+. 
+So far, these actions only work for Java projects that have the same name that the selected graph in Eclipse plugin. It also needs a working generator in !MetaEdit+.
+
+== Extending the plugin ==
+
+As this plugin may lack of functions that you would need, it's possible to extend it to provide those functions. !MetaEdit+ commands, for example commit and abandon or editing the graphs programmatically, are available via API similarly to the commands that are used in this plugin. For more, see the API section in !MetaEdit+ manual and [http://code.google.com/p/metaedit-plugin-for-eclipse/source/browse/ the source code] of this plugin.
