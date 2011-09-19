@@ -21,15 +21,3 @@ In the popup menu (mouse right click) there are two commands that are not shown 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/create_graph_icon.png *Create a new Graph* will open a !MetaEdit+ dialog for creating a new graph. If no graph is selected, a dialog opens to ask which type of graph will be created. If graph is selected the dialog will automatically have the same type as the selected graph.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/edit_properties_icon.png *Edit Graph Properties* opens graph properties dialog in !MetaEdit+ and lets user to edit the graph's properties. This function always depends on selected graph so the command is shown in the popup menu only when there is a selection in the tree view.
-
-== The generation and import process ==
-
-The generation and import process contains stages in which the plugin writes an ini file for !MetaEdit+, generator for the selected graph is run in !MetaEdit+, the (possibly) generated Eclipse project is imported in Eclipse, opened, built and launched in Eclipse automatically. Let's look next the individual states in more detail. You may also test these by running the 'Digital Watch' example available in !MetaEdit+.
-
-In the first stage an ini file for !MetaEdit+ is written. Plugin writes ini file after user has confirmed running a generator. The file contains only information from the application (Eclipse in this case) that calls !MetaEdit+. It also contains the Eclipse workspace path in which the !MetaEdit+ generator is supposed to generate the source code files. The file and it's 'correct' content shows !MetaEdit+ that it should only generate the files, and not run them as standalone autobuild. The plugin also removes the file after it's used during the process.
-
-After !MetaEdit+ has generated the source code files, the plugin looks for the project in the Eclipse workspace that has the same name as the graph for which the generator was executed. If one is found, it is imported in Eclipse and opened. After this the project is built and run. Finally, as a generation result, user sees the generated code running program in Eclipse.
-
-The project import automates otherwise manual action like choosing a new project from file menu and going through wizard to create a new project. While these actions could be left for the user, the plugin aims to automate integration between code generated from !MetaEdit+ and Eclipse. To provide this automation !MetaEdit+ creates Eclipse project resource files that are needed for opening the project in Eclipse and Eclipse API provides the project import, build and launch commands.
-
-So far, these actions only work for Java projects that have the same name that the selected graph in Eclipse plugin. It also needs a working generator in !MetaEdit+. 
