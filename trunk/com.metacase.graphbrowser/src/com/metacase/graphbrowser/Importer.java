@@ -85,6 +85,8 @@ public class Importer {
         	
         	// set the ini file
         	String _path = this.path + "\\plugin.ini";
+        	File _temp = new File(_path);
+        	if (_temp.exists()) _temp.deleteOnExit();
         	IniHandler writer = new IniHandler(_path);
         	writer.flushValues();
         	// the eclipse flag
