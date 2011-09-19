@@ -1,3 +1,5 @@
+#summary How the plugin was made and how it could be extended
+
 = How to plugin works and how it was made =
 
 This page contains information of how the plugin works. It gives information for people willing to modifying or extending the plugin for their own use. Look for the plugin source code from [http://code.google.com/p/metaedit-plugin-for-eclipse/source/browse/ here].
