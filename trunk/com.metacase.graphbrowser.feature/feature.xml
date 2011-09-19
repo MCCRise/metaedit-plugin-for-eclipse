@@ -3,7 +3,8 @@
       id="com.metacase.graphbrowser.feature"
       label="MetaEdit+ plugin for Eclipse"
       version="0.1"
-      provider-name="MetaCase">
+      provider-name="MetaCase"
+      plugin="com.metacase.graphbrowser">
 
    <description url="http://www.example.com/description">
       Plugin for intergrating MetaEdit+ to Eclipse
@@ -31,7 +32,7 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
          id="com.metacase.graphbrowser"
          download-size="0"
          install-size="0"
-         version="0.1"
+         version="0.1.0"
          unpack="false"/>
 
 </feature>
