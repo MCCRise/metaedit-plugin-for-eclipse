@@ -1,6 +1,8 @@
-= Advanced instructions for using the plugin =
+#summary Usage of the plugin
 
-This page contains advanced instructions for using the !MetaEdit+ plugin for Eclipse.
+= Plugin functions =
+
+This is a usage guide page for functions of the !MetaEdit+ plugin for Eclipse.
 
 == Commands ==
 
