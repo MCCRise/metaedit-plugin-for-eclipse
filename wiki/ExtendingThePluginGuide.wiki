@@ -6,7 +6,7 @@ This page contains information of how the plugin was develop. It gives a informa
 
 The generation and import process contains stages in which the plugin writes an ini file for !MetaEdit+, generator for the selected graph is run in !MetaEdit+, the (possibly) generated Eclipse project is imported in Eclipse, opened, built and launched in Eclipse automatically. Let's look next the individual states in more detail. You may also test these by running the 'Digital Watch' example available in !MetaEdit+.
 
-In the first stage an ini file for !MetaEdit+ is written. Once user has chosen to run a generator the file is created. The ini file contains information from the application (Eclipse in this case) that calls !MetaEdit+. It also contains the Eclipse workspace path in which the !MetaEdit+ generator is supposed to generate the source code files. Below you can see an example of the ini file.
+In the first stage an ini file for !MetaEdit+ is written. Once user has chosen to run a generator the file is created. The ini file contains information from the application (Eclipse in this case) that calls !MetaEdit+. It also contains the Eclipse workspace path in which the !MetaEdit+ generator is supposed to generate the source code files. Below you can see an example of the ini file content.
 {{{
 IDE=eclipse
 workspace=C:\user\Documents and settings\workspace\
