@@ -6,7 +6,7 @@
       provider-name="MetaCase"
       plugin="com.metacase.graphbrowser">
 
-   <description url="http://www.example.com/description">
+   <description url="http://code.google.com/p/metaedit-plugin-for-eclipse/">
       Plugin for intergrating MetaEdit+ to Eclipse
    </description>
 
@@ -28,11 +28,20 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
       <update label="MetaEdit+ plugin for Eclipse" url="http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser.site/"/>
    </url>
 
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources" version="3.6.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.debug.core"/>
+   </requires>
+
    <plugin
          id="com.metacase.graphbrowser"
          download-size="0"
          install-size="0"
-         version="0.1.0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
