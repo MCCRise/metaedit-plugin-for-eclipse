@@ -1,4 +1,4 @@
-#summary Getting started with the plugin in Eclipse.
+#summary Getting started with the plugin in Eclipse
 
 = Getting started =
 
