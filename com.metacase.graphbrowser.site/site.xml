@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.metacase.graphbrowser.feature_0.1.0.jar" id="com.metacase.graphbrowser.feature" version="0.1"/>
+   <feature url="http://metaedit-plugin-for-eclipse.googlecode.com/files/com.metacase.graphbrowser_0.1.0.jar" id="com.metacase.graphbrowser.feature" version="0.1"/>
    <category-def name="metaedit_plugin" label="MetaEdit+ for plugin">
       <description>
          Plugin that provides integration between MetaEdit+ and Eclipse.
