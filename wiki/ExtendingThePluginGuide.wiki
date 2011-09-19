@@ -1,6 +1,18 @@
 = How to plugin works and how it was made =
 
-This page contains information of how the plugin was develop. It gives a information for people willing to modifying or extending the plugin for their own use. You may look for the plugin source code from [http://code.google.com/p/metaedit-plugin-for-eclipse/source/browse/ here].
+This page contains information of how the plugin works. It gives information for people willing to modifying or extending the plugin for their own use. You may look for the plugin source code from [http://code.google.com/p/metaedit-plugin-for-eclipse/source/browse/ here].
+
+== Launching the plugin ==
+
+When the plug-in starts it will  search for open API connection. If finds one, it will ask the all the graphs that opened projects have in !MetaEdit+ and show them in the view. If the plug-in doesn’t find API connection it will search for ini-file (named ‘default.mer’) in the root of the used workspace that contains !MetaEdit+ launch parameters. If it finds one, the plug-in asks the user permission to launch !MetaEdit+, log in, open projects and start API server.
+
+Obviously when using the plug-in for first time there is no ini-file in the workspace root nor is there any open API connections to !MetaEdit+. In this case the plug-in tries to calculate the values that are needed for launching !MetaEdit+ and shows the in a dialog to user. When user has checked and edited them if needed, !MetaEdit+ can be launched by clicking the ‘Open !MetaEdit+’ button. The launch parameters are also saved in ‘default.mer’ file in the workspace root folder and are read when the plug-in is next time launched without API connection.
+
+http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/plugin_settings_dialog.PNG
+
+Below you can see a state diagram showing the plugin initialization process. 
+
+http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/state_diagram_eclipse_plugin.png
 
 == The generation and import process ==
 
