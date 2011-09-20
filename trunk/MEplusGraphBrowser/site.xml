@@ -5,7 +5,7 @@
    </feature>
    <category-def name="GraphBrowser" label="MetaEdit+ plugin">
       <description>
-         Plugin for integrating MetaEdit+ and Eclipse.
+         MetaEdit+ and Eclipse integration.
       </description>
    </category-def>
 </site>
