@@ -29,6 +29,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	private JFrame parent;
+	private static JFrame frame;
 	Box programDirBox, workingDirBox, databaseBox, usernameBox, passwordBox, projectsBox, portNumberBox, buttonBox;
 	JLabel headerLabel, programDirLabel, workingDirLabel, databaseLabel, usernameLabel, passwordLabel,
 	projectsLabel, hostnameLabel, loggingLabel, portLabel;
@@ -65,27 +66,27 @@ public class SettingsDialog extends JPanel implements ActionListener {
 		buttonBox = Box.createHorizontalBox();		
 		
 		//Labels
-        programDirLabel = createLabel("MetaEdit+ program path: ");
-        workingDirLabel = createLabel("MetaEdit+ working directory: ");
-        databaseLabel = createLabel("Database name: ");
-        usernameLabel = createLabel("Username: ");
-        passwordLabel = createLabel("Password: ");
-        projectsLabel = createLabel("Projects: ");
-        // hostnameLabel = createLabel("Hostaname: ");
-        portLabel = createLabel("Port: ");
-        // loggingLabel = createLabel("Logging: ");
-        
-        // Icon labels and tooltiptexts 
-        programDirIconLabel = createIconLabel();
-        workingDirIconLabel = createIconLabel();
-        databaseIconLabel = createIconLabel();
-        usernameIconLabel = createIconLabel();
-        passwordIconLabel = createIconLabel();
-        projectsIconLabel = createIconLabel();
-        // hostnameIconLabel = createIconLabel();
-        portIconLabel = createIconLabel();
+                programDirLabel = createLabel("MetaEdit+ program path: ");
+                workingDirLabel = createLabel("MetaEdit+ working directory: ");
+                databaseLabel = createLabel("Database name: ");
+                usernameLabel = createLabel("Username: ");
+                passwordLabel = createLabel("Password: ");
+                projectsLabel = createLabel("Projects: ");
+                // hostnameLabel = createLabel("Hostaname: ");
+                portLabel = createLabel("Port: ");
+                // loggingLabel = createLabel("Logging: ");
+                
+                // Icon labels and tooltiptexts 
+                programDirIconLabel = createIconLabel();
+                workingDirIconLabel = createIconLabel();
+                databaseIconLabel = createIconLabel();
+                usernameIconLabel = createIconLabel();
+                passwordIconLabel = createIconLabel();
+                projectsIconLabel = createIconLabel();
+                // hostnameIconLabel = createIconLabel();
+                portIconLabel = createIconLabel();
 		
-        // Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
+                // Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
 		tooltipTexts.put(programDirIconLabel, new String [] {"MetaEdit+ program file not properly set.", "", ""});
 		tooltipTexts.put(workingDirIconLabel, new String [] {"Given path not recognized as a MetaEdit+ working directory.", "", ""});
 		tooltipTexts.put(databaseIconLabel, new String [] {"Given path not recognized as a MetaEdit+ database", "Can't do the verification for given " +
@@ -120,7 +121,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e) { }
 		});
         
-        workingDirField.addKeyListener(new KeyListener() {
+		workingDirField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) { }
 			public void keyReleased(KeyEvent e) {
 				verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
@@ -130,7 +131,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e) { }
 		});
 
-        databaseField.addKeyListener(new KeyListener() {
+		databaseField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {	}
 			public void keyReleased(KeyEvent e) { 
 				verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
@@ -140,7 +141,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e)  { }
 		});
 
-        usernameField.addKeyListener(new KeyListener() {
+		usernameField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {	}
 			public void keyReleased(KeyEvent e) {
 				verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
@@ -149,7 +150,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e) { }
 		});
 
-        passwordField.addKeyListener(new KeyListener() {
+		passwordField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) { }
 			public void keyReleased(KeyEvent e) {
 				verifyField(new PasswordVerifier(getManagerAbPath(), usernameField.getText()), passwordField,  passwordIconLabel);
@@ -157,7 +158,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e) { }
 		});
 
-        projectsField.addKeyListener(new KeyListener() {
+		projectsField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) { }
 			public void keyReleased(KeyEvent e) {
 				verifyField(new ProjectsVerifier(getManagerAbPath()), projectsField, projectsIconLabel);
@@ -165,8 +166,8 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e) { }
 		});
         
-        /*
-       	hostnameField.addKeyListener(new KeyListener() {
+		/*
+       		hostnameField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) { }
 			public void keyReleased(KeyEvent e) {	
 				verifyField(new HostnameVerifier(), hostnameField, hostnameIconLabel);
@@ -175,7 +176,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 		});
 		*/
         
-        portField.addKeyListener(new KeyListener() {
+		portField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) { }
 			public void keyReleased(KeyEvent e) {	
 				verifyField(new PortVerifier(), portField, portIconLabel);
@@ -183,8 +184,8 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent e) { }
 		});
 		
-        // Buttons
-        programDirBrowseButton = new JButton(new AbstractAction("...") {
+		// Buttons
+		programDirBrowseButton = new JButton(new AbstractAction("...") {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -206,7 +207,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			}
 		});
 
-        workingDirBrowseButton = new JButton(new AbstractAction("...") {
+		workingDirBrowseButton = new JButton(new AbstractAction("...") {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -228,7 +229,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			}
 		});
 
-        projectsSelectionDialogButton = new JButton(new AbstractAction("...") {
+		projectsSelectionDialogButton = new JButton(new AbstractAction("...") {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -269,9 +270,9 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			}
 		});
         
-        // Create "Save" button ------------>
-        if (!initaliLaunch) {
-        	saveButton = new JButton(new AbstractAction("Save") {
+		// Create "Save" button ------------>
+		if (!initaliLaunch) {
+		    saveButton = new JButton(new AbstractAction("Save") {
 			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -291,8 +292,8 @@ public class SettingsDialog extends JPanel implements ActionListener {
 
 			}
 		});
-        } else {
-        	saveButton = new JButton(new AbstractAction("Open MetaEdit+") {
+		} else {
+		    saveButton = new JButton(new AbstractAction("Open MetaEdit+") {
     			private static final long serialVersionUID = 1L;
     			public void actionPerformed(ActionEvent e) {
     				SwingUtilities.invokeLater(new Runnable() {
@@ -306,10 +307,10 @@ public class SettingsDialog extends JPanel implements ActionListener {
 
     			}
     		});
-        }
+		}
     	
-    	// Create "Cancel" button ---------->
-        cancelButton = new JButton(new AbstractAction("Cancel") {
+		// Create "Cancel" button ---------->
+		cancelButton = new JButton(new AbstractAction("Cancel") {
 			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -319,64 +320,64 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	            });
 			}
 		});
-        // Add components to boxes.
-        programDirBox.add(programDirLabel);
-        programDirBox.add(programDirIconLabel);
-        programDirBox.add(programDirField);
-        programDirBox.add(programDirBrowseButton);
-        workingDirBox.add(workingDirLabel);
-        workingDirBox.add(workingDirIconLabel);
-        workingDirBox.add(workingDirField);
-        workingDirBox.add(workingDirBrowseButton);
-        databaseBox.add(databaseLabel);
-        databaseBox.add(databaseIconLabel);
-        databaseBox.add(databaseField);
-        usernameBox.add(usernameLabel);
-        usernameBox.add(usernameIconLabel);
-        usernameBox.add(usernameField);
-        passwordBox.add(passwordLabel);
-        passwordBox.add(passwordIconLabel);
-        passwordBox.add(passwordField);
-        projectsBox.add(projectsLabel);
-        projectsBox.add(projectsIconLabel);
-        projectsBox.add(projectsField);
-        projectsBox.add(projectsSelectionDialogButton);
-        // hostnameBox.add(hostnameLabel);
-        // hostnameBox.add(hostnameIconLabel);
-        // hostnameBox.add(hostnameField);
-        portNumberBox.add(portLabel);
-        portNumberBox.add(portIconLabel);
-        portNumberBox.add(portField);
-        // loggingBox.add(loggingLabel);
-        // loggingBox.add(loggingCheckBox);
-        buttonBox.add(Box.createGlue());
-        buttonBox.add(saveButton);
-        buttonBox.add(cancelButton);
-        buttonBox.add(Box.createGlue());
-        buttonBox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        
-        // Add boxes to JFrame
-        add(programDirBox);
-        add(workingDirBox);
-        add(databaseBox);
-        add(usernameBox);
-        add(passwordBox);
-        add(projectsBox);
-        // add(hostnameBox);
-        add(portNumberBox);
-        //add(loggingBox);
-        add(buttonBox);
-        
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		
-        SwingUtilities.invokeLater( new Runnable() 
-        { 
-        	public void run() { 
-        		programDirField.requestFocusInWindow(); 
-        	} 
-        });
-        // Populate textfields 
-        initSettings();
+            // Add components to boxes.
+            programDirBox.add(programDirLabel);
+            programDirBox.add(programDirIconLabel);
+            programDirBox.add(programDirField);
+            programDirBox.add(programDirBrowseButton);
+            workingDirBox.add(workingDirLabel);
+            workingDirBox.add(workingDirIconLabel);
+            workingDirBox.add(workingDirField);
+            workingDirBox.add(workingDirBrowseButton);
+            databaseBox.add(databaseLabel);
+            databaseBox.add(databaseIconLabel);
+            databaseBox.add(databaseField);
+            usernameBox.add(usernameLabel);
+            usernameBox.add(usernameIconLabel);
+            usernameBox.add(usernameField);
+            passwordBox.add(passwordLabel);
+            passwordBox.add(passwordIconLabel);
+            passwordBox.add(passwordField);
+            projectsBox.add(projectsLabel);
+            projectsBox.add(projectsIconLabel);
+            projectsBox.add(projectsField);
+            projectsBox.add(projectsSelectionDialogButton);
+            // hostnameBox.add(hostnameLabel);
+            // hostnameBox.add(hostnameIconLabel);
+            // hostnameBox.add(hostnameField);
+            portNumberBox.add(portLabel);
+            portNumberBox.add(portIconLabel);
+            portNumberBox.add(portField);
+            // loggingBox.add(loggingLabel);
+            // loggingBox.add(loggingCheckBox);
+            buttonBox.add(Box.createGlue());
+            buttonBox.add(saveButton);
+            buttonBox.add(cancelButton);
+            buttonBox.add(Box.createGlue());
+            buttonBox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+            
+            // Add boxes to JFrame
+            add(programDirBox);
+            add(workingDirBox);
+            add(databaseBox);
+            add(usernameBox);
+            add(passwordBox);
+            add(projectsBox);
+            // add(hostnameBox);
+            add(portNumberBox);
+            //add(loggingBox);
+            add(buttonBox);
+            
+            setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    		
+            SwingUtilities.invokeLater( new Runnable() 
+            { 
+            	public void run() { 
+            		programDirField.requestFocusInWindow(); 
+            	} 
+            });
+            // Populate textfields 
+            initSettings();
 	}
 	
 	/**
@@ -474,6 +475,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	 */
 	public void exitDialog(){
 	   this.setVisible(false);
+	   frame = null;
 	   this.parent.dispose();
 	}
 	
@@ -553,25 +555,43 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	 * Method that creates and shows the dialog.
 	 * @param initalLaunch if true this dialog is shown at plugin start and
 	 * therefore the "Save" button is replaced with "Open MetaEdit+" button.
+	 * Prevents multiple windows to be opened at the same time.
 	 */
 	public static void createAndShowGUI(boolean initalLaunch) {
-		String title = "MetaEdit+ Launch Parameters";
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) { }
-       JFrame frame = new JFrame(title);
-       
-       frame.setIconImage(getImage("icons/metaedit_logo.png"));
-       frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    if ( frame == null) {
+    	    	String title = "MetaEdit+ Launch Parameters";
+    	    	try {
+    			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+    	    	} catch (Exception e) { }
+    	    	frame = new JFrame();
+               
+    	    	frame.setIconImage(getImage("icons/metaedit_logo.png"));
+    	    	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    	    	//Create and set up the content pane.
+    	    	JComponent newContentPane = new SettingsDialog(frame, initalLaunch);
+    	    	frame.setContentPane(newContentPane);
+    	    	//Display the window.
+    	    	frame.setTitle(title);
+    	    	frame.pack();
+    	    	frame.setLocationByPlatform(true);
+    	    	frame.setResizable(false);
+    	    	frame.setVisible(true);
+    	    	frame.addWindowListener(new WindowAdapter() {
+    	    	    public void windowClosing(WindowEvent we){
+    	    		frame.setVisible(false);
+    	    		frame = null;
+    	    	    }
+		});
+	    } else {
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        frame.toFront();
+                        frame.repaint();
+                    }
+                });
 
-       //Create and set up the content pane.
-       JComponent newContentPane = new SettingsDialog(frame, initalLaunch);
-       frame.setContentPane(newContentPane);
-       //Display the window.
-       frame.pack();
-       frame.setLocationByPlatform(true);
-       frame.setResizable(false);
-       frame.setVisible(true);
+	    }
 	}
 
 	@Override
@@ -593,8 +613,6 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	/**
 	 * Checks that program directory path is correct. The verifying is made by looking
 	 * the given filename and checking that it exists in the filesystem.
-	 * @author olli
-	 *
 	 */
 	public class ProgramDirectoryVerifier implements SettingsVerifier {
 	
@@ -609,8 +627,6 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	/**
 	 * Verifier class for verifyin the MetaEdit+ working directory. Looks
 	 * for artbase.roo file from given path.
-	 * @author olli
-	 *
 	 */
 	public class WorkingDirectoryVerifier implements SettingsVerifier {
 		
@@ -630,8 +646,6 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	/**
 	 * Checks username. Reads all the usernames from the databases manager.ab file
 	 * and check if the given username is in there.
-	 * @author olli
-	 *
 	 */
 	public class UsernameVerifier implements SettingsVerifier {
 		
@@ -656,9 +670,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * 
-	 * @author olli
-	 *
+	 * Check that the given password is correct (if the verifying is possible).
 	 */
 	public class PasswordVerifier implements SettingsVerifier {
 		
@@ -702,8 +714,6 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	/**
 	 * Verifies the database name by checking that the file manager.ab exists in folder
 	 * that is built by adding given working directory path and given database name.
-	 * @author olli
-	 *
 	 */
 	public class DatabaseVerifier implements SettingsVerifier {
 		
@@ -763,6 +773,10 @@ public class SettingsDialog extends JPanel implements ActionListener {
 
 	}
 	
+	/**
+	 * Cheks the given port number. Port number should be an integer between 0 and 65535.
+	 * If possible numbers less than 1023 should not be used.
+	 */
 	public class PortVerifier implements SettingsVerifier {
 
 		@Override
@@ -786,13 +800,15 @@ public class SettingsDialog extends JPanel implements ActionListener {
 		}
 
 	}
-
+	
+	/**
+	 * Hostname verifier. Not used.
+	 */
 	public class HostnameVerifier implements SettingsVerifier {
 
 		public int verify(JComponent input) {
 			//JTextField tf = (JTextField) input;
 			return 1;
 		}
-
 	}
 }
