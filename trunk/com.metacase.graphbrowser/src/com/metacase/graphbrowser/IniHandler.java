@@ -9,6 +9,10 @@ public class IniHandler
     private String key;
     private String iniFilePath;
 
+    /**
+     * Constructor. Reads data from ini file.
+     * @param _iniPath path to ini file.
+     */
     public IniHandler(String _iniPath)
     {
         FileInputStream fis = null;

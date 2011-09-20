@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
- * Dialog provider class offers some basic dialogs.
+ * Dialog provider class offers some basic dialogs. Used in the plugin.
  */
 public class DialogProvider {
 

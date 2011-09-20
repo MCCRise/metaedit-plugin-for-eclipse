@@ -37,7 +37,6 @@ public class Graph {
 		this.setType(type);
 		this.setAreaID(areaID);
 		this.setObjectID(objectID);
-		
 		Hashtable<Integer, Graph> graphTable =  (Hashtable<Integer, Graph>) projectTable.get(areaID);
 		if ( graphTable == null ) {
 			graphTable  = new Hashtable<Integer, Graph>();
@@ -79,8 +78,6 @@ public class Graph {
 		return graph;
 	}
 	
-	
-	
 	/**
 	 * Runs generator for caller Graph. After calling ME+ to run generator, tries
 	 * to import project with same name as the graph to workspace. Used for MetaEdit+ 5.0 API
@@ -115,8 +112,12 @@ public class Graph {
 		this.importProject(Settings.getSettings());
 	}
 		
-	private void removeIniFile(String pluginINIpath) {
-	    Importer i = new Importer(new File(pluginINIpath), "");
+	/**
+	 * Calls file remove method with correct path.
+	 * @param path path to the file.
+	 */
+	private void removeIniFile(String path) {
+	    Importer i = new Importer(new File(path), "");
 	    i.removeIniFile();
 	}
 
@@ -127,7 +128,8 @@ public class Graph {
 	private void importProject(Settings s) {
 		String workDir = s.getWorkingDirectory();
 		if (workDir.equals("")) {
-			DialogProvider.showMessageDialog("Error when importing generated project to workspace. Can't read working directory path from .mer file.",
+			DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
+					"Can't read working directory path from .mer file.",
 					"MER file doesn't exist");
 			return;
 		}

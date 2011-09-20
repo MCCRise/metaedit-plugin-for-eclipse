@@ -9,8 +9,13 @@ import java.rmi.RemoteException;
 import com.metacase.API.*;
 import com.metacase.objects.Graph;
 
+/**
+ * Class that runs MetaEdit+ dialogs by calling them via MetaEdit+ API.
+ * Since dialogs block application process, this class extends Thread super class.
+ */
 public class MEDialogRunner extends Thread {
 	
+    	// Dialog types
 	public static final int CREATE_NEW_GRAPH = 1;
 	//public static final int CREATE_NEW_GRAPH_OF_SAME_TYPE = 2;
 	public static final int EDIT_GRAPH_PROPERTIES = 3;
@@ -26,7 +31,10 @@ public class MEDialogRunner extends Thread {
 		this.dialog = dialogType;
 		this.selectedGraph = selectedGraph;
 	}
-
+	
+	/**
+	 * Runs MetaEdit+ dialog.
+	 */
 	public void run() {
 		MetaEditAPIPortType port = Launcher.getPort();
 		switch (this.dialog) {

@@ -162,6 +162,7 @@ public class Settings {
 			writer.AddSetting("database", this.getDatabase());
 			writer.AddSetting("username", this.getUsername());
 			writer.AddSetting("password", this.getPassword());
+			// Write all projects to one string with separator.
 			String projects = "";
 			String separator = "";
 			for (String s : this.getProjects()) {

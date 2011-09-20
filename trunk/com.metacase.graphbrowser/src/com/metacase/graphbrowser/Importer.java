@@ -46,8 +46,7 @@ public class Importer {
 	    IProgressMonitor monitor =  new NullProgressMonitor();
 	    root = ResourcesPlugin.getWorkspace().getRoot();
 	    try {
-	    	//description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(this.path + "\\.project"));
-		description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(root.getLocation().toString() + "/" + appName + "/.project"));
+	    	description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(root.getLocation().toString() + "/" + appName + "/.project"));
 	    	project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 	    	if (project.exists()) {
 	    		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
