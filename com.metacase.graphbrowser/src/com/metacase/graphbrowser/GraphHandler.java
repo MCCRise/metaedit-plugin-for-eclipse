@@ -52,16 +52,16 @@ public class GraphHandler {
 			if (!g.getIsChild()) topLevelGraphs.add(g);
 		}
 		ArrayList<Graph> reachableGraphs = reachableGraphs(topLevelGraphs);
-
+		
 		Collections.sort(graphs, new Comparator(){
 			public int compare(Object o1, Object o2) {
-            	Graph g1 = (Graph) o1;
-                Graph g2 = (Graph) o2;
-               return g2.getChildren().length -(g1.getChildren().length);
-            }
-        });
+			    Graph g1 = (Graph) o1;
+			    Graph g2 = (Graph) o2;
+			    return g2.getChildren().length -(g1.getChildren().length);
+			}
+		});
 		
-		for (Graph g: graphs) {
+		for ( Graph g : graphs ) {
 			if (!reachableGraphs.contains(g)) {
 				topLevelGraphs.add(g);
 				buildReachableGraphs(g, reachableGraphs);

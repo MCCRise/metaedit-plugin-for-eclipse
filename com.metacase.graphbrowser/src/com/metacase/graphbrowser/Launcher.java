@@ -179,7 +179,7 @@ public class Launcher {
 			} catch (RemoteException e) { }
 		}
 	}
-
+	
 	public static Settings getSettings() {
 		return Settings.getSettings();
 	}

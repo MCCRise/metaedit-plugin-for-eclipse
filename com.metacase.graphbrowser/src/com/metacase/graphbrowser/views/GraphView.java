@@ -125,8 +125,7 @@ public class GraphView extends ViewPart {
 		}
 	}
 
-	class ViewContentProvider implements IStructuredContentProvider, 
-										   ITreeContentProvider {
+	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		private TreeObject invisibleRoot;
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
