@@ -31,7 +31,7 @@ public class IniHandler
                 while ((strLine = br.readLine()) != null)
                 {
                     strLine = strLine.trim();
-                    if (strLine != "" && !strLine.startsWith("#"))
+                    if (!strLine.isEmpty() && !strLine.startsWith("#"))
                     {
                         keyPair = strLine.split("=");
                         values.put(keyPair[0], keyPair[1]);

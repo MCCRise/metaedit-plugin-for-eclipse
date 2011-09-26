@@ -17,13 +17,14 @@ import com.metacase.graphbrowser.*;
  */
 public class Graph {
 
-	protected String name;
-	protected String type;
-	protected int areaID;
-	protected int objectID;
-	protected boolean isChild  = false;
-	protected Graph[] children = new Graph[0];
-	protected static Hashtable<Integer, Hashtable<Integer, Graph>> projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
+	private String name;
+	private String type;
+	private int areaID;
+	private int objectID;
+	private boolean isChild  = false;
+	private boolean compileAndExecute = false;
+	private Graph[] children = new Graph[0];
+	private static Hashtable<Integer, Hashtable<Integer, Graph>> projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
 	
 	/**
 	 * Constructor.
@@ -39,7 +40,7 @@ public class Graph {
 		this.setObjectID(objectID);
 		Hashtable<Integer, Graph> graphTable =  (Hashtable<Integer, Graph>) projectTable.get(areaID);
 		if ( graphTable == null ) {
-			graphTable  = new Hashtable<Integer, Graph>();
+			graphTable = new Hashtable<Integer, Graph>();
 			projectTable.put(areaID, graphTable);
 		}
 		graphTable.put(objectID, this);
@@ -79,12 +80,20 @@ public class Graph {
 	}
 	
 	/**
+	 * Method stub for the "Run Autobuild" button. Runs autobuild for the graph without asking from user anything.
+	 * Works for both MetaEdit+ 4.5 or 5.0.
+	 */
+	public void runAutobuild() {
+	    this.runAutoBuildFor45();
+	}
+	
+	/**
 	 * Runs generator for caller Graph. After calling ME+ to run generator, tries
 	 * to import project with same name as the graph to workspace. Used for MetaEdit+ 5.0 API
 	 * @param generator name of the generator to be run.
 	 */
 	public void runGenerator(String generator) {
-	    	String pluginINIpath = this.writePluginIniFile();
+	    	String pluginINIpath = this.writePluginIniFile(generator);
 		MetaEditAPIPortType port = Launcher.getPort();
 		Settings s = Settings.getSettings();
 		try {
@@ -100,7 +109,7 @@ public class Graph {
 	 * Runs Autobuild generator for selected graph. This method is used for MetaEdit+ 4.5 API.
 	 */
 	public void runAutoBuildFor45() {
-		String pluginINIpath = this.writePluginIniFile();
+		String pluginINIpath = this.writePluginIniFile("Autobuild");
 		MetaEditAPIPortType port = Launcher.getPort();
 		MENull meNull = new MENull();
 		try {
@@ -113,11 +122,13 @@ public class Graph {
 	}
 		
 	/**
-	 * Calls file remove method with correct path.
+	 * Calls file remove method with correct path. Read compileAndExecute info written by MetaEdit+ before removing the file. 
 	 * @param path path to the file.
 	 */
-	private void removeIniFile(String path) {
+	private void removeIniFile(String path) {	    
 	    Importer i = new Importer(new File(path), "");
+	    IniHandler h = new IniHandler(path);
+	    if (h.GetSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
 	    i.removeIniFile();
 	}
 
@@ -133,26 +144,21 @@ public class Graph {
 					"MER file doesn't exist");
 			return;
 		}
-		Importer i = new Importer(new File(workDir + "\\reports\\" + this.getName()), this.getName());
-		i.importProject();
+		if (this.compileAndExecute) {
+		    Importer i = new Importer(new File(workDir + "\\reports\\" + this.getName()), this.getName());
+		    i.importProject();
+		    this.compileAndExecute  = false;
+		}
 	}
 	
 	/**
 	 * Method stub for importer's plugin.ini writer.
 	 * @return path of the written ini file.
 	 */
-	private String writePluginIniFile() {
+	private String writePluginIniFile(String generatorName) {
 		Settings s = Settings.getSettings();
 		Importer i = new Importer(new File(s.getWorkingDirectory()), this.getName());
-		return i.writePluginIniFile();
-	}
-	
-	/**
-	 * Get Graph's children
-	 * @return children in array.
-	 */
-	public Graph[] getChildren() {
-		return this.children;
+		return i.writePluginIniFile(generatorName);
 	}
 	
 	/**
@@ -260,6 +266,14 @@ public class Graph {
 	 */
 	public boolean getIsChild(){
 		return this.isChild;
+	}
+	
+	/**
+	 * Get Graph's children
+	 * @return children in array.
+	 */
+	public Graph[] getChildren() {
+		return this.children;
 	}
 	
 	/**

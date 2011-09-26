@@ -54,6 +54,7 @@ public class GraphView extends ViewPart {
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
 	private Action actionOpenInMetaEdit;
+	private Action actionRunAutobuild;
 	private Action actionGenerateGraph;
 	private Action actionUpdateGraphList;
 	private Action doubleClickAction;
@@ -246,21 +247,41 @@ public class GraphView extends ViewPart {
 
 	private void fillContextMenu(IMenuManager manager) {
 		Settings s = Settings.getSettings();
-		if (s.getIs50()) manager.add(actionOpenCreateGraphDialog);
 		if (!viewer.getSelection().isEmpty()) {
-			manager.add(actionOpenInMetaEdit);
-			manager.add(actionGenerateGraph);
-			if (s.getIs50()) manager.add(actionOpenEditPropertiesDialog);
-			manager.add(new Separator());
-			drillDownAdapter.addNavigationActions(manager);
-			// Other plug-ins can contribute their actions here
-			manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		    	if (s.getIs50()) this.loadContextMenuFor50(manager);
+		    	else this.loadContextMenuFor45(manager);
 		}
 	}
 	
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(actionOpenInMetaEdit);
+	private void loadContextMenuFor50(IMenuManager manager) {
+	    	manager.add(actionRunAutobuild);
 		manager.add(actionGenerateGraph);
+		manager.add(new Separator());
+		manager.add(actionOpenInMetaEdit);
+		manager.add(actionOpenEditPropertiesDialog);
+		manager.add(actionOpenCreateGraphDialog);
+		manager.add(new Separator());
+		drillDownAdapter.addNavigationActions(manager);
+		// Other plug-ins can contribute their actions here
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		
+	}
+	
+	private void loadContextMenuFor45(IMenuManager manager) {
+	    	manager.add(actionRunAutobuild);
+	    	manager.add(new Separator());
+	    	manager.add(actionOpenInMetaEdit);
+	    	manager.add(new Separator());
+		drillDownAdapter.addNavigationActions(manager);
+		// Other plug-ins can contribute their actions here
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+	
+	private void fillLocalToolBar(IToolBarManager manager) {
+		manager.add(actionRunAutobuild);
+		manager.add(actionGenerateGraph);
+		manager.add(new Separator());
+		manager.add(actionOpenInMetaEdit);
 		manager.add(actionUpdateGraphList);
 		manager.add(actionOpenSettings);
 		manager.add(new Separator());
@@ -292,6 +313,18 @@ public class GraphView extends ViewPart {
 		this.setActionDetails(actionOpenInMetaEdit,
 				"Open Graph in MetaEdit+",
 				"icons/open_graph_in_metaedit_icon.png");
+		
+		actionRunAutobuild = new Action() {
+		    public void run() {
+			Graph _graph = getSelectedGraph();
+			if (_graph == null) return;
+			_graph.runAutobuild();
+		    }
+		};
+		
+		this.setActionDetails(actionRunAutobuild,
+			"Run Autobuild for the Selected Graph",
+			"icons/run_generator_icon.png");
 		
 		actionGenerateGraph = new Action() {
 			public void run() {
@@ -344,8 +377,8 @@ public class GraphView extends ViewPart {
 			}
 		};
 		this.setActionDetails(actionGenerateGraph,
-				"Run Generator ...",
-				"icons/run_generator_icon.png");
+				"Select Generator to Run for the Selected Graph",
+				"icons/select_generator_to_run_icon.png");
 		
 		actionOpenSettings = new Action() {
 			public void run() {
@@ -353,7 +386,7 @@ public class GraphView extends ViewPart {
 			}
 		};
 		this.setActionDetails(actionOpenSettings,
-				"Open Settings",
+				"MetaEdit+ Launch Parameters",
 				"icons/settings_icon.png");
 				
 		doubleClickAction = new Action() {

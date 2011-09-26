@@ -212,7 +212,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
-	                @Override
+			@Override
 	                public void run() {
 	                	final JFileChooser fc = new JFileChooser();
 	                	fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
