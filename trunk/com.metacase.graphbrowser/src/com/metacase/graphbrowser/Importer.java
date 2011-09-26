@@ -76,7 +76,7 @@ public class Importer {
 	 * Writes the plugin.ini file that is written for MetaEdit+ generator. 
 	 * The file contains information for the generator.
 	 */
-	public String writePluginIniFile() {
+	public String writePluginIniFile(String generatorName) {
         	Location installLoc = Platform.getInstallLocation();
         	String path = installLoc.getURL().getFile();
         	path = path.substring(1, path.length()) + "eclipse.exe";
@@ -92,6 +92,8 @@ public class Importer {
         	writer.AddSetting("IDE", "eclipse");
         	// workspace path
         	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
+        	if ( generatorName.equalsIgnoreCase("autobuild")) writer.AddSetting("runGenerated", "true");
+        	else writer.AddSetting("runGenerated", "false");
         	writer.SaveSettings();
         	return _path;
 	}
