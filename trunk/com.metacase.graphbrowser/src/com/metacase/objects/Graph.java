@@ -64,7 +64,9 @@ public class Graph {
 		if (graph == null) {
 			try {
 				graph = new Graph(port.userPrintString(m), port.typeName(port.type(m)), m.getAreaID(), m.getObjectID());
-			} catch (RemoteException e) { }
+			} catch (RemoteException e) {
+			    e.printStackTrace();
+			}
 		}
 		// in the case graph exists check if its name has changed.
 		else if (graph != null) {
@@ -100,6 +102,7 @@ public class Graph {
 			port.forGraphRun(this.toMEOop(), generator);
 		} catch (RemoteException e) { 
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+			e.printStackTrace();
 		}
 		this.removeIniFile(pluginINIpath);
 		this.importProject(s);
@@ -116,6 +119,7 @@ public class Graph {
 			port.forName(meNull, this.getName(), this.getType(), "Autobuild");
 		} catch (RemoteException e) { 
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+			e.printStackTrace();
 		}
 		this.removeIniFile(pluginINIpath);
 		this.importProject(Settings.getSettings());

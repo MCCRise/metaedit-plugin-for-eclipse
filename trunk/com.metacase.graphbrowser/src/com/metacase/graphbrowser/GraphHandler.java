@@ -35,8 +35,8 @@ public class GraphHandler {
 		try {
 			meOops = port.allSimilarInstances(graphType);
 		} catch (RemoteException e) { 
-			e.printStackTrace();
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+			e.printStackTrace();
 			}
 		for (MEOop m : meOops) {
 			Graph g = Graph.MEOopToGraph(m);
@@ -46,7 +46,9 @@ public class GraphHandler {
 		for (Graph g : graphs) {
 			try {
 				g.initChildren(port, done);
-			} catch (Exception e) { }
+			} catch (Exception e) { 
+			    e.printStackTrace();
+			}
 		}
 		for (Graph g : graphs) {
 			if (!g.getIsChild()) topLevelGraphs.add(g);
@@ -100,7 +102,9 @@ public class GraphHandler {
 	    if (!path.exists()) return list.toArray(new String[list.size()]);
 	    try {
 			scanner = new Scanner(path);
-		} catch (FileNotFoundException e) { }
+		} catch (FileNotFoundException e) { 
+		    e.printStackTrace();
+		}
 	    try {
 	    	while (scanner.hasNextLine()){
 	    		line = scanner.nextLine();

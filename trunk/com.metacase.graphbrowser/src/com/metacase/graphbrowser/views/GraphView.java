@@ -254,8 +254,8 @@ public class GraphView extends ViewPart {
 	}
 	
 	private void loadContextMenuFor50(IMenuManager manager) {
-	    	manager.add(actionRunAutobuild);
-		manager.add(actionGenerateGraph);
+		manager.add(actionGenerateGraph);	
+		manager.add(actionRunAutobuild);
 		manager.add(new Separator());
 		manager.add(actionOpenInMetaEdit);
 		manager.add(actionOpenEditPropertiesDialog);
@@ -278,8 +278,8 @@ public class GraphView extends ViewPart {
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(actionRunAutobuild);
 		manager.add(actionGenerateGraph);
+		manager.add(actionRunAutobuild);
 		manager.add(new Separator());
 		manager.add(actionOpenInMetaEdit);
 		manager.add(actionUpdateGraphList);
@@ -323,61 +323,64 @@ public class GraphView extends ViewPart {
 		};
 		
 		this.setActionDetails(actionRunAutobuild,
-			"Run Autobuild for the Selected Graph",
+			"Run Autobuild",
 			"icons/run_generator_icon.png");
 		
 		actionGenerateGraph = new Action() {
 			public void run() {
-				final Graph _graph = getSelectedGraph();
-				if (_graph == null) return;
-				Settings s = Settings.getSettings();
-				if (s.getIs50()) { 
-					String okString = "<HTML><p>Choose the generator you want to run for the graph.</p></HTML>";
-					String notOkString = "<HTML><p>No generators found for the the graph</p></HTML>";
-					MetaEditAPIPortType port = Launcher.getPort();
-					JFrame frame = new JFrame("");
-	                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	                String [] generators = null;
-	                try {
-	                	String line = port.generatorNames(_graph.getMEType());
-	                	generators = line.split("\r");
-					} catch (RemoteException e1) { }
-					
-					ArrayList<String> generatorList = new ArrayList<String>();
-					for (int i=generators.length-1; i>=0; i--) {
-						if (!generators[i].startsWith("_") && !generators[i].startsWith("!")) {
-							generatorList.add(generators[i]);
-						}
-					}
-					final SelectionDialog p = new SelectionDialog(frame, generatorList, true, okString ,notOkString);
-	                JComponent newContentPane = p;
-	                frame.setContentPane(newContentPane);
-	                frame.addWindowListener(new WindowListener() {
-						public void windowOpened(WindowEvent e) { }
-						public void windowIconified(WindowEvent e) { }
-						public void windowDeiconified(WindowEvent e) { }
-						public void windowDeactivated(WindowEvent e) { }
-						public void windowClosing(WindowEvent e) {	}
-						public void windowClosed(WindowEvent e) { 
-							if (p.getIsOKd()) {
-								_graph.runGenerator(p.getOpenProjectsAsArray()[0]);
-							}
-						}
-						public void windowActivated(WindowEvent e) { }
-					});
-	                frame.setResizable(false);
-	                frame.setVisible(true);
-	                frame.setSize(new Dimension(200, 300)); 
-	                frame.setIconImage(SettingsDialog.getImage("icons/metaedit_logo.png"));
-	                frame.setLocation(300, 300);
-				} else {
-				_graph.runAutoBuildFor45();
+			    final Graph _graph = getSelectedGraph();
+			    if (_graph == null) return;
+			    Settings s = Settings.getSettings();
+			    if (s.getIs50()) { 
+				// Creates dialog that shows available generators and lets user to select one.
+				String okString = "<HTML><p>Choose the generator you want to run for the graph.</p></HTML>";
+				String notOkString = "<HTML><p>No generators found for the the graph</p></HTML>";
+				MetaEditAPIPortType port = Launcher.getPort();
+				JFrame frame = new JFrame("");
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				String [] generators = null;
+				try {
+				    String line = port.generatorNames(_graph.getMEType());
+				    generators = line.split("\r");
+				} catch (RemoteException e1) {
+				    e1.printStackTrace();
 				}
-
+					
+				ArrayList<String> generatorList = new ArrayList<String>();
+				for (int i=generators.length-1; i>=0; i--) {
+				    if (!generators[i].startsWith("_") && !generators[i].startsWith("!")) {
+					generatorList.add(generators[i]);
+				    }
+				}
+				final SelectionDialog p = new SelectionDialog(frame, generatorList, true, okString ,notOkString);
+				JComponent newContentPane = p;
+				frame.setContentPane(newContentPane);
+				frame.addWindowListener(new WindowListener() {
+				    public void windowOpened(WindowEvent e) { }
+				    public void windowIconified(WindowEvent e) { }
+				    public void windowDeiconified(WindowEvent e) { }
+				    public void windowDeactivated(WindowEvent e) { }
+				    public void windowClosing(WindowEvent e) {	}
+				    public void windowClosed(WindowEvent e) { 
+					if (p.getIsOKd()) {
+					    _graph.runGenerator(p.getOpenProjectsAsArray()[0]);
+					}
+				    }
+				    public void windowActivated(WindowEvent e) { }
+				});
+				frame.setResizable(false);
+				frame.setVisible(true);
+				frame.setSize(new Dimension(200, 300)); 
+				frame.setIconImage(SettingsDialog.getImage("icons/metaedit_logo.png"));
+				frame.setLocation(300, 300);
+			    } else {
+				// If using MetaEdit+ 4.5, cannot ask graph's generators. Run just autobuild
+				_graph.runAutoBuildFor45();
+			    }
 			}
 		};
 		this.setActionDetails(actionGenerateGraph,
-				"Select Generator to Run for the Selected Graph",
+				"Select Generator to Run",
 				"icons/select_generator_to_run_icon.png");
 		
 		actionOpenSettings = new Action() {
@@ -468,7 +471,9 @@ public class GraphView extends ViewPart {
 		  URL url = null;
 		    try {
 		    url = new URL(Platform.getBundle(Activator.PLUGIN_ID).getEntry("/"), iconPath);
-		    } catch (MalformedURLException e) { }
+		    } catch (MalformedURLException e) {
+			e.printStackTrace();
+		    }
 		    image = ImageDescriptor.createFromURL(url);
 		    return image;
 	}

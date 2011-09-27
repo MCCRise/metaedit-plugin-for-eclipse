@@ -24,7 +24,9 @@ public class DialogProvider {
 	public static void showMessageDialog(String message, String title){
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) { }
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
@@ -37,7 +39,9 @@ public class DialogProvider {
 	public static boolean showYesNoMessageDialog(String message, String title){
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) { }
+		} catch (Exception e) { 
+		    e.printStackTrace();
+		}
 		if (JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION)
 				== JOptionPane.YES_OPTION) return true;
 		else return false;

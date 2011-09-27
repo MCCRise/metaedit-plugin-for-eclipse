@@ -562,7 +562,9 @@ public class SettingsDialog extends JPanel implements ActionListener {
     	    	String title = "MetaEdit+ Launch Parameters";
     	    	try {
     			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-    	    	} catch (Exception e) { }
+    	    	} catch (Exception e) { 
+    	    	    e.printStackTrace();
+    	    	}
     	    	frame = new JFrame();
                
     	    	frame.setIconImage(getImage("icons/metaedit_logo.png"));
@@ -606,7 +608,9 @@ public class SettingsDialog extends JPanel implements ActionListener {
 		URL url = null;
 	    try {
 	    url = new URL(Platform.getBundle(Activator.PLUGIN_ID).getEntry("/"), path);
-	    } catch (MalformedURLException e) { }
+	    } catch (MalformedURLException e) {
+		e.printStackTrace();
+	    }
 	    return Toolkit.getDefaultToolkit().getImage(url);
 	}
 

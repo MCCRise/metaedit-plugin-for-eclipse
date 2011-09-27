@@ -88,7 +88,7 @@ public class Importer {
         	if (_temp.exists()) _temp.deleteOnExit();
         	IniHandler writer = new IniHandler(_path);
         	writer.flushValues();
-        	// the eclipse flag
+        	// eclipse flag
         	writer.AddSetting("IDE", "eclipse");
         	// workspace path
         	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
