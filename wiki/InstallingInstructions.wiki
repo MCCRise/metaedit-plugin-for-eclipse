@@ -2,7 +2,7 @@
 
 == Download and install Eclipse ==
 
-Download [http://eclipse.org/ Eclipse Classic]. Look for instructions on how to install Eclipse to your computer.
+Download [http://eclipse.org/ Eclipse]. Look for instructions on how to install Eclipse to your computer.
 
 
 == Installing the plugin ==
