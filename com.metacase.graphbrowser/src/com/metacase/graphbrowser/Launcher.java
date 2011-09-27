@@ -101,7 +101,9 @@ public class Launcher {
 		while (!isApiOK() && ((totalWaitMs += waitMs) <= maxWaitMs )) {
 			try {
 				Thread.sleep(waitMs);
-			} catch (InterruptedException e) { }
+			} catch (InterruptedException e) {
+			    e.printStackTrace();
+			}
 		}
 	}
 	

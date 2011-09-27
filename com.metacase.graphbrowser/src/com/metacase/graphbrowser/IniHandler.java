@@ -38,13 +38,17 @@ public class IniHandler
                         
                     }
                 }
-            } catch (Exception e) {    }
+            } catch (Exception e) {    
+        	e.printStackTrace();
+            }
             finally
             {
                 if (fis != null)
 		    try {
 			fis.close();
-		    } catch (IOException e) {	    }
+		    } catch (IOException e) {
+			e.printStackTrace();
+		    }
             }
         }
     }
@@ -123,7 +127,9 @@ public class IniHandler
             BufferedWriter out = new BufferedWriter(new FileWriter(newFilePath));
 	    out.write(strToSave);
 	    out.close();
-	} catch (IOException e1) {	}
+	} catch (IOException e1) {
+	    e1.printStackTrace();
+	}
     }
 
     /**

@@ -37,7 +37,9 @@ public class SelectionDialog extends JPanel {
 	public SelectionDialog (final JFrame _parent, List<String> items, boolean singleSelection, String headerOkString, String headerNotOkString){
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) { }
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		
 		parent = _parent;
     	String labelStr;

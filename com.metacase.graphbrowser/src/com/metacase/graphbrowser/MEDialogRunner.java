@@ -50,13 +50,17 @@ public class MEDialogRunner extends Thread {
 						m = selectedGraph.getMEType(); 
 					}
 					port.createGraphDialog(m);
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) {
+				    e.printStackTrace();
+				}
 				break;
 			case EDIT_GRAPH_PROPERTIES:
 				// Opens "Properties" dialog for the selected graph in MetaEdit+
 				try {
 					port.propertyDialog(this.selectedGraph.toMEOop());
-				} catch (RemoteException e) { }
+				} catch (RemoteException e) { 
+				    e.printStackTrace();
+				}
 				break;
 		}
 	}

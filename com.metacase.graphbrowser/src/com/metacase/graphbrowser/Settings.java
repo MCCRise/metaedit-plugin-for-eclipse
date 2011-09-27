@@ -204,7 +204,9 @@ public class Settings {
 	public void createEmptyMerFile(){
 		try {
 			merFile.createNewFile();
-		} catch (IOException e) { }
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	}
 	
 	/**
