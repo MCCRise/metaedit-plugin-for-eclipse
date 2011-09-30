@@ -17,14 +17,14 @@ http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/state_diagram_eclipse
 
 == The generation and import process ==
 
-The generation and import process contains stages in which the plugin writes an ini file for !MetaEdit+, a generator for the selected graph is run in !MetaEdit+, the generated Eclipse project (if any) is imported in Eclipse, opened, built and launched in Eclipse automatically. Let's look next at the individual states in more detail. You may also test these by running the 'Digital Watch' example available in !MetaEdit+.
+The generation and import process contains stages in which the plugin writes a plugin.ini file for !MetaEdit+, a generator for the selected graph is run in !MetaEdit+, the generated Eclipse project (if any) is imported in Eclipse, opened, built and launched in Eclipse automatically. Let's look next at the individual states in more detail. You may also test these by running the 'Digital Watch' example available in !MetaEdit+.
 
-In the first stage an ini file for !MetaEdit+ is written. Once the user has chosen to run a generator the file is created. The ini file contains information from the application (Eclipse in this case) that calls !MetaEdit+. It also contains the Eclipse workspace path in which the !MetaEdit+ generator is supposed to generate the source code files. Below you can see an example of the ini file content.
+In the first stage a plugin.ini file for !MetaEdit+ is written in the !MetaEdit+ working directory. Once the user has chosen to run a generator the file is created. The plugin.ini file contains information from the application (Eclipse in this case) that calls !MetaEdit+. It also contains the Eclipse workspace path in which the !MetaEdit+ generator is supposed to generate the source code files. Below you can see an example of the plugin.ini file content.
 {{{
 IDE=eclipse
 workspace=C:\user\Documents and settings\workspace\
 }}}
-The file and its content allow the generator in !MetaEdit+ to see that it is being used from another program. The generator can thus change its behaviour, e.g. instead of compiling and opening generated code itself, it can just generate the source code and project resource files that are needed for importing and building the project in Eclipse. The plugin removes the ini file at the end of the process.
+The file and its content allow the generator in !MetaEdit+ to see that it is being used from another program. The generator can thus change its behaviour, e.g. instead of compiling and opening generated code itself, it can just generate the source code and project resource files that are needed for importing and building the project in Eclipse. The plugin removes the plugin.ini file at the end of the process.
 
 After !MetaEdit+ has generated the source code files, the plugin looks for a Java project with the same name as the graph selected in the plugin tree view. If a project is found, it is imported into Eclipse and opened. After that the project is built and run, so the user can go straight to seeing the generated program running.
 
@@ -35,7 +35,7 @@ The project import automates otherwise manual actions like choosing to create a 
 The most common scenario for the plugin is for the generated source code to end up in an Eclipse project and be compiled and run from there. To do that, the plugin and generator must work together, following this interface: 
 
   *Name the generator 'Autobuild'
-  *Read the Eclipse workspace directory from the settings file created by the plugin
+  *Read the Eclipse workspace directory from the plugin.ini file created by the plugin
   *Generate the source files under that directory
   *Generate an Eclipse project file in that directory, with the same name as the graph, and referring to the generated source code
 
