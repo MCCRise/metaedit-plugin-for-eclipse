@@ -18,14 +18,14 @@ public class IniHandler
         FileInputStream fis = null;
         String strLine = null;
         String[] keyPair = null;
-        File iniPath = new File(_iniPath);
         this.iniFilePath = _iniPath;
+        File iniFile = new File(this.iniFilePath);
         
-        if (iniPath.exists())
+        if (iniFile.exists())
         {
             try
             {
-                fis = new FileInputStream(iniPath);
+                fis = new FileInputStream(iniFile);
         	DataInputStream in = new DataInputStream(fis);
         	BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 while ((strLine = br.readLine()) != null)

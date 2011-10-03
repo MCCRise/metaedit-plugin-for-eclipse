@@ -25,6 +25,7 @@ public class Importer {
 	 * Imports eclipse project to workspace and opens it. If project already exists, refreshes the project.
 	 * Finally builds and runs the imported project.
 	 * If no .project file found, does nothing.
+	 * @param applicationName name of the project that should be imported. Used for compiling and running the project.
 	 */
 	public static void importAndExecuteProject(String applicationName) {
 	    IProjectDescription description = null;
@@ -69,7 +70,6 @@ public class Importer {
         	if (_temp.exists()) _temp.deleteOnExit();
         	IniHandler writer = new IniHandler(path);
         	writer.flushValues();
-        	// eclipse flag
         	writer.AddSetting("IDE", "eclipse");
         	// workspace path
         	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
