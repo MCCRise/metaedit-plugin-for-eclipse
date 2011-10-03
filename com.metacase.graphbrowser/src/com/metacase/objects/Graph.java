@@ -34,16 +34,16 @@ public class Graph {
 	 * @param objectID Object id of MEOop
 	 */
 	private Graph(String name, String type, int areaID, int objectID) {
-		this.setName(name);
-		this.setType(type);
-		this.setAreaID(areaID);
-		this.setObjectID(objectID);
-		Hashtable<Integer, Graph> graphTable =  (Hashtable<Integer, Graph>) projectTable.get(areaID);
-		if ( graphTable == null ) {
-			graphTable = new Hashtable<Integer, Graph>();
-			projectTable.put(areaID, graphTable);
-		}
-		graphTable.put(objectID, this);
+	    this.setName(name);
+	    this.setType(type);
+	    this.setAreaID(areaID);
+	    this.setObjectID(objectID);
+	    Hashtable<Integer, Graph> graphTable =  (Hashtable<Integer, Graph>) projectTable.get(areaID);
+	    if ( graphTable == null ) {
+		graphTable = new Hashtable<Integer, Graph>();
+		projectTable.put(areaID, graphTable);
+	    }
+	    graphTable.put(objectID, this);
 	}
 	
 	/**
@@ -55,38 +55,47 @@ public class Graph {
 	 * @return created Graph
 	 */
 	public static Graph MEOopToGraph(MEOop m) {
-		Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(m.getAreaID());
-		Graph graph = null;
-		if ( graphTable != null ) {
-			graph = (Graph) graphTable.get(m.getObjectID());	
+	    Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(m.getAreaID());
+	    Graph graph = null;
+	    if ( graphTable != null ) {
+		graph = (Graph) graphTable.get(m.getObjectID());	
+	    }
+	    MetaEditAPIPortType port = Launcher.getPort();
+	    if (graph == null) {
+		try {
+		    graph = new Graph(port.userPrintString(m), port.typeName(port.type(m)), m.getAreaID(), m.getObjectID());
+		} catch (RemoteException e) {
+		    e.printStackTrace();
 		}
-		MetaEditAPIPortType port = Launcher.getPort();
-		if (graph == null) {
-			try {
-				graph = new Graph(port.userPrintString(m), port.typeName(port.type(m)), m.getAreaID(), m.getObjectID());
-			} catch (RemoteException e) {
-			    e.printStackTrace();
-			}
+	    }
+	    // in the case graph exists check if its name has changed.
+	    else if (graph != null) {
+		String _name = "";
+		try {
+		    _name = port.userPrintString(m);
+		} catch (RemoteException e) { }
+		if (!_name.equals(graph.getName())) {
+		    graph.setName(_name);
 		}
-		// in the case graph exists check if its name has changed.
-		else if (graph != null) {
-			String _name = "";
-			try {
-				 _name = port.userPrintString(m);
-			} catch (RemoteException e) { }
-			if (!_name.equals(graph.getName())) {
-				graph.setName(_name);
-			}
-		}
-		return graph;
+	    }
+	    return graph;
 	}
 	
 	/**
-	 * Method stub for the "Run Autobuild" button. Runs autobuild for the graph without asking from user anything.
-	 * Works for both MetaEdit+ 4.5 or 5.0.
+	 * Method for running the autobuild for the selected graph.
 	 */
 	public void runAutobuild() {
-	    this.runAutoBuildFor45();
+	    String pluginINIpath = this.writePluginIniFile("Autobuild");
+	    MetaEditAPIPortType port = Launcher.getPort();
+	    MENull meNull = new MENull();
+	    try {
+		port.forName(meNull, this.getName(), this.getType(), "Autobuild");
+	    } catch (RemoteException e) { 
+		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+		e.printStackTrace();
+	    }
+	    this.removeIniFile(pluginINIpath);
+	    this.importProject(Settings.getSettings());
 	}
 	
 	/**
@@ -95,34 +104,17 @@ public class Graph {
 	 * @param generator name of the generator to be run.
 	 */
 	public void runGenerator(String generator) {
-	    	String pluginINIpath = this.writePluginIniFile(generator);
-		MetaEditAPIPortType port = Launcher.getPort();
-		Settings s = Settings.getSettings();
-		try {
-			port.forGraphRun(this.toMEOop(), generator);
-		} catch (RemoteException e) { 
-			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-			e.printStackTrace();
-		}
-		this.removeIniFile(pluginINIpath);
-		this.importProject(s);
-	}
-	
-	/**
-	 * Runs Autobuild generator for selected graph. This method is used for MetaEdit+ 4.5 API.
-	 */
-	public void runAutoBuildFor45() {
-		String pluginINIpath = this.writePluginIniFile("Autobuild");
-		MetaEditAPIPortType port = Launcher.getPort();
-		MENull meNull = new MENull();
-		try {
-			port.forName(meNull, this.getName(), this.getType(), "Autobuild");
-		} catch (RemoteException e) { 
-			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-			e.printStackTrace();
-		}
-		this.removeIniFile(pluginINIpath);
-		this.importProject(Settings.getSettings());
+	    String pluginINIpath = this.writePluginIniFile(generator);
+	    MetaEditAPIPortType port = Launcher.getPort();
+	    Settings s = Settings.getSettings();
+	    try {
+		port.forGraphRun(this.toMEOop(), generator);
+	    } catch (RemoteException e) { 
+		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+		e.printStackTrace();
+	    }
+	    this.removeIniFile(pluginINIpath);
+	    this.importProject(s);
 	}
 		
 	/**
@@ -130,10 +122,9 @@ public class Graph {
 	 * @param path path to the file.
 	 */
 	private void removeIniFile(String path) {	    
-	    Importer i = new Importer(new File(path), "");
 	    IniHandler h = new IniHandler(path);
 	    if (h.GetSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
-	    i.removeIniFile();
+	    Importer.removeIniFile(new File(path));
 	}
 
 	/**
@@ -141,28 +132,29 @@ public class Graph {
 	 * @param s Settings instance
 	 */
 	private void importProject(Settings s) {
-		String workDir = s.getWorkingDirectory();
-		if (workDir.equals("")) {
-			DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
-					"Can't read working directory path from .mer file.",
-					"MER file doesn't exist");
-			return;
-		}
-		if (this.compileAndExecute) {
-		    Importer i = new Importer(new File(workDir + "\\reports\\" + this.getName()), this.getName());
-		    i.importProject();
-		    this.compileAndExecute  = false;
-		}
+	    String workDir = s.getWorkingDirectory();
+	    if (workDir.equals("")) {
+		DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
+			"Can't read working directory path from .mer file.",
+			"MER file doesn't exist");
+		return;
+	    }
+	    if (this.compileAndExecute) {
+		Importer.importAndExecuteProject(this.getName());
+		this.compileAndExecute  = false;
+	    }
 	}
 	
 	/**
-	 * Method stub for importer's plugin.ini writer.
+	 * Method stub for importer's plugin.ini writer. Writes the plugin.ini file under
+	 * the MetaEdit+ working directory.
+	 * @param generatorName name of the generator in MetaEdit+.
 	 * @return path of the written ini file.
 	 */
 	private String writePluginIniFile(String generatorName) {
-		Settings s = Settings.getSettings();
-		Importer i = new Importer(new File(s.getWorkingDirectory()), this.getName());
-		return i.writePluginIniFile(generatorName);
+	    Settings s = Settings.getSettings();
+	    // TODO: mitä jos workdir tyhjä?
+	    return Importer.writePluginIniFile(s.getWorkingDirectory(), generatorName);
 	}
 	
 	/**
@@ -170,7 +162,7 @@ public class Graph {
 	 * @return created MEOop object.
 	 */
 	public MEOop toMEOop() {
-		return new MEOop(this.getAreaID(), this.getObjectID());
+	    return new MEOop(this.getAreaID(), this.getObjectID());
 	}
 	
 	/**
@@ -178,9 +170,9 @@ public class Graph {
 	 * @return METype corresponding to Graphs attribute (String) type.
 	 */
 	public METype getMEType() {
-		METype type = new METype();
-		type.setName(this.getType());
-		return type;
+	    METype type = new METype();
+	    type.setName(this.getType());
+	    return type;
 	}
 	
 	/**
@@ -188,7 +180,7 @@ public class Graph {
 	 * @param _name Graphs name
 	 */
 	public void setName(String _name) {
-		this.name = _name;
+	    this.name = _name;
 	}
 	
 	/**
@@ -196,7 +188,7 @@ public class Graph {
 	 * @return graph name.
 	 */
 	public String getName() {
-		return this.name;
+	    return this.name;
 	}
 	
 	/**
@@ -204,7 +196,7 @@ public class Graph {
 	 * @param _type name of type.
 	 */
 	public void setType(String _type) {
-		this.type = _type;
+	    this.type = _type;
 	}
 	
 	/**
@@ -212,15 +204,15 @@ public class Graph {
 	 * @return name of graph type.
 	 */
 	public String getType() {
-		return this.type;
+	    return this.type;
 	}
 	
 	/**
 	 * Graphs area id setter.
 	 * @param _areaID area id integer.
 	 */
-	public void setAreaID(int _areaID) {
-		this.areaID = _areaID;
+    	public void setAreaID(int _areaID) {
+    	    this.areaID = _areaID;
 	}
 	
 	/**
@@ -228,7 +220,7 @@ public class Graph {
 	 * @return - id of graphs area. 
 	 */
 	public int getAreaID(){
-		return this.areaID;
+	    return this.areaID;
 	}
 	
 	/**
@@ -236,7 +228,7 @@ public class Graph {
 	 * @param _objectID - graphs object id.
 	 */
 	public void setObjectID(int _objectID){
-		this.objectID = _objectID;
+	    this.objectID = _objectID;
 	}
 	
 	/**
@@ -244,7 +236,7 @@ public class Graph {
 	 * @return object id integer.
 	 */
 	public int getObjectID() {
-		return this.objectID;
+	    return this.objectID;
 	}
 
 	/**
@@ -252,7 +244,7 @@ public class Graph {
 	 * @return Graphs name.
 	 */
 	public String toString() {
-		return this.name;
+	    return this.name;
 	}
 	
 	/**
@@ -261,7 +253,7 @@ public class Graph {
 	 * @param _isChild
 	 */
 	public void setIsChild(boolean _isChild){
-		this.isChild = _isChild;
+	    this.isChild = _isChild;
 	}
 	
 	/**
@@ -269,7 +261,7 @@ public class Graph {
 	 * @return isChild boolean property.
 	 */
 	public boolean getIsChild(){
-		return this.isChild;
+	    return this.isChild;
 	}
 	
 	/**
@@ -277,7 +269,7 @@ public class Graph {
 	 * @return children in array.
 	 */
 	public Graph[] getChildren() {
-		return this.children;
+	    return this.children;
 	}
 	
 	/**
@@ -285,7 +277,7 @@ public class Graph {
 	 * @param children - array of children graphs.
 	 */
 	public void setChildren(Graph[] children){
-		this.children = children;
+	    this.children = children;
 	}
 	
 	/**
@@ -296,19 +288,19 @@ public class Graph {
 	 * @throws Exception
 	 */
 	public void initChildren(MetaEditAPIPortType port, ArrayList<Graph> done) throws  Exception {
-		if (done.contains(this)) return;
-		done.add(this);
-		MEOop[] subgraphOops = null;
-		subgraphOops = port.subgraphs(this.toMEOop());
-		// Set the subgraph items to be children of this graph.
-		if (subgraphOops.length > 0 && subgraphOops != null) {
-			Graph [] graphs = new Graph[subgraphOops.length];
-			for (int i=0; i < subgraphOops.length; i++){
-				Graph g = graphs[i] = MEOopToGraph(subgraphOops[i]);
-				g.setIsChild(true);
-				g.initChildren(port, done);
-			}
-			this.setChildren(graphs);
-		 }
+	    if (done.contains(this)) return;
+	    done.add(this);
+	    MEOop[] subgraphOops = null;
+	    subgraphOops = port.subgraphs(this.toMEOop());
+	    // Set the subgraph items to be children of this graph.
+	    if (subgraphOops.length > 0 && subgraphOops != null) {
+		Graph [] graphs = new Graph[subgraphOops.length];
+		for (int i=0; i < subgraphOops.length; i++){
+		    Graph g = graphs[i] = MEOopToGraph(subgraphOops[i]);
+		    g.setIsChild(true);
+		    g.initChildren(port, done);
+		}
+		this.setChildren(graphs);
+	    }
 	}
 }
