@@ -30,17 +30,19 @@ public class Launcher {
 	 * @return created MetaEditAPIPortType instance
 	 */
 	private static MetaEditAPIPortType apiPort() {
-		java.net.URL address = null;
+	    java.net.URL address = null;
+	    try {
 		try {
-			 try {
-				address = new URL("http://"+ getSettings().getHostname() +
-						":"+ getSettings().getPort() +"/MetaEditAPI");
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-			return service.getMetaEditAPIPort(address);
-		} catch (ServiceException e) { }
-		return null;
+		    address = new URL("http://"+ getSettings().getHostname() +
+			    ":"+ getSettings().getPort() +"/MetaEditAPI");
+		} catch (MalformedURLException e) {
+		    e.printStackTrace();
+		}
+		return service.getMetaEditAPIPort(address);
+	    } catch (ServiceException e) { 
+		e.printStackTrace();
+	    }
+	    return null;
 	}
 	
 	/**
@@ -48,7 +50,7 @@ public class Launcher {
 	 * @param port MetaEditAPIPortType instance
 	 */
 	public static void setPort(MetaEditAPIPortType port) {
-		Launcher.port = port;
+	    Launcher.port = port;
 	}
 
 	/**
@@ -56,17 +58,17 @@ public class Launcher {
 	 * @return MetaEditAPIPortType instance.
 	 */
 	public static MetaEditAPIPortType getPort() {
-		return port;
+	    return port;
 	}
 
 	/**
 	 * Launcher method for doing initialization launch.
 	 */
 	public static void doInitialLaunch() {
-		if (getSettings().checkIfMerExists() || isApiOK()) initializeAPI();
-		else {
-			DialogProvider.showSettingsDialog(true);
-		}
+	    if (getSettings().checkIfMerExists() || isApiOK()) initializeAPI();
+	    else {
+		DialogProvider.showSettingsDialog(true);
+	    }
 	}
 	
 	/**
@@ -75,20 +77,20 @@ public class Launcher {
 	 * @return true if ME launched successfully else false.
 	 */
 	public static boolean initializeAPI(){
-		if (!isApiOK()) {
-			int maxWaitMs = 500;
-			String message = "MetaEdit+ API server not found." +
-					"\n\nClick Yes to start new MetaEdit+ instance or No if you will start API server manually.\n\n";
-			String title = "API not found";
-			if ( DialogProvider.showYesNoMessageDialog(message, title)) {
-				if (launchMetaEdit()) {
-					maxWaitMs = 2500;
-				}
-			}
-			else DialogProvider.showMessageDialog("Start MetaEdit+ API and click OK to proceed.", "Start MetaEdit+");
-			poll(maxWaitMs);
+	    if (!isApiOK()) {
+		int maxWaitMs = 500;
+		String message = "MetaEdit+ API server not found." +
+			"\n\nClick Yes to start new MetaEdit+ instance or No if you will start API server manually.\n\n";
+		String title = "API not found";
+		if ( DialogProvider.showYesNoMessageDialog(message, title)) {
+		    if (launchMetaEdit()) {
+			maxWaitMs = 2500;
+		    }
 		}
-		return isInitialized;
+		else DialogProvider.showMessageDialog("Start MetaEdit+ API and click OK to proceed.", "Start MetaEdit+");
+		poll(maxWaitMs);
+	    }
+	    return isInitialized;
 	}
 	
 	/**
@@ -96,15 +98,15 @@ public class Launcher {
 	 * @param maxWaitMs maximum wait time in milliseconds.
 	 */
 	public static void poll(int maxWaitMs) {
-		int totalWaitMs = 0;
-		int waitMs = 500;
-		while (!isApiOK() && ((totalWaitMs += waitMs) <= maxWaitMs )) {
-			try {
-				Thread.sleep(waitMs);
-			} catch (InterruptedException e) {
-			    e.printStackTrace();
-			}
+	    int totalWaitMs = 0;
+	    int waitMs = 500;
+	    while (!isApiOK() && ((totalWaitMs += waitMs) <= maxWaitMs )) {
+		try {
+		    Thread.sleep(waitMs);
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
 		}
+	    }
 	}
 	
 	/**
@@ -113,15 +115,16 @@ public class Launcher {
 	 * @return true if API is ok, otherwise false.
 	 */
 	public static boolean isApiOK() {
-		String name;
-		METype metype = new METype();
-		metype.setName("Graph");
-		try {
-			name = getPort().typeName(metype);
-		} catch (RemoteException e) {
-			name = ""; }
-		isInitialized = name.equals("Graph");
-		return isInitialized;
+	    String name;
+	    METype metype = new METype();
+	    metype.setName("Graph");
+	    try {
+		name = getPort().typeName(metype);
+	    } catch (RemoteException e) {
+		name = ""; 
+	    }
+	    isInitialized = name.equals("Graph");
+	    return isInitialized;
 	}
 
 	/**
@@ -129,15 +132,15 @@ public class Launcher {
 	 * @return true or false.
 	 */
 	public static boolean launchMetaEdit(){
-		Runtime rt = Runtime.getRuntime();
-        try {
-			needStopAPI = true;
-			rt.exec(createLaunchParameters());
-			return true;
-		} catch (IOException e) { 
-			DialogProvider.showMessageDialog("Could not start MetaEdit+: " + e.getMessage() + "\nPlease start MetaEdit+ API and click OK to proceed", "Launch error");
-		}
-		return false;
+	    Runtime rt = Runtime.getRuntime();
+	    try {
+		needStopAPI = true;
+		rt.exec(createLaunchParameters());
+		return true;
+	    } catch (IOException e) { 
+		DialogProvider.showMessageDialog("Could not start MetaEdit+: " + e.getMessage() + "\nPlease start MetaEdit+ API and click OK to proceed", "Launch error");
+	    }
+	    return false;
 	}
 	
 	/**
@@ -146,43 +149,43 @@ public class Launcher {
 	 * @return command that can be executed.
 	 */
 	private static String createLaunchParameters(){
-		String metaEditDir = "\"" + getSettings().getProgramPath() + "\"";
-		String workingDir = "\"" + getSettings().getWorkingDirectory() + "\"";
-		String db = "\"" + getSettings().getDatabase() + "\"";
-		String user = "\"" + getSettings().getUsername() + "\"";
-		String password = "\"" + getSettings().getPassword() + "\"";
-		int port = getSettings().getPort();
-		String hostname = getSettings().getHostname();
-		boolean logging = getSettings().isLogging();
+	    String metaEditDir = "\"" + getSettings().getProgramPath() + "\"";
+	    String workingDir = "\"" + getSettings().getWorkingDirectory() + "\"";
+	    String db = "\"" + getSettings().getDatabase() + "\"";
+	    String user = "\"" + getSettings().getUsername() + "\"";
+	    String password = "\"" + getSettings().getPassword() + "\"";
+	    int port = getSettings().getPort();
+	    String hostname = getSettings().getHostname();
+	    boolean logging = getSettings().isLogging();
 		
-		String line = metaEditDir + " currentDir: " + workingDir + " " + "loginDB:user:password: " + db + " " + 
-		user + " " + password; 
+	    String line = metaEditDir + " currentDir: " + workingDir + " " + "loginDB:user:password: " + db + " " + 
+		    user + " " + password; 
 		
-		String [] projects = getSettings().getProjects();
-			for (String s : projects) {
-				if (!s.equals("")) {
-					line += " setProject: " + "\"" + s + "\"";
-				}
-			}
+	    String [] projects = getSettings().getProjects();
+	    for (String s : projects) {
+		if (!s.equals("")) {
+		    line += " setProject: " + "\"" + s + "\"";
+		}
+	    }
 				
-		line += " startAPIHostname:port:logEvents: " + hostname + " " + port + " " + logging;
-		return line;
+	    line += " startAPIHostname:port:logEvents: " + hostname + " " + port + " " + logging;
+	    return line;
 	}
 
 	/**
 	 * Stops api.
 	 */
 	public static void stopApi() {
-		if (needStopAPI) {
-			MENull menull = new MENull();
-			try {
-				getPort().stopAPI(menull);
-				needStopAPI = false;
-			} catch (RemoteException e) { }
-		}
+	    if (needStopAPI) {
+		MENull menull = new MENull();
+		try {
+		    getPort().stopAPI(menull);
+		    needStopAPI = false;
+		} catch (RemoteException e) { }
+	    }
 	}
 	
 	public static Settings getSettings() {
-		return Settings.getSettings();
+	    return Settings.getSettings();
 	}
 }

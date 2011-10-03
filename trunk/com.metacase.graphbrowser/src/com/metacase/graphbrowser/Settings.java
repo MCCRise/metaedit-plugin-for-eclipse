@@ -8,12 +8,13 @@ package com.metacase.graphbrowser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Observable; 
 import javax.swing.JFileChooser;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 
-public class Settings {
-
+public class Settings extends Observable {
+ 
 	private String programPath;
 	private String workingDirectory;
 	private String database;
@@ -26,7 +27,7 @@ public class Settings {
 	private boolean initialized;
 	private File merFile;
 	private static Settings singleton;
-	private boolean is50;
+
 	
 	/**
 	 * <p>
@@ -55,6 +56,9 @@ public class Settings {
 	*/
 	public void setProgramPath(String programPath) {
 		this.programPath = programPath;
+		// Notify toolbar buttons (=listeners).
+		setChanged();
+		notifyObservers();
 	}
 	public String getProgramPath() {
 		return programPath;
@@ -117,10 +121,7 @@ public class Settings {
 		merFile = f;
 	}
 	public boolean getIs50() {
-		return is50;
-	}
-	public void setIs50(boolean is50) {
-		this.is50 = is50;
+		return this.programPath.contains("50");
 	}
 	
 	/**
@@ -155,8 +156,6 @@ public class Settings {
 	 */
 	public void writeConfigFile(String comment) {
 			IniHandler writer = new IniHandler(this.getMerFile().toString());
-			if (this.getProgramPath().contains("50")) this.setIs50(true);
-			else this.setIs50(false);
 			writer.AddSetting("metaEditDir", this.getProgramPath());
 			writer.AddSetting("workingDir", this.getWorkingDirectory());
 			writer.AddSetting("database", this.getDatabase());
@@ -185,8 +184,6 @@ public class Settings {
 	 */
 	private void readFromConfigFile(){
 		IniHandler reader = new IniHandler(this.getMerFile().toString());	
-		if (reader.GetSetting("metaEditDir").contains("50")) this.setIs50(true);
-		else this.setIs50(false);
 		this.setProgramPath(new File(reader.GetSetting("metaEditDir")).toString());
 		this.setWorkingDirectory(new File(reader.GetSetting("workingDir")).toString());
 		this.setDatabase(reader.GetSetting("database"));
