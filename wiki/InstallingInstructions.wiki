@@ -9,4 +9,4 @@ Download [http://eclipse.org/ Eclipse]. Look for instructions on how to install 
 
 There are two alternative ways for installing the plugin:
  * Install the plugin from update site. Open Eclipse and choose *Help | Install New Software* and set the update site to http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/MEplusGraphBrowser/ and follow the instructions in the wizard.
- * Download the plugin as a single JAR-file from [http://code.google.com/p/metaedit-plugin-for-eclipse/downloads/list Downloads] page. Place it to plugins folder under Eclipse installation folder.
+ * Download the plugin as a single JAR-file from [http://code.google.com/p/metaedit-plugin-for-eclipse/downloads/list Downloads] page. Place it to Eclipse\plugins folder under Eclipse installation folder.
