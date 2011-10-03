@@ -12,6 +12,8 @@ http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/metaedit_parameters_a
 
 When running the plugin for the first time there is no 'default.mer' file. In this case the plugin tries to search some paths needed for launching !MetaEdit+ and shows them to user who can edit and accept them by clicking 'Open !MetaEdit+'. Accepting them will open !MetaEdit+. If the plugin doesn't show any models after launching !MetaEdit+ and API try clicking the 'Update Graph List' icon on Graph Browser toolbar.
 
+http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/update_icon_toolbar.png
+
 When running you'll see in Graph Browser plugin the models from !MetaEdit+. Figure below shows the plugin listing the 'Digital watch' example models in Eclipse.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_running_plugin.PNG
