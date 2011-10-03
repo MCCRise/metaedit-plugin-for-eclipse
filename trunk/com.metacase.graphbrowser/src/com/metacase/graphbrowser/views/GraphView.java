@@ -429,8 +429,8 @@ public class GraphView extends ViewPart implements Observer {
 		
 		actionOpenCreateGraphDialog = new Action() {
 		    public void run() {
-			MEDialogRunner mdr = new MEDialogRunner(MEDialogRunner.CREATE_NEW_GRAPH, getSelectedGraph());
-			mdr.start();
+			MEDialog md = new MEDialog(MEDialog.CREATE_NEW_GRAPH, getSelectedGraph());
+			md.start();
 		    }
 		};
 		this.setActionDetails(actionOpenCreateGraphDialog,
@@ -439,8 +439,8 @@ public class GraphView extends ViewPart implements Observer {
 		
 		actionOpenEditPropertiesDialog = new Action() {
 			public void run() {
-			    MEDialogRunner mdr = new MEDialogRunner(MEDialogRunner.EDIT_GRAPH_PROPERTIES, getSelectedGraph());
-			    mdr.start();
+			    MEDialog md = new MEDialog(MEDialog.EDIT_GRAPH_PROPERTIES, getSelectedGraph());
+			    md.start();
 			}
 		};
 		this.setActionDetails(actionOpenEditPropertiesDialog,

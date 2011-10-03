@@ -13,13 +13,13 @@ import com.metacase.objects.Graph;
  * Class that runs MetaEdit+ dialogs by calling them via MetaEdit+ API.
  * Since dialogs block application process, this class extends Thread super class.
  */
-public class MEDialogRunner extends Thread {
+public class MEDialog extends Thread {
 	
     	// Dialog types
 	public static final int CREATE_NEW_GRAPH = 1;
 	//public static final int CREATE_NEW_GRAPH_OF_SAME_TYPE = 2;
 	public static final int EDIT_GRAPH_PROPERTIES = 3;
-	private int dialog;
+	private int dialogType;
 	private Graph selectedGraph;
 	
 	/**
@@ -27,8 +27,8 @@ public class MEDialogRunner extends Thread {
 	 * @param dialogType integer showing the dialog type. Use CREATE_NEW_GRAPH or EDIT_GRAPH_PROPERTIES
 	 * @param selectedGraph graph that is selected in the treeview or null.
 	 */
-	public MEDialogRunner(int dialogType, Graph selectedGraph) {
-	    this.dialog = dialogType;
+	public MEDialog(int dialogType, Graph selectedGraph) {
+	    this.dialogType = dialogType;
 	    this.selectedGraph = selectedGraph;
 	}
 	
@@ -37,7 +37,7 @@ public class MEDialogRunner extends Thread {
 	 */
 	public void run() {
 	    MetaEditAPIPortType port = Launcher.getPort();
-	    switch (this.dialog) {
+	    switch (this.dialogType) {
 	    	case CREATE_NEW_GRAPH:
 	    	    // Opens "Create Graph" dialog in MetaEdit+
 	    	    METype m  = null;
