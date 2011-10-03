@@ -22,12 +22,12 @@ public class DialogProvider {
 	 * @param title the title for the dialog window.
 	 */
 	public static void showMessageDialog(String message, String title){
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+	    try {
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	    JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	/**
@@ -37,14 +37,13 @@ public class DialogProvider {
 	 * @return true if <b>OK</b> clicked, false if <b>Cancel</b> cliked.
 	 */
 	public static boolean showYesNoMessageDialog(String message, String title){
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) { 
-		    e.printStackTrace();
-		}
-		if (JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION)
-				== JOptionPane.YES_OPTION) return true;
-		else return false;
+	    try {
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	    } catch (Exception e) { 
+		e.printStackTrace();
+	    }
+	    if (JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) return true;
+	    else return false;
 	}
 	
 	/**
@@ -53,9 +52,9 @@ public class DialogProvider {
 	 */
 	public static void showSettingsDialog(final boolean initialLaunch){
 	    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	           public void run() {
-	               SettingsDialog.createAndShowGUI(initialLaunch);
-	           }
+		public void run() {
+		    SettingsDialog.createAndShowGUI(initialLaunch);
+		}
 	    });
 	}
 }

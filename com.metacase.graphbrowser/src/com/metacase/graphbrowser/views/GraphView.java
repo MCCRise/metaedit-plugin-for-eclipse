@@ -12,9 +12,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.*;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
@@ -44,7 +47,7 @@ import com.metacase.objects.*;
  * <p>
  */
 
-public class GraphView extends ViewPart {
+public class GraphView extends ViewPart implements Observer {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -71,58 +74,58 @@ public class GraphView extends ViewPart {
 		private ArrayList<TreeObject> children;
 		
 		public TreeObject(Graph _graph) {
-			this.graph = _graph;
-			this.children = new ArrayList<TreeObject>();
+		    this.graph = _graph;
+		    this.children = new ArrayList<TreeObject>();
 		}
 		public TreeObject() {
-			this.graph = null;
-			this.children = new ArrayList<TreeObject>();
+		    this.graph = null;
+		    this.children = new ArrayList<TreeObject>();
 		}
 		public String getName() {
-			if (this.getGraph() == null) return "";
-			return this.getGraph().toString();
+		    if (this.getGraph() == null) return "";
+		    return this.getGraph().toString();
 		}
 		public void setParent(TreeObject parent) {
-			this.parent = parent;
+		    this.parent = parent;
 		}
 		public TreeObject getParent() {
-			return parent;
+		    return parent;
 		}
 		public Graph getGraph(){
-			return this.graph;
+		    return this.graph;
 		}
 		public String toString() {
-			return getName();
+		    return getName();
 		}
 		public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
-			return null;
+		    return null;
 		}
 		public void addChild(TreeObject child) {
-			children.add(child);
-			child.setParent(this);
+		    children.add(child);
+		    child.setParent(this);
 		}
 		public void removeChild(TreeObject child) {
-			children.remove(child);
-			child.setParent(null);
+		    children.remove(child);
+		    child.setParent(null);
 		}
 		public TreeObject [] getChildren() {
-			return children.toArray(new TreeObject[children.size()]);
+		    return children.toArray(new TreeObject[children.size()]);
 		}
 		public boolean hasChildren() {
-			return children.size()>0;
+		    return children.size()>0;
 		}
 		
 		public void populate(Graph[] graphs, ArrayList<Graph> stack) {
-			if (!stack.contains(this.getGraph())) {
-				stack.add(this.getGraph());
-				for (Graph g : graphs) {
-					TreeObject to = new TreeObject(g);
-					this.addChild(to);
-					if (g.getChildren() != null && g.getChildren().length > 0) {
-						to.populate(g.getChildren(), stack);
-					}
-				}
+		    if (!stack.contains(this.getGraph())) {
+			stack.add(this.getGraph());
+			for (Graph g : graphs) {
+			    TreeObject to = new TreeObject(g);
+			    this.addChild(to);
+    			    if (g.getChildren() != null && g.getChildren().length > 0) {
+    				to.populate(g.getChildren(), stack);
+    			    }
 			}
+		    }
 		}
 	}
 
@@ -130,36 +133,35 @@ public class GraphView extends ViewPart {
 		private TreeObject invisibleRoot;
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-			v.refresh();
+		    v.refresh();
 		}
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			if (parent.equals(getViewSite())) {
-				if (invisibleRoot==null)
-					try {
-						initialize();
-					} catch (Exception e) { }
-				return getChildren(invisibleRoot);
-			}
-			return getChildren(parent);
+		    if (parent.equals(getViewSite())) {
+			if (invisibleRoot==null)
+			    try {
+				initialize();
+			    } catch (Exception e) { }
+			return getChildren(invisibleRoot);
+		    }
+		    return getChildren(parent);
 		}
 		public Object getParent(Object child) {
-			if (child instanceof TreeObject) {
-				return ((TreeObject)child).getParent();
-			}
-			return null;
+		    if (child instanceof TreeObject) {
+			return ((TreeObject)child).getParent();
+		    }
+		    return null;
 		}
 		public Object [] getChildren(Object parent) {
-			if (parent instanceof TreeObject) {
-				return ((TreeObject)parent).getChildren();
-			}
-			return new Object[0];
+		    if (parent instanceof TreeObject) {
+			return ((TreeObject)parent).getChildren();
+		    }
+		    return new Object[0];
 		}
 		public boolean hasChildren(Object parent) {
-			if (parent instanceof TreeObject)
-				return ((TreeObject)parent).hasChildren();
-			return false;
+		    if (parent instanceof TreeObject) return ((TreeObject)parent).hasChildren();
+		    return false;
 		}
 		
 		/**
@@ -167,32 +169,32 @@ public class GraphView extends ViewPart {
 		 * creating a tree from the graph set. Shows busy cursor while the work is done.
 		 */
 		public void initialize() {
-			Runnable init = new Runnable() {
-				public void run() {
-					invisibleRoot = new TreeObject();
-					graphs = GraphHandler.init();
-					invisibleRoot.populate(graphs, new ArrayList<Graph>());				
-					}
-			};
-	        BusyIndicator.showWhile(getSite().getShell().getDisplay(), init);
+		    Runnable init = new Runnable() {
+			public void run() {
+			    invisibleRoot = new TreeObject();
+			    graphs = GraphHandler.init();
+			    invisibleRoot.populate(graphs, new ArrayList<Graph>());				
+			}
+		    };
+		    BusyIndicator.showWhile(getSite().getShell().getDisplay(), init);
 		}		
 	}
 	
 	class ViewLabelProvider extends LabelProvider {
 
 		public String getText(Object obj) {
-			return obj.toString();
+		    return obj.toString();
 		}
 		
 		public Image getImage(Object obj) {
-			String imagePath = "icons/graph_icon.png";
-			ImageDescriptor image;
-			  URL url = null;
-			    try {
-			    url = new URL(Platform.getBundle(Activator.PLUGIN_ID).getEntry("/"), imagePath);
-			    } catch (MalformedURLException e) { }
-			    image = ImageDescriptor.createFromURL(url);
-			    return image.createImage();
+		    String imagePath = "icons/graph_icon.png";
+		    ImageDescriptor image;
+		    URL url = null;
+		    try {
+			url = new URL(Platform.getBundle(Activator.PLUGIN_ID).getEntry("/"), imagePath);
+		    } catch (MalformedURLException e) { }
+		    image = ImageDescriptor.createFromURL(url);
+		    return image.createImage();
 		}
 	}
 	
@@ -203,6 +205,7 @@ public class GraphView extends ViewPart {
 	 * The constructor.
 	 */
 	public GraphView() {
+	 
 	}
 
 	/**
@@ -210,6 +213,7 @@ public class GraphView extends ViewPart {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
+	    	Settings.getSettings().addObserver(this);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewContentProvider = new ViewContentProvider();
@@ -225,15 +229,23 @@ public class GraphView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+		setToolBarButtonsEnabled();
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		    
+		    @Override
+		    public void selectionChanged(SelectionChangedEvent event) {
+			setToolBarButtonsEnabled();
+		    }
+		});
 	}
 
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				GraphView.this.fillContextMenu(manager);
-			}
+		    public void menuAboutToShow(IMenuManager manager) {
+			GraphView.this.fillContextMenu(manager);
+		    }
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
@@ -246,46 +258,55 @@ public class GraphView extends ViewPart {
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		Settings s = Settings.getSettings();
 		if (!viewer.getSelection().isEmpty()) {
-		    	if (s.getIs50()) this.loadContextMenuFor50(manager);
-		    	else this.loadContextMenuFor45(manager);
+		    manager.add(actionRunAutobuild);
+		    if (this.is50()) manager.add(actionGenerateGraph);	
+		    manager.add(new Separator());
+		    manager.add(actionOpenInMetaEdit);
+		    if (this.is50()) manager.add(actionOpenEditPropertiesDialog);
+		    if (this.is50()) manager.add(actionOpenCreateGraphDialog);
+		} else {
+		    if (this.is50()) manager.add(actionOpenCreateGraphDialog);
 		}
-	}
-	
-	private void loadContextMenuFor50(IMenuManager manager) {
-		manager.add(actionGenerateGraph);	
-		manager.add(actionRunAutobuild);
 		manager.add(new Separator());
-		manager.add(actionOpenInMetaEdit);
-		manager.add(actionOpenEditPropertiesDialog);
-		manager.add(actionOpenCreateGraphDialog);
-		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
-		// Other plug-ins can contribute their actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
-	}
-	
-	private void loadContextMenuFor45(IMenuManager manager) {
-	    	manager.add(actionRunAutobuild);
-	    	manager.add(new Separator());
-	    	manager.add(actionOpenInMetaEdit);
-	    	manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute their actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(actionGenerateGraph);
-		manager.add(actionRunAutobuild);
+	    	manager.add(actionRunAutobuild);
+	    	manager.add(actionGenerateGraph);
 		manager.add(new Separator());
 		manager.add(actionOpenInMetaEdit);
+		manager.add(actionOpenCreateGraphDialog);
+		manager.add(new Separator());
 		manager.add(actionUpdateGraphList);
 		manager.add(actionOpenSettings);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
+	}
+	
+	/**
+	 * Check if set MetaEdit+ program version is 4.5 or 5.0
+	 * @return true if version is 5.0 false if not.
+	 */
+	private boolean is50() {
+	    Settings s = Settings.getSettings();
+	    return s.getIs50();
+	}
+	
+	/**
+	 * Sets the seleceted toolbar buttons enabled or disabled.
+	 */
+	private void setToolBarButtonsEnabled() {
+	    actionGenerateGraph.setEnabled(this.is50());
+	    actionOpenCreateGraphDialog.setEnabled(this.is50());
+	    actionOpenInMetaEdit.setEnabled(!viewer.getSelection().isEmpty());
+	    IActionBars bars = getViewSite().getActionBars();
+	    IToolBarManager manager = bars.getToolBarManager();
+	    manager.update(true);
+	    
 	}
 	
 	private Graph getSelectedGraph(){
@@ -298,16 +319,16 @@ public class GraphView extends ViewPart {
 	private void makeActions() {
 		actionOpenInMetaEdit = new Action() {
 			public void run() {
-				Graph _graph = getSelectedGraph();
-				if (_graph == null) return;
-				MetaEditAPIPortType port = Launcher.getPort();
-				try {
-					port.open(_graph.toMEOop());
-				} 
-				catch (RemoteException e) { 
-					e.printStackTrace();
-					DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-					}
+			    Graph _graph = getSelectedGraph();
+			    if (_graph == null) return;
+			    MetaEditAPIPortType port = Launcher.getPort();
+			    try {
+				port.open(_graph.toMEOop());
+			    } 
+			    catch (RemoteException e) { 
+				e.printStackTrace();
+				DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+			    }
 			}
 		};
 		this.setActionDetails(actionOpenInMetaEdit,
@@ -330,9 +351,7 @@ public class GraphView extends ViewPart {
 			public void run() {
 			    final Graph _graph = getSelectedGraph();
 			    if (_graph == null) return;
-			    Settings s = Settings.getSettings();
-			    if (s.getIs50()) { 
-				// Creates dialog that shows available generators and lets user to select one.
+			   	// Creates dialog that shows available generators and lets user to select one.
 				String okString = "<HTML><p>Choose the generator you want to run for the graph.</p></HTML>";
 				String notOkString = "<HTML><p>No generators found for the the graph</p></HTML>";
 				MetaEditAPIPortType port = Launcher.getPort();
@@ -373,10 +392,6 @@ public class GraphView extends ViewPart {
 				frame.setSize(new Dimension(200, 300)); 
 				frame.setIconImage(SettingsDialog.getImage("icons/metaedit_logo.png"));
 				frame.setLocation(300, 300);
-			    } else {
-				// If using MetaEdit+ 4.5, cannot ask graph's generators. Run just autobuild
-				_graph.runAutoBuildFor45();
-			    }
 			}
 		};
 		this.setActionDetails(actionGenerateGraph,
@@ -386,6 +401,7 @@ public class GraphView extends ViewPart {
 		actionOpenSettings = new Action() {
 			public void run() {
 				DialogProvider.showSettingsDialog(false);
+				
 			}
 		};
 		this.setActionDetails(actionOpenSettings,
@@ -394,16 +410,16 @@ public class GraphView extends ViewPart {
 				
 		doubleClickAction = new Action() {
 			public void run() {
-				actionOpenInMetaEdit.run();
+			    actionOpenInMetaEdit.run();
 			}
 		};
 		actionUpdateGraphList = new Action() {
 			public void run() {
-				Object oldInput = viewer.getInput();
-				Launcher.doInitialLaunch();
-				viewContentProvider.initialize();
-				viewContentProvider.inputChanged(viewer, oldInput, viewer.getInput());
-				viewer.expandToLevel(2);
+			    Object oldInput = viewer.getInput();
+			    Launcher.doInitialLaunch();
+			    viewContentProvider.initialize();
+			    viewContentProvider.inputChanged(viewer, oldInput, viewer.getInput());
+			    viewer.expandToLevel(2);
 			}
 		};
 		this.setActionDetails(actionUpdateGraphList,
@@ -412,10 +428,10 @@ public class GraphView extends ViewPart {
 		
 		
 		actionOpenCreateGraphDialog = new Action() {
-			public void run() {
-				MEDialogRunner mdr = new MEDialogRunner(MEDialogRunner.CREATE_NEW_GRAPH, getSelectedGraph());
-				mdr.start();
-			}
+		    public void run() {
+			MEDialogRunner mdr = new MEDialogRunner(MEDialogRunner.CREATE_NEW_GRAPH, getSelectedGraph());
+			mdr.start();
+		    }
 		};
 		this.setActionDetails(actionOpenCreateGraphDialog,
 				"Create a New Graph",
@@ -423,8 +439,8 @@ public class GraphView extends ViewPart {
 		
 		actionOpenEditPropertiesDialog = new Action() {
 			public void run() {
-				MEDialogRunner mdr = new MEDialogRunner(MEDialogRunner.EDIT_GRAPH_PROPERTIES, getSelectedGraph());
-				mdr.start();
+			    MEDialogRunner mdr = new MEDialogRunner(MEDialogRunner.EDIT_GRAPH_PROPERTIES, getSelectedGraph());
+			    mdr.start();
 			}
 		};
 		this.setActionDetails(actionOpenEditPropertiesDialog,
@@ -446,19 +462,18 @@ public class GraphView extends ViewPart {
 	}
 	
 	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
+	    viewer.addDoubleClickListener(new IDoubleClickListener() {
+		public void doubleClick(DoubleClickEvent event) {
+		    doubleClickAction.run();
+		}
+	    });
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-		viewer.getControl().setFocus();
-		
+	    viewer.getControl().setFocus();
 	}
 	
 	/**
@@ -467,14 +482,31 @@ public class GraphView extends ViewPart {
 	 * @return loaded image
 	 */
 	public static ImageDescriptor getImageDescriptor(String iconPath) {
-		 ImageDescriptor image;
-		  URL url = null;
-		    try {
-		    url = new URL(Platform.getBundle(Activator.PLUGIN_ID).getEntry("/"), iconPath);
-		    } catch (MalformedURLException e) {
-			e.printStackTrace();
-		    }
-		    image = ImageDescriptor.createFromURL(url);
-		    return image;
+	    ImageDescriptor image;
+	    URL url = null;
+	    try {
+		url = new URL(Platform.getBundle(Activator.PLUGIN_ID).getEntry("/"), iconPath);
+	    } catch (MalformedURLException e) {
+		e.printStackTrace();
+	    }
+	    image = ImageDescriptor.createFromURL(url);
+	    return image;
+	}
+
+	/**
+	 * Implementation of java.util.Observer interface method. Checks if
+	 * the observable class is Settings and calls the method for checking
+	 * the toolbar buttons enabling/disabling. 
+	 */
+	@Override
+	public void update(Observable arg0, Object arg1) {
+	    if (arg0.getClass() == Settings.class) {
+		Display.getDefault().syncExec(
+			new Runnable() {
+			    public void run(){
+				setToolBarButtonsEnabled();
+			    }
+			});
+	    }
 	}
 }

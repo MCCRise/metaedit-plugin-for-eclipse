@@ -28,40 +28,40 @@ public class MEDialogRunner extends Thread {
 	 * @param selectedGraph graph that is selected in the treeview or null.
 	 */
 	public MEDialogRunner(int dialogType, Graph selectedGraph) {
-		this.dialog = dialogType;
-		this.selectedGraph = selectedGraph;
+	    this.dialog = dialogType;
+	    this.selectedGraph = selectedGraph;
 	}
 	
 	/**
 	 * Runs MetaEdit+ dialog.
 	 */
 	public void run() {
-		MetaEditAPIPortType port = Launcher.getPort();
-		switch (this.dialog) {
-			case CREATE_NEW_GRAPH:
-				// Opens "Create Graph" dialog in MetaEdit+
-				METype m  = null;
-				try {
-					if (selectedGraph == null) {
-						m = new METype();
-						m.setName("Graph");
-					}
-					else {
-						m = selectedGraph.getMEType(); 
-					}
-					port.createGraphDialog(m);
-				} catch (RemoteException e) {
-				    e.printStackTrace();
-				}
-				break;
-			case EDIT_GRAPH_PROPERTIES:
-				// Opens "Properties" dialog for the selected graph in MetaEdit+
-				try {
-					port.propertyDialog(this.selectedGraph.toMEOop());
-				} catch (RemoteException e) { 
-				    e.printStackTrace();
-				}
-				break;
-		}
+	    MetaEditAPIPortType port = Launcher.getPort();
+	    switch (this.dialog) {
+	    	case CREATE_NEW_GRAPH:
+	    	    // Opens "Create Graph" dialog in MetaEdit+
+	    	    METype m  = null;
+	    	    try {
+	    		if (selectedGraph == null) {
+	    		    m = new METype();
+	    		    m.setName("Graph");
+	    		}
+	    		else {
+	    		    m = selectedGraph.getMEType(); 
+	    		}
+	    		port.createGraphDialog(m);
+	    	    } catch (RemoteException e) {
+	    		e.printStackTrace();
+	    	    }
+	    	    break;
+	    	case EDIT_GRAPH_PROPERTIES:
+	    	    // Opens "Properties" dialog for the selected graph in MetaEdit+
+	    	    try {
+	    		port.propertyDialog(this.selectedGraph.toMEOop());
+	    	    } catch (RemoteException e) { 
+	    		e.printStackTrace();
+	    	    }
+	    	    break;
+	    }
 	}
 }

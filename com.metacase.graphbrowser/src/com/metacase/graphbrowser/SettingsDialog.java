@@ -21,8 +21,9 @@ import org.eclipse.core.runtime.Platform;
 import com.metacase.verifier.*;
 
 /**
- * Settings dialog for setting the launch parameters. Contains code (in comments) for hostname textfield stuff, its verifier and
- * also for checkbox for selecting if logging should be enabled on API server.
+ * Settings dialog for setting the launch parameters. Contains code (in comments) for
+ * hostname textfield stuff, its verifier and also for checkbox for selecting
+ * if logging should be enabled on API server.
  *
  */
 public class SettingsDialog extends JPanel implements ActionListener {
@@ -89,15 +90,17 @@ public class SettingsDialog extends JPanel implements ActionListener {
                 // Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
 		tooltipTexts.put(programDirIconLabel, new String [] {"MetaEdit+ program file not properly set.", "", ""});
 		tooltipTexts.put(workingDirIconLabel, new String [] {"Given path not recognized as a MetaEdit+ working directory.", "", ""});
-		tooltipTexts.put(databaseIconLabel, new String [] {"Given path not recognized as a MetaEdit+ database", "Can't do the verification for given " +
-				"database. Make sure that the given working directory path is correct.", ""});
-		tooltipTexts.put(usernameIconLabel, new String [] {"Username not found from the given database", "Can't check the given username.", ""});
+		tooltipTexts.put(databaseIconLabel, new String [] {"Given path not recognized as a MetaEdit+ database",
+			"Can't do the verification for given database. Make sure that the given working directory path is correct.", ""});
+		tooltipTexts.put(usernameIconLabel, new String [] {"Username not found from the given database",
+			"Can't check the given username.", ""});
 		tooltipTexts.put(passwordIconLabel, new String [] {"Wrong password!", "Can't check the given password.", ""});
-		tooltipTexts.put(projectsIconLabel, new String [] {"One or more projects not found from the database!", "Can't check the project name. Make sure the working directory" +
+		tooltipTexts.put(projectsIconLabel, new String [] {"One or more projects not found from the database!",
+			"Can't check the project name. Make sure the working directory" +
 				" and database fields are correct.", ""});
 		// tooltipTexts.put(hostnameIconLabel, new String [] {"", "", ""});
-		tooltipTexts.put(portIconLabel, new String [] {"Port number should be an number between 1024 and 65535. By default it's 6390.", "Ports 0-1023 are normally" +
-				" reserved by the system.", ""});
+		tooltipTexts.put(portIconLabel, new String [] {"Port number should be an number between 1024 and 65535." +
+				" By default it's 6390.", "Ports 0-1023 are normally reserved by the system.", ""});
         
 		
 		// TextFields, passwordfield and logging checkbox;
@@ -659,6 +662,10 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			this.managerAb = managerAb;
 		}
 		
+		/**
+		 * Reads the user names from manager.ab file and checks if
+		 * given username is in there.
+		 */
 		public int verify(final JComponent input) {
 			if ( !verifyField(new DatabaseVerifier(workingDirField.getText()), databaseField, databaseIconLabel) ) {
 				return 0;
@@ -716,8 +723,8 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	}
 	
 	/**
-	 * Verifies the database name by checking that the file manager.ab exists in folder
-	 * that is built by adding given working directory path and given database name.
+	 * Verifies the database name by checking that the file manager.ab exists in path
+	 * that is formed by adding together given working directory path and given database name.
 	 */
 	public class DatabaseVerifier implements SettingsVerifier {
 		
@@ -736,13 +743,17 @@ public class SettingsDialog extends JPanel implements ActionListener {
 			if (f.isDirectory()) {
 				File [] files = f.listFiles();
 				for (File _f : files) {
-					if (_f.getName().equals("manager.ab")) return 1;;
+					if (_f.getName().equals("manager.ab")) return 1;
 				}
 			}
 			return -1;
 		}
 	}
 	
+	/**
+	 * Verifies projectsfield. Looks if the given project names can be found from
+	 * manager.ab file which is located in databases folder.
+	 */
 	public class ProjectsVerifier implements SettingsVerifier {
 
 		File managerAb;

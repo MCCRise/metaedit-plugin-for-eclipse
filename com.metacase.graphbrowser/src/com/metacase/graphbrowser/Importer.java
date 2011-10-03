@@ -13,7 +13,6 @@ import org.eclipse.debug.core.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.*;
 import org.eclipse.debug.core.Launch;
-import org.eclipse.osgi.service.datalocation.Location;
 
 /**
  * Class that imports existing Eclipse project to workspace. The
@@ -22,36 +21,22 @@ import org.eclipse.osgi.service.datalocation.Location;
  */
 public class Importer {
 	
-    	IWorkspaceRoot root;
-	File path;
-	String appName;
-	
-	/**
-	 *  Constuctor.
-	 * @param path for the Project folder.
-	 */
-	public Importer(File path, String name) {
-	    this.path = path;
-	    this.appName = name;
-	}
-	
 	/**
 	 * Imports eclipse project to workspace and opens it. If project already exists, refreshes the project.
 	 * Finally builds and runs the imported project.
 	 * If no .project file found, does nothing.
 	 */
-	public void importProject() {
+	public static void importAndExecuteProject(String applicationName) {
 	    IProjectDescription description = null;
 	    IProject project = null;
 	    IProgressMonitor monitor =  new NullProgressMonitor();
-	    root = ResourcesPlugin.getWorkspace().getRoot();
+	    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 	    try {
-	    	description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(root.getLocation().toString() + "/" + appName + "/.project"));
+	    	description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(root.getLocation().toString() + "/" + applicationName + "/.project"));
 	    	project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 	    	if (project.exists()) {
 	    		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-	    	}
-	    	else {
+	    	} else {
 	    		project.create(description, monitor);
 	    	}
 	    	project.open(IResource.PROJECT, monitor);
@@ -63,7 +48,7 @@ public class Importer {
 	    	if (vm == null) vm = JavaRuntime.getDefaultVMInstall();
 	    	IVMRunner vmr = vm.getVMRunner(ILaunchManager.RUN_MODE);
 	    	String[] cp = JavaRuntime.computeDefaultRuntimeClassPath(iproject);
-	    	VMRunnerConfiguration config = new VMRunnerConfiguration("_" + appName, cp);
+	    	VMRunnerConfiguration config = new VMRunnerConfiguration("_" + applicationName, cp);
 	    	ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
 	    	vmr.run(config, launch, monitor);
 	    	}
@@ -76,32 +61,31 @@ public class Importer {
 	 * Writes the plugin.ini file that is written for MetaEdit+ generator. 
 	 * The file contains information for the generator.
 	 */
-	public String writePluginIniFile(String generatorName) {
-        	Location installLoc = Platform.getInstallLocation();
-        	String path = installLoc.getURL().getFile();
-        	path = path.substring(1, path.length()) + "eclipse.exe";
-        	root = ResourcesPlugin.getWorkspace().getRoot(); 
-        	
+	public static String writePluginIniFile(String path, String generatorName) {
+	    	IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
         	// set the ini file
-        	String _path = this.path + "\\plugin.ini";
-        	File _temp = new File(_path);
+        	path = path + "\\plugin.ini";
+        	File _temp = new File(path);
         	if (_temp.exists()) _temp.deleteOnExit();
-        	IniHandler writer = new IniHandler(_path);
+        	IniHandler writer = new IniHandler(path);
         	writer.flushValues();
         	// eclipse flag
         	writer.AddSetting("IDE", "eclipse");
         	// workspace path
         	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
+        	// If we are running Autobuild generator mark to the file that the generated source
+        	// code should be compiled and run in Eclipse.
         	if ( generatorName.equalsIgnoreCase("autobuild")) writer.AddSetting("runGenerated", "true");
         	else writer.AddSetting("runGenerated", "false");
         	writer.SaveSettings();
-        	return _path;
+        	// Return the path of written ini file so that it can be read later.  
+        	return path;
 	}
 	
 	/**
 	 * Removes the written ini file.
 	 */
-	public void removeIniFile() {
-	    this.path.delete();
+	public static void removeIniFile(File path) {
+	    path.delete();
 	}
 }
