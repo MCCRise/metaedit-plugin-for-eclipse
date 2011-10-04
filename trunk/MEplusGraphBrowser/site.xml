@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.metacase.graphbrowser.feature_0.1.0.jar" id="com.metacase.graphbrowser.feature" version="0.1">
+      <category name="com.metacase.graphbrowser"/>
+   </feature>
+   <category-def name="com.metacase.graphbrowser" label="MetaEdit+ plugin"/>
+</site>
