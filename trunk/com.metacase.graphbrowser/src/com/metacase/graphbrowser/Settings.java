@@ -39,11 +39,10 @@ public class Settings extends Observable {
 		setMerFile("default.mer");
 		if (!checkIfMerExists()) {
 			this.calculateValues();
-			this.setInitialized(true);
 		} else {
 			this.readFromConfigFile();
-			this.setInitialized(true);
 		}
+		this.setInitialized(true);
 	}
 	
 	public static Settings getSettings() {

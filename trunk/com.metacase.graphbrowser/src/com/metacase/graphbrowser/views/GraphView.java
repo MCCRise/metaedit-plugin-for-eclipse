@@ -11,15 +11,16 @@ import java.awt.event.WindowListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.part.*;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
@@ -55,6 +56,9 @@ public class GraphView extends ViewPart implements Observer {
 	public static final String ID = "com.metacase.graphbrowser.views.GraphView";
 
 	private TreeViewer viewer;
+	private Composite errorView;
+	private Composite container;
+	private StackLayout layout;
 	private DrillDownAdapter drillDownAdapter;
 	private Action actionOpenInMetaEdit;
 	private Action actionRunAutobuild;
@@ -66,7 +70,6 @@ public class GraphView extends ViewPart implements Observer {
 	private Action actionOpenEditPropertiesDialog;
 	private ViewContentProvider viewContentProvider;
 	public Graph[] graphs;
-
 	 
 	class TreeObject implements IAdaptable {
 		private Graph graph;
@@ -130,7 +133,7 @@ public class GraphView extends ViewPart implements Observer {
 	}
 
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-		private TreeObject invisibleRoot;
+		private TreeObject invisibleRoot; 
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		    v.refresh();
@@ -173,7 +176,7 @@ public class GraphView extends ViewPart implements Observer {
 			public void run() {
 			    invisibleRoot = new TreeObject();
 			    graphs = GraphHandler.init();
-			    invisibleRoot.populate(graphs, new ArrayList<Graph>());				
+			    invisibleRoot.populate(graphs, new ArrayList<Graph>());
 			}
 		    };
 		    BusyIndicator.showWhile(getSite().getShell().getDisplay(), init);
@@ -205,7 +208,7 @@ public class GraphView extends ViewPart implements Observer {
 	 * The constructor.
 	 */
 	public GraphView() {
-	 
+
 	}
 
 	/**
@@ -214,30 +217,91 @@ public class GraphView extends ViewPart implements Observer {
 	 */
 	public void createPartControl(Composite parent) {
 	    	Settings.getSettings().addObserver(this);
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewContentProvider = new ViewContentProvider();
-		viewer.setContentProvider(viewContentProvider);
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
-		viewer.expandToLevel(2);
-
-		// Create the help context id for the viewer's control
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "com.metacase.graphbrowser.viewer");
-		makeActions();
-		hookContextMenu();
-		hookDoubleClickAction();
-		contributeToActionBars();
-		setToolBarButtonsEnabled();
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-		    
-		    @Override
-		    public void selectionChanged(SelectionChangedEvent event) {
-			setToolBarButtonsEnabled();
-		    }
-		});
+	    	
+	    	layout = new StackLayout();
+	    	container = new Composite(parent, SWT.MULTI);
+	    	container.setLayout(layout);
+	    	
+	    	createErrorView(container);
+	    	createTreeView(container); 
+	    	
+	    	setView();
 	}
+
+	/**
+	 * Sets a view on top of StackLayout.
+	 */
+	private void setView() {
+	    int ctrlIndex = 0;
+	    if (this.isAPI()) ctrlIndex = 1;
+	    layout.topControl = container.getChildren()[ctrlIndex];
+	    
+	    container.layout();
+	}
+	
+	/**
+	 * Creates the treeview that is shown if API connection is available.
+	 * @param parent The parent composite for the view.
+	 */
+	private void createTreeView(Composite parent) {
+	    	viewer = new TreeViewer(container, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+	    	drillDownAdapter = new DrillDownAdapter(viewer);
+	    	viewContentProvider = new ViewContentProvider();
+	    	viewer.setContentProvider(viewContentProvider);
+	    	viewer.setLabelProvider(new ViewLabelProvider());
+	    	viewer.setSorter(new NameSorter());
+	    	viewer.setInput(getViewSite());
+	    	viewer.expandToLevel(2);
+	    	
+	    	makeActions();
+	    	hookContextMenu();
+	    	hookDoubleClickAction();
+	    	contributeToActionBars();
+	    	setToolBarButtonsEnabled();
+	    	viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        		    
+	    	    @Override
+	    	    public void selectionChanged(SelectionChangedEvent event) {
+	    		setToolBarButtonsEnabled();
+	    	    }
+	    	});
+	}
+	
+	/**
+	 * Creates an error view that is shown when no API connection is available.
+	 * @param parent The parent composite for the error view.
+	 */
+	private void createErrorView(Composite parent) {
+	    RowLayout layout = new RowLayout();
+	    layout.type = SWT.VERTICAL;
+	    layout.wrap = true;
+	    layout.center = true;
+	    layout.marginLeft = 7;
+	    layout.marginRight = 7;
+	    layout.marginHeight = 10;
+	    
+	    errorView = new Composite(container, SWT.NONE);
+	    errorView.setLayout(layout);
+	    Label errorLabel = new Label(errorView, SWT.WRAP | SWT.CENTER);
+	    RowData data = new RowData();
+	    data.width = 250;
+	    errorLabel.setLayoutData(data);
+	    errorLabel.setText("No API connection found.");
+	    	
+	    Listener listener = new Listener() {
+		public void handleEvent(Event event) {
+		    actionUpdateGraphList.run();
+		}
+	    };
+	    Button errorButton = new Button(errorView, SWT.NORMAL);
+	    
+	    errorButton.addListener(SWT.Selection, listener);
+	    errorButton.setText("Start MetaEdit+");
+	    	
+	    errorView.layout();
+	}
+	
+	
 
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
@@ -269,7 +333,6 @@ public class GraphView extends ViewPart implements Observer {
 		    if (this.is50()) manager.add(actionOpenCreateGraphDialog);
 		}
 		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute their actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -283,8 +346,6 @@ public class GraphView extends ViewPart implements Observer {
 		manager.add(new Separator());
 		manager.add(actionUpdateGraphList);
 		manager.add(actionOpenSettings);
-		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
 	}
 	
 	/**
@@ -297,18 +358,37 @@ public class GraphView extends ViewPart implements Observer {
 	}
 	
 	/**
+	 * Check if API is ok
+	 * @return true if connection available.
+	 */
+	private boolean isAPI() {
+	    return Launcher.isApiOK();
+	}
+	
+	/**
 	 * Sets the seleceted toolbar buttons enabled or disabled.
 	 */
 	private void setToolBarButtonsEnabled() {
-	    actionGenerateGraph.setEnabled(this.is50());
-	    actionOpenCreateGraphDialog.setEnabled(this.is50());
-	    actionOpenInMetaEdit.setEnabled(!viewer.getSelection().isEmpty());
+	    boolean _is50 = this.is50();
+	    boolean _isAPI = this.isAPI();
+	    boolean _isSelection = !viewer.getSelection().isEmpty();
+	    
+	    actionRunAutobuild.setEnabled(_isAPI && _isSelection);
+	    actionGenerateGraph.setEnabled( _is50 && _isAPI && _isSelection);
+	    actionOpenInMetaEdit.setEnabled(_isAPI && _isSelection);
+	    actionOpenCreateGraphDialog.setEnabled(_is50 && _isAPI);
+	    actionUpdateGraphList.setEnabled(true);
+	    actionOpenSettings.setEnabled(true);
+	    
 	    IActionBars bars = getViewSite().getActionBars();
 	    IToolBarManager manager = bars.getToolBarManager();
 	    manager.update(true);
-	    
 	}
 	
+	/**
+	 * Gets the selected graph from treeview.
+	 * @return selected Graph or null
+	 */
 	private Graph getSelectedGraph(){
 		ISelection selection = viewer.getSelection();
 		TreeObject to = (TreeObject) ((IStructuredSelection)selection).getFirstElement();
@@ -316,6 +396,9 @@ public class GraphView extends ViewPart implements Observer {
 		return to.getGraph();
 	}
 
+	/**
+	 * Creates the action methods for toolbar and context menu items.
+	 */
 	private void makeActions() {
 		actionOpenInMetaEdit = new Action() {
 			public void run() {
@@ -420,6 +503,7 @@ public class GraphView extends ViewPart implements Observer {
 			    viewContentProvider.initialize();
 			    viewContentProvider.inputChanged(viewer, oldInput, viewer.getInput());
 			    viewer.expandToLevel(2);
+			    setView();
 			}
 		};
 		this.setActionDetails(actionUpdateGraphList,

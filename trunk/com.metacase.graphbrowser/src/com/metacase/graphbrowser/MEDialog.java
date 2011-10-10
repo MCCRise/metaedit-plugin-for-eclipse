@@ -11,7 +11,7 @@ import com.metacase.objects.Graph;
 
 /**
  * Class that runs MetaEdit+ dialogs by calling them via MetaEdit+ API.
- * Since dialogs block application process, this class extends Thread super class.
+ * Since dialogs block application process, this class extends java.lang.Thread class.
  */
 public class MEDialog extends Thread {
 	
