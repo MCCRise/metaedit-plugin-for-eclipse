@@ -57,4 +57,22 @@ public class DialogProvider {
 		}
 	    });
 	}
+	
+	public static int showTwoButtonsDialog(String message, String title, String firstButtonText, String secondButtonText) {
+	    try {
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	    } catch (Exception e) { 
+		e.printStackTrace();
+	    }
+	    Object[] options = new Object[] {firstButtonText, secondButtonText};
+	    int result = JOptionPane.showOptionDialog(null,
+		    message,
+		    title,
+	            JOptionPane.DEFAULT_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0]);
+	   return result;
+	}
 }

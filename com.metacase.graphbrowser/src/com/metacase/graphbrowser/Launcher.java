@@ -74,21 +74,23 @@ public class Launcher {
 	/**
 	 * Initializes API connection by checking if it's available and asking user
 	 * if MetaEdit+ should be launched. 
-	 * @return true if ME launched successfully else false.
+	 * @return true if MetaEdit+ was launched successfully else false.
 	 */
-	public static boolean initializeAPI(){
+	public static boolean initializeAPI() {
 	    if (!isApiOK()) {
 		int maxWaitMs = 500;
-		String message = "MetaEdit+ API server not found." +
-			"\n\nClick Yes to start new MetaEdit+ instance or No if you will start API server manually.\n\n";
-		String title = "API not found";
-		if ( DialogProvider.showYesNoMessageDialog(message, title)) {
+		int result = DialogProvider.showTwoButtonsDialog(
+			"No connection to MetaEdit+ API available. Would you like to launch new MetaEdit+ instance automatically?",
+			"MetaEdit+ API server not found",
+			"Yes, start MetaEdit+",
+			"No, I will start MetaEdit+ manually"
+			);
+		if (result == 0) {
 		    if (launchMetaEdit()) {
 			maxWaitMs = 2500;
+			poll(maxWaitMs);
 		    }
 		}
-		else DialogProvider.showMessageDialog("Start MetaEdit+ API and click OK to proceed.", "Start MetaEdit+");
-		poll(maxWaitMs);
 	    }
 	    return isInitialized;
 	}
