@@ -64,32 +64,27 @@ public class Launcher {
 	/**
 	 * Launcher method for doing initialization launch.
 	 */
-	public static void doInitialLaunch() {
-	    if (getSettings().checkIfMerExists() || isApiOK()) initializeAPI();
-	    else {
-		DialogProvider.showSettingsDialog(true);
+	public static boolean doInitialLaunch() {
+	    if (getSettings().checkIfMerExists() || isApiOK()) {
+		initializeAPI();
 	    }
+	    else {
+		DialogProvider.showSettingsDialog(false);
+	    }
+	    return isApiOK();
 	}
 	
 	/**
-	 * Initializes API connection by checking if it's available and asking user
-	 * if MetaEdit+ should be launched. 
+	 * Initializes API connection by checking if it's available launching MetaEdit+ if 
+	 * no connection found.
 	 * @return true if MetaEdit+ was launched successfully else false.
 	 */
 	public static boolean initializeAPI() {
 	    if (!isApiOK()) {
 		int maxWaitMs = 500;
-		int result = DialogProvider.showTwoButtonsDialog(
-			"No connection to MetaEdit+ API available. Would you like to launch new MetaEdit+ instance automatically?",
-			"MetaEdit+ API server not found",
-			"Yes, start MetaEdit+",
-			"No, I will start MetaEdit+ manually"
-			);
-		if (result == 0) {
-		    if (launchMetaEdit()) {
-			maxWaitMs = 2500;
-			poll(maxWaitMs);
-		    }
+		if (launchMetaEdit()) {
+		    maxWaitMs = 2500;
+		    poll(maxWaitMs);
 		}
 	    }
 	    return isInitialized;
@@ -140,7 +135,7 @@ public class Launcher {
 		rt.exec(createLaunchParameters());
 		return true;
 	    } catch (IOException e) { 
-		DialogProvider.showMessageDialog("Could not start MetaEdit+: " + e.getMessage() + "\nPlease start MetaEdit+ API and click OK to proceed", "Launch error");
+		DialogProvider.showMessageDialog("Could not start MetaEdit+: " + e.getMessage(), "Launch error");
 	    }
 	    return false;
 	}

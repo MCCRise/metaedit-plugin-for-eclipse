@@ -75,8 +75,8 @@ public class Importer {
         	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
         	// If we are running Autobuild generator mark to the file that the generated source
         	// code should be compiled and run in Eclipse.
-        	if ( generatorName.equalsIgnoreCase("autobuild")) writer.AddSetting("runGenerated", "true");
-        	else writer.AddSetting("runGenerated", "false");
+        	String _runValue = generatorName.equalsIgnoreCase("autobuild") ? "true" : "false";
+        	writer.AddSetting("runGenerated", _runValue);
         	writer.SaveSettings();
         	// Return the path of written ini file so that it can be read later.  
         	return path;

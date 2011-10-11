@@ -26,11 +26,10 @@ import com.metacase.verifier.*;
  * if logging should be enabled on API server.
  *
  */
-public class SettingsDialog extends JPanel implements ActionListener {
+public class SettingsDialog extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
-	private JFrame parent;
-	private static JFrame frame;
+	private static JDialog dialog;
 	Box programDirBox, workingDirBox, databaseBox, usernameBox, passwordBox, projectsBox, portNumberBox, buttonBox;
 	JLabel headerLabel, programDirLabel, workingDirLabel, databaseLabel, usernameLabel, passwordLabel,
 	projectsLabel, hostnameLabel, loggingLabel, portLabel;
@@ -45,15 +44,13 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	ImageIcon [] icons = { new ImageIcon(getImage("icons/error_icon.png")),
 			new ImageIcon(getImage("icons/question_icon.png")), new ImageIcon(getImage("icons/ok_icon.png")) };
 	private Settings settings;
-	private boolean initaliLaunch;
 	
 	public SettingsDialog() {
 	}
 	
-	private SettingsDialog(final JFrame parent, boolean initialLaunch){
-		this.parent = parent;
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.initaliLaunch = initialLaunch;
+	private SettingsDialog(boolean modal){
+		this.setModal(modal);
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		
 		programDirBox = Box.createHorizontalBox();
 		workingDirBox = Box.createHorizontalBox();
@@ -199,7 +196,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	                	 File currentDir = new File(programDirField.getText());
 	                	 if (!currentDir.exists()) currentDir = new java.io.File("C:\\"); 
 	                	 fc.setCurrentDirectory(currentDir);
-	                	 int returnVal = fc.showOpenDialog(parent); 
+	                	 int returnVal = fc.showOpenDialog(dialog); 
 	                	 if (returnVal == JFileChooser.APPROVE_OPTION) {
 	                         File file = fc.getSelectedFile();
 	                         programDirField.setText(file.toString());
@@ -221,7 +218,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	                	fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	                	File currentDir = new File(workingDirField.getText());
 	                	if (!currentDir.exists()) currentDir = new java.io.File("C:\\"); 
-	                	int returnVal = fc.showOpenDialog(parent); 
+	                	int returnVal = fc.showOpenDialog(dialog); 
 	                	if (returnVal == JFileChooser.APPROVE_OPTION) {
 	                        File file = fc.getSelectedFile();
 	                        workingDirField.setText(file.toString());
@@ -266,7 +263,7 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	                    //frame.pack();
 	                    frame.setResizable(false);
 	                    frame.setVisible(true);
-	                    frame.setLocationRelativeTo(parent);
+	                    frame.setLocationRelativeTo(dialog);
 	                    frame.setSize(new Dimension(200, 500)); 
 	                }
 	            });
@@ -274,7 +271,6 @@ public class SettingsDialog extends JPanel implements ActionListener {
 		});
         
 		// Create "Save" button ------------>
-		if (!initaliLaunch) {
 		    saveButton = new JButton(new AbstractAction("Save") {
 			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e) {
@@ -295,22 +291,21 @@ public class SettingsDialog extends JPanel implements ActionListener {
 
 			}
 		});
-		} else {
-		    saveButton = new JButton(new AbstractAction("Open MetaEdit+") {
-    			private static final long serialVersionUID = 1L;
-    			public void actionPerformed(ActionEvent e) {
-    				SwingUtilities.invokeLater(new Runnable() {
-    	                public void run() {
-    	                    settings.createEmptyMerFile();
-    	                    saveSettings();
-    	                    Launcher.launchMetaEdit();
-    	                    exitDialog();
-    	                }
-    	            });
-
-    			}
-    		});
-		}
+		
+//		    saveButton = new JButton(new AbstractAction("Open MetaEdit+") {
+//    			private static final long serialVersionUID = 1L;
+//    			public void actionPerformed(ActionEvent e) {
+//    				SwingUtilities.invokeLater(new Runnable() {
+//    	                public void run() {
+//    	                    settings.createEmptyMerFile();
+//    	                    saveSettings();
+//    	                    Launcher.launchMetaEdit();
+//    	                    exitDialog();
+//    	                }
+//    	            });
+//
+//    			}
+//    		});
     	
 		// Create "Cancel" button ---------->
 		cancelButton = new JButton(new AbstractAction("Cancel") {
@@ -371,7 +366,8 @@ public class SettingsDialog extends JPanel implements ActionListener {
             //add(loggingBox);
             add(buttonBox);
             
-            setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            //setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            
     		
             SwingUtilities.invokeLater( new Runnable() 
             { 
@@ -478,8 +474,8 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	 */
 	public void exitDialog(){
 	   this.setVisible(false);
-	   frame = null;
-	   this.parent.dispose();
+	   dialog = null;
+	   this.dispose();
 	}
 	
 	/**
@@ -538,17 +534,17 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	   	}
    	}
    
-   /**
-    * Setter for managerAb File attribute.
-    * @param managerAbPath File.
-    */
+       /**
+        * Setter for managerAb File attribute.
+        * @param managerAbPath File.
+        */
    	private void setManagerAbPath(File managerAbPath) {
 	   	this.managerAbPath = managerAbPath;
    	}
    	
-   /**
-    * Getter for mangager.ab file path.
-    */
+       /**
+        * Getter for mangager.ab file path.
+        */
    	public File getManagerAbPath() {
 	   	setManagerAbPath();
 	   	return managerAbPath;
@@ -560,47 +556,38 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	 * therefore the "Save" button is replaced with "Open MetaEdit+" button.
 	 * Prevents multiple windows to be opened at the same time.
 	 */
-	public static void createAndShowGUI(boolean initalLaunch) {
-	    if ( frame == null) {
+	public static void createAndShowGUI(boolean modal) {
+	    if ( dialog == null) {
     	    	String title = "MetaEdit+ Launch Parameters";
     	    	try {
     			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     	    	} catch (Exception e) { 
     	    	    e.printStackTrace();
     	    	}
-    	    	frame = new JFrame();
-               
-    	    	frame.setIconImage(getImage("icons/metaedit_logo.png"));
-    	    	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    	    	//Create and set up the content pane.
-    	    	JComponent newContentPane = new SettingsDialog(frame, initalLaunch);
-    	    	frame.setContentPane(newContentPane);
-    	    	//Display the window.
-    	    	frame.setTitle(title);
-    	    	frame.pack();
-    	    	frame.setLocationByPlatform(true);
-    	    	frame.setResizable(false);
-    	    	frame.setVisible(true);
-    	    	frame.addWindowListener(new WindowAdapter() {
+    	    	dialog = new SettingsDialog(modal);
+    	    	dialog.setIconImage(getImage("icons/metaedit_logo.png"));
+    	    	dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    	    	dialog.setTitle(title);
+    	    	dialog.pack();
+    	    	dialog.setLocationByPlatform(true);
+    	    	dialog.setResizable(false);
+    	    	dialog.setVisible(true);
+    	    	dialog.addWindowListener(new WindowAdapter() {
     	    	    public void windowClosing(WindowEvent we){
-    	    		frame.setVisible(false);
-    	    		frame = null;
+    	    		dialog.setVisible(false);
+    	    		dialog = null;
     	    	    }
 		});
 	    } else {
                 java.awt.EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        frame.toFront();
-                        frame.repaint();
+                        dialog.toFront();
+                        dialog.repaint();
                     }
                 });
 
 	    }
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
 	}
 	
 	/**
@@ -638,14 +625,14 @@ public class SettingsDialog extends JPanel implements ActionListener {
 	public class WorkingDirectoryVerifier implements SettingsVerifier {
 		
 		public int verify(final JComponent input) {
-			JTextField tf = (JTextField) input;
-			File file = new File(tf.getText());
-			if (file != null && file.isDirectory()) {
-				File [] files = file.listFiles();
-				for (File f : files) {
-					if (f.isFile() && f.getName().equals("artbase.roo")) return 1;
-				}
+		    JTextField tf = (JTextField) input;
+		    File file = new File(tf.getText());
+		    if (file != null && file.isDirectory()) {
+			File [] files = file.listFiles();
+			for (File f : files) {
+			    if (f.isFile() && f.getName().equals("artbase.roo")) return 1;
 			}
+		    }
 		    return -1;
 		}
 	}

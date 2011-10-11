@@ -59,11 +59,11 @@ public class GraphView extends ViewPart implements Observer {
 	private Composite errorView;
 	private Composite container;
 	private StackLayout layout;
-	private DrillDownAdapter drillDownAdapter;
 	private Action actionOpenInMetaEdit;
 	private Action actionRunAutobuild;
 	private Action actionGenerateGraph;
 	private Action actionUpdateGraphList;
+	private Action actionStartMetaEdit;
 	private Action doubleClickAction;
 	private Action actionOpenSettings;
 	private Action actionOpenCreateGraphDialog;
@@ -230,11 +230,14 @@ public class GraphView extends ViewPart implements Observer {
 
 	/**
 	 * Sets a view on top of StackLayout.
+	 * Shows the treeview if API connection found. If not
+	 * shows the errorview.
 	 */
 	private void setView() {
-	    int ctrlIndex = 0;
-	    if (this.isAPI()) ctrlIndex = 1;
-	    layout.topControl = container.getChildren()[ctrlIndex];
+	    // The errorview is set to stacklayout first and has index 0. It's used 
+	    // when no API connection found.
+	    // The treeview is set second and has index 1.
+	    layout.topControl = container.getChildren()[!this.isAPI() ? 0 : 1];
 	    
 	    container.layout();
 	}
@@ -245,7 +248,6 @@ public class GraphView extends ViewPart implements Observer {
 	 */
 	private void createTreeView(Composite parent) {
 	    	viewer = new TreeViewer(container, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-	    	drillDownAdapter = new DrillDownAdapter(viewer);
 	    	viewContentProvider = new ViewContentProvider();
 	    	viewer.setContentProvider(viewContentProvider);
 	    	viewer.setLabelProvider(new ViewLabelProvider());
@@ -285,12 +287,13 @@ public class GraphView extends ViewPart implements Observer {
 	    Label errorLabel = new Label(errorView, SWT.WRAP | SWT.CENTER);
 	    RowData data = new RowData();
 	    data.width = 250;
+	    
 	    errorLabel.setLayoutData(data);
 	    errorLabel.setText("No API connection found.");
 	    	
 	    Listener listener = new Listener() {
 		public void handleEvent(Event event) {
-		    actionUpdateGraphList.run();
+		    actionStartMetaEdit.run();
 		}
 	    };
 	    Button errorButton = new Button(errorView, SWT.NORMAL);
@@ -400,6 +403,8 @@ public class GraphView extends ViewPart implements Observer {
 	 * Creates the action methods for toolbar and context menu items.
 	 */
 	private void makeActions() {
+	    	// This action opens selected graph in MetaEdit+. 
+	    	// SHows user a dialog in case of issues.
 		actionOpenInMetaEdit = new Action() {
 			public void run() {
 			    Graph _graph = getSelectedGraph();
@@ -418,6 +423,7 @@ public class GraphView extends ViewPart implements Observer {
 				"Open Graph in MetaEdit+",
 				"icons/open_graph_in_metaedit_icon.png");
 		
+		// RunsAutobuild for the selected graph.
 		actionRunAutobuild = new Action() {
 		    public void run() {
 			Graph _graph = getSelectedGraph();
@@ -430,6 +436,8 @@ public class GraphView extends ViewPart implements Observer {
 			"Run Autobuild",
 			"icons/run_generator_icon.png");
 		
+		// Runs seleceted generator for graph. Shows all available generators to user in 
+		// a list where user can choose one to be run.
 		actionGenerateGraph = new Action() {
 			public void run() {
 			    final Graph _graph = getSelectedGraph();
@@ -481,6 +489,7 @@ public class GraphView extends ViewPart implements Observer {
 				"Select Generator to Run",
 				"icons/select_generator_to_run_icon.png");
 		
+		// Open settings dialog.
 		actionOpenSettings = new Action() {
 			public void run() {
 				DialogProvider.showSettingsDialog(false);
@@ -490,7 +499,8 @@ public class GraphView extends ViewPart implements Observer {
 		this.setActionDetails(actionOpenSettings,
 				"MetaEdit+ Launch Parameters",
 				"icons/settings_icon.png");
-				
+		
+		// Double click opens Graph in MetaEdit+
 		doubleClickAction = new Action() {
 			public void run() {
 			    actionOpenInMetaEdit.run();
@@ -499,7 +509,6 @@ public class GraphView extends ViewPart implements Observer {
 		actionUpdateGraphList = new Action() {
 			public void run() {
 			    Object oldInput = viewer.getInput();
-			    Launcher.doInitialLaunch();
 			    viewContentProvider.initialize();
 			    viewContentProvider.inputChanged(viewer, oldInput, viewer.getInput());
 			    viewer.expandToLevel(2);
@@ -510,7 +519,22 @@ public class GraphView extends ViewPart implements Observer {
 				"Update Graph List",
 				"icons/update_graph_list_icon.png");
 		
+		// This action looks for existing API connection and start new MetaEdit+ instance if 
+		// no API connection is found.
+		actionStartMetaEdit = new Action() {
+		  public void run() {
+		      boolean runUpdate;
+		      if (isAPI()) {
+			  DialogProvider.showMessageDialog("Found an existing API connection.", "API connection found.");			  
+			  runUpdate = true;
+		      } else {
+			  runUpdate = Launcher.doInitialLaunch();
+		      }
+		      if (runUpdate) actionUpdateGraphList.run(); 
+		  }
+		};
 		
+		// Open graph creation dialog in MetaEdit+
 		actionOpenCreateGraphDialog = new Action() {
 		    public void run() {
 			MEDialog md = new MEDialog(MEDialog.CREATE_NEW_GRAPH, getSelectedGraph());
@@ -521,6 +545,7 @@ public class GraphView extends ViewPart implements Observer {
 				"Create a New Graph",
 				"icons/create_graph_icon.png");
 		
+		// Opens properties dialog for the selected graph in MetaEdit+.
 		actionOpenEditPropertiesDialog = new Action() {
 			public void run() {
 			    MEDialog md = new MEDialog(MEDialog.EDIT_GRAPH_PROPERTIES, getSelectedGraph());
