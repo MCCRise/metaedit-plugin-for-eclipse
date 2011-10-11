@@ -13,9 +13,6 @@ import javax.swing.UIManager;
  */
 public class DialogProvider {
 
-	private DialogProvider(){
-	}
-	
 	/**
 	 * Simple information message dialog with OK button.
 	 * @param message the message in the window.
@@ -48,16 +45,28 @@ public class DialogProvider {
 	
 	/**
 	 * Opens settings dialog.
-	 * @param initialLaunch true if dialog is opened at plug-in start. Else false.
+	 * @param modal
 	 */
-	public static void showSettingsDialog(final boolean initialLaunch){
+	public static void showSettingsDialog(final boolean modal){
 	    javax.swing.SwingUtilities.invokeLater(new Runnable() {
 		public void run() {
-		    SettingsDialog.createAndShowGUI(initialLaunch);
+		    SettingsDialog.createAndShowGUI(modal);
 		}
-	    });
+	    }); 
 	}
 	
+	public static void showSettingsDialogAndWait(boolean modal) {
+	    SettingsDialog.createAndShowGUI(modal);
+	}
+	
+	/**
+	 * Shows dialog with to options and returns the answer value.
+	 * @param message
+	 * @param title
+	 * @param firstButtonText
+	 * @param secondButtonText
+	 * @return
+	 */
 	public static int showTwoButtonsDialog(String message, String title, String firstButtonText, String secondButtonText) {
 	    try {
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
