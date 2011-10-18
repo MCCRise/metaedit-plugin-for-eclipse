@@ -16,7 +16,6 @@ import com.metacase.API.*;
  * Launcher class that runs MetaEdit. Contains methods for
  * creating the run command with particular parameters and
  * for checking the API connection. 
- *
  */
 public class Launcher {
 	

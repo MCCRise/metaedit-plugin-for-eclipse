@@ -82,11 +82,27 @@ public class Graph {
 	}
 	
 	/**
+	 * Prepares for running the generator, calls method to run generator and
+	 * imports the project to Eclipse.
+	 * @param generator Name of the generator,
+	 * @param autobuild
+	 */
+	public void runGenerator(String generator, boolean autobuild) {
+	    String pluginINIpath = this.writePluginIniFile(generator);
+	    MetaEditAPIPortType port = Launcher.getPort();
+	    // Run generator
+	    if (autobuild) this.runAutobuild(port);
+	    else this.runGenerator(port, generator);
+	    // Remove the written INI file and Import generated project.
+	    this.removeIniFile(pluginINIpath);
+	    Settings s = Settings.getSettings();
+	    this.importProject(s.getWorkingDirectory());
+	}
+
+	/**
 	 * Method for running the autobuild for the selected graph.
 	 */
-	public void runAutobuild() {
-	    String pluginINIpath = this.writePluginIniFile("Autobuild");
-	    MetaEditAPIPortType port = Launcher.getPort();
+	public void runAutobuild(MetaEditAPIPortType port) {
 	    MENull meNull = new MENull();
 	    try {
 		port.forName(meNull, this.getName(), this.getType(), "Autobuild");
@@ -94,8 +110,6 @@ public class Graph {
 		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 		e.printStackTrace();
 	    }
-	    this.removeIniFile(pluginINIpath);
-	    this.importProject(Settings.getSettings());
 	}
 	
 	/**
@@ -103,18 +117,13 @@ public class Graph {
 	 * to import project with same name as the graph to workspace. Used for MetaEdit+ 5.0 API
 	 * @param generator name of the generator to be run.
 	 */
-	public void runGenerator(String generator) {
-	    String pluginINIpath = this.writePluginIniFile(generator);
-	    MetaEditAPIPortType port = Launcher.getPort();
-	    Settings s = Settings.getSettings();
+	public void runGenerator(MetaEditAPIPortType port, String generator) {
 	    try {
 		port.forGraphRun(this.toMEOop(), generator);
 	    } catch (RemoteException e) { 
 		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 		e.printStackTrace();
 	    }
-	    this.removeIniFile(pluginINIpath);
-	    this.importProject(s);
 	}
 		
 	/**
@@ -131,8 +140,7 @@ public class Graph {
 	 * Imports generated project.
 	 * @param s Settings instance
 	 */
-	private void importProject(Settings s) {
-	    String workDir = s.getWorkingDirectory();
+	private void importProject(String workDir) {
 	    if (workDir.equals("")) {
 		DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
 			"Can't read working directory path from .mer file.",
@@ -153,7 +161,7 @@ public class Graph {
 	 */
 	private String writePluginIniFile(String generatorName) {
 	    Settings s = Settings.getSettings();
-	    // TODO: mitä jos workdir tyhjä?
+	    // TODO: what if working directory is null or empty?
 	    return Importer.writePluginIniFile(s.getWorkingDirectory(), generatorName);
 	}
 	

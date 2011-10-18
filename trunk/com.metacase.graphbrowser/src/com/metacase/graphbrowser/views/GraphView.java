@@ -428,7 +428,7 @@ public class GraphView extends ViewPart implements Observer {
 		    public void run() {
 			Graph _graph = getSelectedGraph();
 			if (_graph == null) return;
-			_graph.runAutobuild();
+			_graph.runGenerator("Autobuild", true);
 		    }
 		};
 		
@@ -473,7 +473,7 @@ public class GraphView extends ViewPart implements Observer {
 				    public void windowClosing(WindowEvent e) {	}
 				    public void windowClosed(WindowEvent e) { 
 					if (p.getIsOKd()) {
-					    _graph.runGenerator(p.getOpenProjectsAsArray()[0]);
+					    _graph.runGenerator(p.getOpenProjectsAsArray()[0], false);
 					}
 				    }
 				    public void windowActivated(WindowEvent e) { }

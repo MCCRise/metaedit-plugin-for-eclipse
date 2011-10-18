@@ -269,7 +269,7 @@ public class Settings extends Observable {
 	    	this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + "\\MetaEdit+ 4.5";
 	    }
 	    
-	    // if no mep45.exe found it MUST be the evaluation version ;)
+	    // if no mep45.exe found it MUST be the 4.5 evaluation version ;)
 	    else if (!f.exists()) {
 	    	f = new File(tempProgramDir + "\\MetaEdit+ 4.5 Evaluation\\mep45eval.exe");
 	    }
