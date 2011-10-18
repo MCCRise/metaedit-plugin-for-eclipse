@@ -18,6 +18,6 @@ When running you'll see in Graph Browser plugin the models from !MetaEdit+. Figu
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_running_plugin.PNG
 
-For enabling Eclipse import the generated source code to Eclipse set the *Generation target platform* to *Java: Windows* or *Java: API* in !MetaEdit+ Digital Watch example.
+To enable Eclipse to import the generated source code set the *Generation target platform* to *Java: Windows* or *Java: API* in !MetaEdit+ Digital Watch example.
 
 *If you want to try the integration like shown here you need to download the !MetaEdit+ 5.0 beta and use the demo repository that is shipped with the beta version.*
