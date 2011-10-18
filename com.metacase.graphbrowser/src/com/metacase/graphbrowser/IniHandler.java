@@ -127,8 +127,8 @@ public class IniHandler
             BufferedWriter out = new BufferedWriter(new FileWriter(newFilePath));
 	    out.write(strToSave);
 	    out.close();
-	} catch (IOException e1) {
-	    e1.printStackTrace();
+	} catch (IOException ex) {
+	    ex.printStackTrace();
 	}
     }
 

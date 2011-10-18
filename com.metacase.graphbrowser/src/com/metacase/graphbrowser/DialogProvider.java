@@ -55,17 +55,13 @@ public class DialogProvider {
 	    }); 
 	}
 	
-	public static void showSettingsDialogAndWait(boolean modal) {
-	    SettingsDialog.createAndShowGUI(modal);
-	}
-	
 	/**
 	 * Shows dialog with to options and returns the answer value.
 	 * @param message
 	 * @param title
 	 * @param firstButtonText
 	 * @param secondButtonText
-	 * @return
+	 * @return result of dialog (ID of pressed button).
 	 */
 	public static int showTwoButtonsDialog(String message, String title, String firstButtonText, String secondButtonText) {
 	    try {
@@ -73,15 +69,14 @@ public class DialogProvider {
 	    } catch (Exception e) { 
 		e.printStackTrace();
 	    }
-	    Object[] options = new Object[] {firstButtonText, secondButtonText};
-	    int result = JOptionPane.showOptionDialog(null,
+	    Object[] buttonOptions = new Object[] {firstButtonText, secondButtonText};
+	    return JOptionPane.showOptionDialog(null,
 		    message,
 		    title,
 	            JOptionPane.DEFAULT_OPTION,
 	            JOptionPane.QUESTION_MESSAGE,
 	            null,
-	            options,
-	            options[0]);
-	   return result;
+	            buttonOptions,
+	            buttonOptions[0]);
 	}
 }

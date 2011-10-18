@@ -572,6 +572,7 @@ public class SettingsDialog extends JDialog {
     	    	dialog.setLocationByPlatform(true);
     	    	dialog.setResizable(false);
     	    	dialog.setVisible(true);
+    	    	dialog.setModal(modal);
     	    	dialog.addWindowListener(new WindowAdapter() {
     	    	    public void windowClosing(WindowEvent we){
     	    		dialog.setVisible(false);
