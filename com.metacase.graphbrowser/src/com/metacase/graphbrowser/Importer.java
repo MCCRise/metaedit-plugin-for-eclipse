@@ -54,7 +54,7 @@ public class Importer {
 	    	vmr.run(config, launch, monitor);
 	    	}
 	    catch (CoreException e) { 	
-		// 	No need to react because MetaEdit+ won't generate Eclipse project every time.
+		// MetaEdit+ doesn't generate Eclipse project every time.
 	    }	    
 	}
 

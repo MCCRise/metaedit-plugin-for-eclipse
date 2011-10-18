@@ -38,7 +38,7 @@ public class Graph {
 	    this.setType(type);
 	    this.setAreaID(areaID);
 	    this.setObjectID(objectID);
-	    Hashtable<Integer, Graph> graphTable =  (Hashtable<Integer, Graph>) projectTable.get(areaID);
+	    Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(areaID);
 	    if ( graphTable == null ) {
 		graphTable = new Hashtable<Integer, Graph>();
 		projectTable.put(areaID, graphTable);

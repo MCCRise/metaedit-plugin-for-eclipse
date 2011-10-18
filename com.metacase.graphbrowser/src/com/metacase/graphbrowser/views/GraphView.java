@@ -452,8 +452,8 @@ public class GraphView extends ViewPart implements Observer {
 				try {
 				    String line = port.generatorNames(_graph.getMEType());
 				    generators = line.split("\r");
-				} catch (RemoteException e1) {
-				    e1.printStackTrace();
+				} catch (RemoteException e) {
+				    e.printStackTrace();
 				}
 					
 				ArrayList<String> generatorList = new ArrayList<String>();
