@@ -14,6 +14,6 @@ When running the plugin for the first time there is no 'default.mer' file. In th
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/update_icon_toolbar.png
 
-When running you'll see in Graph Browser plugin the models from !MetaEdit+. Figure below shows the plugin listing the 'Digital watch' example models in Eclipse.
+When running you'll see in Graph Browser plugin the models from !MetaEdit+. Figure below shows the plugin listing the 'Digital watch' example models in Eclipse. If you want to try the integration you need to download the MetaEdit+ 5.0 beta.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_running_plugin.PNG
