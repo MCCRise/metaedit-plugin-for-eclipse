@@ -34,10 +34,10 @@ The project import automates otherwise manual actions like choosing to create a 
 
 The most common scenario for the plugin is for the generated source code to end up in an Eclipse project and be compiled and run from there. To do that, the plugin and generator must work together, following this interface: 
 
-  *Name the generator 'Autobuild'
-  *Read the Eclipse workspace directory from the plugin.ini file created by the plugin
-  *Generate the source files under that directory
-  *Generate an Eclipse project file in that directory, with the same name as the graph, and referring to the generated source code
+  * Name the generator 'Autobuild'
+  * Read the Eclipse workspace directory from the plugin.ini file created by the plugin
+  * Generate the source files under that directory
+  * Generate an Eclipse project file in that directory, with the same name as the graph, and referring to the generated source code
 
 == Extending the plugin ==
 
