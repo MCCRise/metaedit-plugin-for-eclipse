@@ -8,9 +8,9 @@ This is a usage guide page for functions of the !MetaEdit+ plugin for Eclipse.
 
 The plugin provides commands that may be used from buttons in the views toolbar or by selecting a graph from the tree and clicking the mouse right button.
 
- http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/run_generator_icon.png *Run Autobuild* runs generator named "Autobuild" for the selected graph. If no graph is selected, no action is taken.
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/run_generator_icon.png *Run Autobuild* runs the generator named "Autobuild" for the selected graph. If no graph is selected, no action is taken.
 
- http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/select_generator_to_run_icon.png *Select Generator to Run* allows to run generator for the selected graph. If no graph is selected, no action is taken. Since a graph may have more than one generator the plugin asks all available generators from !MetaEdit+ and shows them in a list dialog for selection. Depending on the selected generator this commandmay start several automated steps, like produce the code, importing it to Eclipse and running the generated project. See below for further information.
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/select_generator_to_run_icon.png *Select Generator to Run* allows you to select and run a specific generator for the selected graph. If no graph is selected, no action is taken. Since a graph may have more than one generator the plugin retrieves all available generators from !MetaEdit+ and shows them in a list dialog for selection. Depending on the selected generator this commandmay start several automated steps, like produce the code, importing it to Eclipse and running the generated project. See below for further information.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/open_graph_in_metaedit_icon.png *Open Graph in !MetaEdit+* opens the same graph in !MetaEdit+ that is selected in the tree view. If no graph is selected, no action is taken. This way user gets to edit the graphs quickly in !MetaEdit+.
 
