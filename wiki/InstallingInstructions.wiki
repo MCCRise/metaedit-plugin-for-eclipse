@@ -2,7 +2,7 @@
 
 == Install Eclipse ==
 
-Download and install [http://eclipse.org/downloads/ Eclipse]. 
+Download and install [http://eclipse.org/downloads/ Eclipse]. (Tested with [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/indigosr1 Eclipse IDE for Java EE Developers] and [http://www.eclipse.org/downloads/packages/eclipse-classic-371/indigosr1 Eclipse Classic])
 
 == Install !MetaEdit+ ==
 
