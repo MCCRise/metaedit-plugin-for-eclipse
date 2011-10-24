@@ -1,4 +1,4 @@
-#summary Short instructions how to install the MetaEdit+ plugin for Eclipse
+#summary Short instructions on how to install the MetaEdit+ plugin for Eclipse
 
 == Download and install Eclipse ==
 
