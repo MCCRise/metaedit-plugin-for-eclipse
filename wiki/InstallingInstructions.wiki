@@ -11,7 +11,7 @@ Download and install the [http://www.metacase.com/news/ME50_beta.html MetaEdit+ 
 == Install the plugin ==
 
 There are two alternative ways of installing the plugin:
- * Install the plugin from the update site. Open Eclipse and choose *Help | Install New Software*, set the update site to http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/MEplusGraphBrowser/ and follow the instructions in the wizard.
+ * Install the plugin from the update site. Open Eclipse and choose *Help | Install New Software*, set the update site to {{{http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/MEplusGraphBrowser/}}} and follow the instructions in the wizard.
  * Download the plugin as a single JAR file from the [http://code.google.com/p/metaedit-plugin-for-eclipse/downloads/list Downloads] page. Place it in the plugins folder under your Eclipse installation folder.
 
 For using the plugin see the [GettingStarted getting started] page.
