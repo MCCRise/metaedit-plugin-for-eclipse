@@ -39,7 +39,12 @@ public class GraphHandler {
 			e.printStackTrace();
 			}
 		for (MEOop m : meOops) {
-			Graph g = Graph.MEOopToGraph(m);
+			Graph g = null;
+			try {
+			    g = Graph.MEOopToGraph(m);
+			} catch (RemoteException e) {
+			    e.printStackTrace();
+			}
 			graphs.add(g);
 		}
 		ArrayList<Graph> done = new ArrayList<Graph>();

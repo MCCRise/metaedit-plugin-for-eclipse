@@ -8,6 +8,7 @@ package com.metacase.objects;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.*;
+
 import com.metacase.API.*;
 import com.metacase.graphbrowser.*;
 
@@ -18,12 +19,14 @@ import com.metacase.graphbrowser.*;
 public class Graph {
 
 	private String name;
+	private String typeName;
 	private String type;
 	private int areaID;
 	private int objectID;
 	private boolean isChild  = false;
 	private boolean compileAndExecute = false;
 	private Graph[] children = new Graph[0];
+	private static Hashtable<String, String> typeNameTable = new Hashtable<String, String>();
 	private static Hashtable<Integer, Hashtable<Integer, Graph>> projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
 	
 	/**
@@ -33,7 +36,7 @@ public class Graph {
 	 * @param areaID Area id of MEOop
 	 * @param objectID Object id of MEOop
 	 */
-	private Graph(String name, String type, int areaID, int objectID) {
+	private Graph(String name, String typeName, String type, int areaID, int objectID) {
 	    this.setName(name);
 	    this.setType(type);
 	    this.setAreaID(areaID);
@@ -53,32 +56,40 @@ public class Graph {
 	 * has changed and edits it if needed.
 	 * @param m MEOop object
 	 * @return created Graph
+	 * @throws RemoteException 
 	 */
-	public static Graph MEOopToGraph(MEOop m) {
+	public static Graph MEOopToGraph(MEOop m) throws RemoteException {
 	    Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(m.getAreaID());
 	    Graph graph = null;
-	    if ( graphTable != null ) {
-		graph = (Graph) graphTable.get(m.getObjectID());	
-	    }
-	    MetaEditAPIPortType port = Launcher.getPort();
-	    if (graph == null) {
-		try {
-		    graph = new Graph(port.userPrintString(m), port.typeName(port.type(m)), m.getAreaID(), m.getObjectID());
-		} catch (RemoteException e) {
-		    e.printStackTrace();
-		}
-	    }
-	    // in the case graph exists check if its name has changed.
-	    else if (graph != null) {
-		String _name = "";
-		try {
-		    _name = port.userPrintString(m);
-		} catch (RemoteException e) { }
-		if (!_name.equals(graph.getName())) {
-		    graph.setName(_name);
-		}
-	    }
-	    return graph;
+            if (graphTable == null)
+            {
+                graphTable = new Hashtable<Integer, Graph>();
+                projectTable.put(m.getAreaID(), graphTable);
+            }
+            graph = (Graph) graphTable.get(m.getObjectID());	
+            MetaEditAPIPortType port = Launcher.getPort();
+        
+            METype _graphType = port.type(m);
+            String _typeName;
+            if (typeNameTable.containsKey(_graphType.getName()))
+            {
+                _typeName = (String)typeNameTable.get(_graphType.getName());
+            }
+            else
+            {
+                _typeName = port.typeName(_graphType);
+                typeNameTable.put(_graphType.getName(), _typeName);
+            }
+            if (graph == null) {
+        	graph = new Graph(port.userPrintString(m), _graphType.getName(), _typeName, m.getAreaID(), m.getObjectID());
+                graphTable.put(m.getObjectID(), graph);
+        	    }
+            else {
+                graph.setName(port.userPrintString(m));
+                graph.setType(_graphType.getName());
+                graph.setTypeName(_typeName);
+            }
+            return graph;
 	}
 	
 	/**
@@ -95,8 +106,7 @@ public class Graph {
 	    else this.runGenerator(port, generator);
 	    // Remove the written INI file and Import generated project.
 	    this.removeIniFile(pluginINIpath);
-	    Settings s = Settings.getSettings();
-	    this.importProject(s.getWorkingDirectory());
+	    this.importProject(Settings.getSettings().getWorkingDirectory());
 	}
 
 	/**
@@ -212,9 +222,17 @@ public class Graph {
 	 * @return name of graph type.
 	 */
 	public String getType() {
-	    return this.type;
+	    return this.getTypeName();
 	}
 	
+	private String getTypeName() {
+	    return typeName;
+	}
+
+	private void setTypeName(String typeName) {
+	    this.typeName = typeName;
+	}
+
 	/**
 	 * Graphs area id setter.
 	 * @param _areaID area id integer.

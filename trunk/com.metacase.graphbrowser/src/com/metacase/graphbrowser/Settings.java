@@ -262,7 +262,7 @@ public class Settings extends Observable {
 	    	f = new File(tempProgramDir + "\\MetaEdit+ 5.0\\mep50eval.exe");
 	    }
 	    
-	    else if (!f.exists()) {
+	    if (!f.exists()) {
 	    	// Try with MetaEdit+ 4.5
 	    	f = new File(tempProgramDir + "\\MetaEdit+ 4.5\\mep45.exe"); 
 	    	// No MetaEdit+ 5.0 found, make the working directory for version 4.5
@@ -270,7 +270,7 @@ public class Settings extends Observable {
 	    }
 	    
 	    // if no mep45.exe found it MUST be the 4.5 evaluation version ;)
-	    else if (!f.exists()) {
+	    if (!f.exists()) {
 	    	f = new File(tempProgramDir + "\\MetaEdit+ 4.5 Evaluation\\mep45eval.exe");
 	    }
 	    this.programPath = f.getPath();
