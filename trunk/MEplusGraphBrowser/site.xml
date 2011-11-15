@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.metacase.graphbrowser.feature_0.1.5.jar" id="com.metacase.graphbrowser.feature" version="0.1.5">
+      <category name="MetaEdit+ plugin"/>
+   </feature>
+   <category-def name="MetaEdit+ plugin" label="MetaEdit+ Graph Browser">
+      <description>
+         MetaEdit+ graph browser plugin provides integeration between MetaEdit+ and Eclipse.
+      </description>
+   </category-def>
+</site>
