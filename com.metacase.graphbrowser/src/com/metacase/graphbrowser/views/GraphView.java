@@ -300,8 +300,9 @@ public class GraphView extends ViewPart implements Observer {
 	    };
 	    Button errorButton = new Button(errorView, SWT.NORMAL);
 	    errorButton.addListener(SWT.Selection, listener);
-	    Image image = new Image(Display.getCurrent(), this.getClass().getResourceAsStream("/../icons/metaedit_logo.png"));
-	    errorButton.setImage(image);
+	    //Image image = new Image(Display.getCurrent(), this.getClass().getResourceAsStream("/com.metacase.graphbrowser/icons/metaedit_logo.png"));
+	    
+	    //errorButton.setImage(image);
 	    errorButton.setText("Start MetaEdit+");
 	    	
 	    errorView.layout();
