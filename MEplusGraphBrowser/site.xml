@@ -3,5 +3,5 @@
    <feature url="features/com.metacase.graphbrowser.feature_0.1.6.jar" id="com.metacase.graphbrowser.feature" version="0.1.6">
       <category name="me_category"/>
    </feature>
-   <category-def name="me_category" label="New Category 1"/>
+   <category-def name="me_category" label="MetaEdit+ plugin for Eclipse"/>
 </site>
