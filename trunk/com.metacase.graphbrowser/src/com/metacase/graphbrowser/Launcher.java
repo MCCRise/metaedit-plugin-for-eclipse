@@ -23,7 +23,7 @@ public class Launcher {
 	private static MetaEditAPIPortType port = apiPort();
 	private static boolean needStopAPI = false;
 	private static boolean isInitialized = false;
-	
+
 	/**
 	 * Port initializer
 	 * @return created MetaEditAPIPortType instance

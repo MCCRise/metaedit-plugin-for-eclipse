@@ -219,7 +219,7 @@ public class GraphView extends ViewPart implements Observer {
 	    	Settings.getSettings().addObserver(this);
 	    	
 	    	layout = new StackLayout();
-	    	container = new Composite(parent, SWT.MULTI);
+	    	container = new Composite(parent, SWT.CENTER);
 	    	container.setLayout(layout);
 	    	
 	    	createErrorView(container);
@@ -265,6 +265,7 @@ public class GraphView extends ViewPart implements Observer {
 	    	    @Override
 	    	    public void selectionChanged(SelectionChangedEvent event) {
 	    		setToolBarButtonsEnabled();
+	    		setView();
 	    	    }
 	    	});
 	}
@@ -282,9 +283,10 @@ public class GraphView extends ViewPart implements Observer {
 	    layout.marginRight = 7;
 	    layout.marginHeight = 10;
 	    
-	    errorView = new Composite(container, SWT.NONE);
+	    errorView = new Composite(container, SWT.CENTER);
 	    errorView.setLayout(layout);
-	    Label errorLabel = new Label(errorView, SWT.WRAP | SWT.CENTER);
+	    Label errorLabel = new Label(errorView, SWT.CENTER | SWT.WRAP);
+	    errorLabel.setAlignment(SWT.CENTER);
 	    RowData data = new RowData();
 	    data.width = 250;
 	    
@@ -297,8 +299,9 @@ public class GraphView extends ViewPart implements Observer {
 		}
 	    };
 	    Button errorButton = new Button(errorView, SWT.NORMAL);
-	    
 	    errorButton.addListener(SWT.Selection, listener);
+	    Image image = new Image(Display.getCurrent(), this.getClass().getResourceAsStream("/../icons/metaedit_logo.png"));
+	    errorButton.setImage(image);
 	    errorButton.setText("Start MetaEdit+");
 	    	
 	    errorView.layout();

@@ -19,8 +19,8 @@ import com.metacase.graphbrowser.*;
 public class Graph {
 
 	private String name;
-	private String typeName;
 	private String type;
+	private String typeName;
 	private int areaID;
 	private int objectID;
 	private boolean isChild  = false;
@@ -36,9 +36,10 @@ public class Graph {
 	 * @param areaID Area id of MEOop
 	 * @param objectID Object id of MEOop
 	 */
-	private Graph(String name, String typeName, String type, int areaID, int objectID) {
+	private Graph(String name, String type, String typeName, int areaID, int objectID) {
 	    this.setName(name);
 	    this.setType(type);
+	    this.setTypeName(typeName);
 	    this.setAreaID(areaID);
 	    this.setObjectID(objectID);
 	    Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(areaID);
@@ -115,7 +116,7 @@ public class Graph {
 	public void runAutobuild(MetaEditAPIPortType port) {
 	    MENull meNull = new MENull();
 	    try {
-		port.forName(meNull, this.getName(), this.getType(), "Autobuild");
+		port.forName(meNull, this.getName(), this.getTypeName(), "Autobuild");
 	    } catch (RemoteException e) { 
 		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 		e.printStackTrace();
@@ -189,7 +190,7 @@ public class Graph {
 	 */
 	public METype getMEType() {
 	    METype type = new METype();
-	    type.setName(this.getType());
+	    type.setName(this.getTypeName());
 	    return type;
 	}
 	
@@ -222,7 +223,7 @@ public class Graph {
 	 * @return name of graph type.
 	 */
 	public String getType() {
-	    return this.getTypeName();
+	    return this.type;
 	}
 	
 	private String getTypeName() {
