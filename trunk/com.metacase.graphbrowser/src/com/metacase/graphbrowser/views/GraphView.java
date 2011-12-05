@@ -169,7 +169,7 @@ public class GraphView extends ViewPart implements Observer {
 		
 		/**
 		 * Initializes the tree by first calling the graphs from MetaEdit+ and
-		 * creating a tree from the graph set. Shows busy cursor while the work is done.
+		 * creating a tree from the graph set. Shows busy cursor while the work is being done.
 		 */
 		public void initialize() {
 		    Runnable init = new Runnable() {
@@ -410,18 +410,18 @@ public class GraphView extends ViewPart implements Observer {
 	    	// This action opens selected graph in MetaEdit+. 
 	    	// SHows user a dialog in case of issues.
 		actionOpenInMetaEdit = new Action() {
-			public void run() {
-			    Graph _graph = getSelectedGraph();
-			    if (_graph == null) return;
-			    MetaEditAPIPortType port = Launcher.getPort();
-			    try {
-				port.open(_graph.toMEOop());
-			    } 
-			    catch (RemoteException e) { 
-				e.printStackTrace();
-				DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-			    }
+		    public void run() {
+			Graph _graph = getSelectedGraph();
+			if (_graph == null) return;
+			MetaEditAPIPortType port = Launcher.getPort();
+			try {
+			    port.open(_graph.toMEOop());
+			} 
+			catch (RemoteException e) { 
+			    e.printStackTrace();
+			    DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 			}
+		    }
 		};
 		this.setActionDetails(actionOpenInMetaEdit,
 				"Open Graph in MetaEdit+",
@@ -443,7 +443,7 @@ public class GraphView extends ViewPart implements Observer {
 		// Runs seleceted generator for graph. Shows all available generators to user in 
 		// a list where user can choose one to be run.
 		actionGenerateGraph = new Action() {
-			public void run() {
+		    	public void run() {
 			    final Graph _graph = getSelectedGraph();
 			    if (_graph == null) return;
 			   	// Creates dialog that shows available generators and lets user to select one.

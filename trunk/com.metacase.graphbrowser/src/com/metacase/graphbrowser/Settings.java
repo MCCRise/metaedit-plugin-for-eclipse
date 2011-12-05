@@ -36,91 +36,91 @@ public class Settings extends Observable {
 	 * </p>
 	 */
 	private Settings() {
-		setMerFile("default.mer");
-		if (!checkIfMerExists()) {
-			this.calculateValues();
-		} else {
-			this.readFromConfigFile();
-		}
-		this.setInitialized(true);
+	    setMerFile("default.mer");
+	    if (!checkIfMerExists()) {
+		this.calculateValues();
+	    } else {
+		this.readFromConfigFile();
+	    }
+	    this.setInitialized(true);
 	}
 	
 	public static Settings getSettings() {
-		if (singleton == null) singleton = new Settings();
-		return singleton;
+	    if (singleton == null) singleton = new Settings();
+	    return singleton;
 	}
 	
 	/*
-	Getters and setters for all properties.
-	*/
+	 * Getters and setters for all properties.
+	 */
 	public void setProgramPath(String programPath) {
-		this.programPath = programPath;
-		// Notify toolbar buttons (=listeners).
-		setChanged();
-		notifyObservers();
+	    this.programPath = programPath;
+	    // Notify toolbar buttons (=listeners).
+	    setChanged();
+	    notifyObservers();
 	}
 	public String getProgramPath() {
-		return programPath;
+	    return programPath;
 	}
 	public void setWorkingDirectory(String workingDirectory) {
-		this.workingDirectory = workingDirectory;
+	    this.workingDirectory = workingDirectory;
 	}
 	public String getWorkingDirectory() {
-		return workingDirectory;
+	    return workingDirectory;
 	}
 	public void setDatabase(String database) {
-		this.database = database;
+	    this.database = database;
 	}
 	public String getDatabase() {
-		return database;
+	    return database;
 	}
 	public void setUsername(String username) {
-		this.username = username;
+	    this.username = username;
 	}
 	public String getUsername() {
-		return username;
+	    return username;
 	}
 	public void setPassword(String password) {
-		this.password = password;
+	    this.password = password;
 	}
 	public String getPassword() {
-		return password;
+	    return password;
 	}
 	public void setProjects(String [] projects) {
-		this.projects = projects;
+	    this.projects = projects;
 	}
 	public String [] getProjects() {
-		return projects;
+	    return projects;
 	}
 	public void setHostname(String hostname) {
-		this.hostname = hostname;
+	    this.hostname = hostname;
 	}
 	public String getHostname() {
-		return hostname;
+	    return hostname;
 	}
 	public void setPort(int port) {
-		this.port = port;
+	    this.port = port;
 	}
 	public int getPort() {
-		return port;
+	    return port;
 	}
 	public void setLogging(boolean logging) {
-		this.logging = logging;
+	    this.logging = logging;
 	}
 	public boolean isLogging() {
-		return logging;
+	    return logging;
 	}
 	public void setInitialized(boolean initialized) {
-		this.initialized = initialized;
+	    this.initialized = initialized;
 	}
 	public boolean isInitialized() {
-		return initialized;
+	    return initialized;
 	}
 	public void setMerFile(File f) {
-		merFile = f;
+	    merFile = f;
 	}
 	public boolean getIs50() {
-		return this.programPath.contains("50");
+	    return this.programPath.contains("50");
 	}
 	
 	/**
@@ -154,26 +154,25 @@ public class Settings extends Observable {
 	 * @param comment comment to be written in configurations file.
 	 */
 	public void writeConfigFile(String comment) {
-			IniHandler writer = new IniHandler(this.getMerFile().toString());
-			writer.AddSetting("metaEditDir", this.getProgramPath());
-			writer.AddSetting("workingDir", this.getWorkingDirectory());
-			writer.AddSetting("database", this.getDatabase());
-			writer.AddSetting("username", this.getUsername());
-			writer.AddSetting("password", this.getPassword());
-			// Write all projects to one string with separator.
-			String projects = "";
-			String separator = "";
-			for (String s : this.getProjects()) {
-				projects += separator + s;
-				separator = ";";
-			}
-			writer.AddSetting("projects", projects);
-			writer.AddSetting("hostname", this.getHostname());
-			writer.AddSetting("port", String.valueOf(this.getPort()));
-			writer.AddSetting("logging", String.valueOf(this.isLogging()));
-			writer.SaveSettings();
-			
+	    IniHandler writer = new IniHandler(this.getMerFile().toString());
+	    writer.AddSetting("metaEditDir", this.getProgramPath());
+	    writer.AddSetting("workingDir", this.getWorkingDirectory());
+	    writer.AddSetting("database", this.getDatabase());
+	    writer.AddSetting("username", this.getUsername());
+	    writer.AddSetting("password", this.getPassword());
+	    // Write all projects to one string with separator.
+	    String projects = "";
+	    String separator = "";
+	    for (String s : this.getProjects()) {
+		projects += separator + s;
+		separator = ";";
 	    }
+	    writer.AddSetting("projects", projects);
+	    writer.AddSetting("hostname", this.getHostname());
+	    writer.AddSetting("port", String.valueOf(this.getPort()));
+	    writer.AddSetting("logging", String.valueOf(this.isLogging()));
+	    writer.SaveSettings();
+	}
 	
 	/**
 	 * <p>
@@ -182,27 +181,27 @@ public class Settings extends Observable {
 	 * </p>
 	 */
 	private void readFromConfigFile(){
-		IniHandler reader = new IniHandler(this.getMerFile().toString());	
-		this.setProgramPath(new File(reader.GetSetting("metaEditDir")).toString());
-		this.setWorkingDirectory(new File(reader.GetSetting("workingDir")).toString());
-		this.setDatabase(reader.GetSetting("database"));
-		this.setUsername(reader.GetSetting("username"));
-		this.setPassword(reader.GetSetting("password"));
-		this.setProjects(reader.GetSetting("projects").split(";"));
-		this.setHostname(reader.GetSetting("hostname"));
-		this.setPort(Integer.valueOf(reader.GetSetting("port")));
-		this.setLogging(reader.GetSetting("logging").equals("true"));
+	    IniHandler reader = new IniHandler(this.getMerFile().toString());	
+	    this.setProgramPath(new File(reader.GetSetting("metaEditDir")).toString());
+	    this.setWorkingDirectory(new File(reader.GetSetting("workingDir")).toString());
+	    this.setDatabase(reader.GetSetting("database"));
+	    this.setUsername(reader.GetSetting("username"));
+	    this.setPassword(reader.GetSetting("password"));
+	    this.setProjects(reader.GetSetting("projects").split(";"));
+	    this.setHostname(reader.GetSetting("hostname"));
+	    this.setPort(Integer.valueOf(reader.GetSetting("port")));
+	    this.setLogging(reader.GetSetting("logging").equals("true"));
 	}
 	
 	/**
 	 * Creates new empty default.mer file.
 	 */
 	public void createEmptyMerFile(){
-		try {
-			merFile.createNewFile();
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
+	    try {
+		merFile.createNewFile();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
 	}
 	
 	/**
@@ -211,14 +210,14 @@ public class Settings extends Observable {
 	 */
 	public boolean checkIfMerExists() {
 	    if (merFile == null) return false;
-		return merFile.exists();
+	    return merFile.exists();
 	}
 
 	/**
 	 * Saves the properties to file.
 	 */
 	public void save() {
-		this.writeConfigFile();
+	    this.writeConfigFile();
 	}
 	
 	/**
@@ -233,19 +232,19 @@ public class Settings extends Observable {
 	 * </p>
 	 */
 	public void calculateValues() {
-		boolean x86 = false;
-		this.database = "demo";
-		this.username = "user";
-		this.password = "user";
-		this.projects = new String [] { "Digital Watch" };
-		this.port = 6390;
-		this.hostname = "localhost";
-		this.logging = false;
+	    boolean x86 = false;
+	    this.database = "demo";
+	    this.username = "user";
+	    this.password = "user";
+	    this.projects = new String [] { "Digital Watch" };
+	    this.port = 6390;
+	    this.hostname = "localhost";
+	    this.logging = false;
 		
-		String tempProgramDir = "";
+	    String tempProgramDir = "";
 		
-		Map<String, String> variables = System.getenv();  
-		// Search for Program File (x86) folder from env. varible.
+	    Map<String, String> variables = System.getenv();  
+	    // Search for Program File (x86) folder from env. varible.
 	    for (Map.Entry<String, String> entry : variables.entrySet())  
 	    {  
 	       String name = entry.getKey();  
