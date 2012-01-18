@@ -25,21 +25,20 @@ public class IniHandler
         {
             try
             {
-                fis = new FileInputStream(iniFile);
-        	DataInputStream in = new DataInputStream(fis);
-        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                while ((strLine = br.readLine()) != null)
-                {
-                    strLine = strLine.trim();
-                    if (!strLine.isEmpty() && !strLine.startsWith("#"))
-                    {
-                        keyPair = strLine.split("=");
-                        values.put(keyPair[0], keyPair[1]);
-                        
-                    }
-                }
+	            fis = new FileInputStream(iniFile);
+	        	DataInputStream in = new DataInputStream(fis);
+	        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	                while ((strLine = br.readLine()) != null)
+	                {
+	                    //strLine = strLine.trim();
+	                    if (!strLine.isEmpty() && !strLine.startsWith("#"))
+	                    {
+	                        keyPair = strLine.split("=");
+	                        values.put(keyPair[0], keyPair[1]);
+	                    }
+	                }
             } catch (Exception e) {    
-        	e.printStackTrace();
+            	e.printStackTrace();
             }
             finally
             {

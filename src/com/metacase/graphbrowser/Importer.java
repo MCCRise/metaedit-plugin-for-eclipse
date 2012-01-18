@@ -16,7 +16,7 @@ import org.eclipse.debug.core.Launch;
 
 /**
  * Class that imports existing Eclipse project to workspace. The
- * MetaEdit+ generator ini file writer is implemented in this file
+ * MetaEdit+ generator INI file writer is implemented in this file
  * because its only used when generating and importing project.
  */
 public class Importer {
@@ -27,7 +27,7 @@ public class Importer {
 	 * If no .project file found, does nothing.
 	 * @param applicationName name of the project that should be imported. Used for compiling and running the project.
 	 */
-	public static void importAndExecuteProject(String applicationName) {
+	public static void importAndExecuteProject(String applicationName, String classToLaunch) {
 	    IProjectDescription description = null;
 	    IProject project = null;
 	    IProgressMonitor monitor =  new NullProgressMonitor();
@@ -47,7 +47,8 @@ public class Importer {
 	    	project.open(IResource.PROJECT, monitor);
 	    	// Build the project.
 	    	project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-	    	if (isJavaProject && !isAndroidProject ) {
+	    	//if (isJavaProject && !isAndroidProject) {
+	    	if (!classToLaunch.isEmpty()) {
 		    	// Cast project to IJavaProject and run it.
 		    	IJavaProject iproject = JavaCore.create(project);
 	
@@ -55,13 +56,14 @@ public class Importer {
 		    	if (vm == null) vm = JavaRuntime.getDefaultVMInstall();
 		    	IVMRunner vmr = vm.getVMRunner(ILaunchManager.RUN_MODE);
 		    	String[] cp = JavaRuntime.computeDefaultRuntimeClassPath(iproject);
-		    	VMRunnerConfiguration config = new VMRunnerConfiguration("com.metacase.watch.generated" + "._" + applicationName, cp);
+		    	VMRunnerConfiguration config = new VMRunnerConfiguration(classToLaunch, cp);
+		    	
 		    	ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
 		    	vmr.run(config, launch, monitor);
 	    	}
-	    	}
+	    }
 	    catch (CoreException e) { 	
-		// MetaEdit+ doesn't generate Eclipse project every time.
+	    	// MetaEdit+ doesn't generate Eclipse project every time.
 	    }	    
 	}
 

@@ -57,8 +57,8 @@ public class DialogProvider {
 	
 	/**
 	 * Shows dialog with to options and returns the answer value.
-	 * @param message
-	 * @param title
+	 * @param message Message to show
+	 * @param title Window title
 	 * @param firstButtonText
 	 * @param secondButtonText
 	 * @return result of dialog (ID of pressed button).

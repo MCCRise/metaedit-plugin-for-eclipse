@@ -25,6 +25,7 @@ public class Graph {
 	private int objectID;
 	private boolean isChild  = false;
 	private boolean compileAndExecute = false;
+	private String classToLaunch = "";
 	private Graph[] children = new Graph[0];
 	private static Hashtable<String, String> typeNameTable = new Hashtable<String, String>();
 	private static Hashtable<Integer, Hashtable<Integer, Graph>> projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
@@ -116,10 +117,10 @@ public class Graph {
 	public void runAutobuild(MetaEditAPIPortType port) {
 	    MENull meNull = new MENull();
 	    try {
-		port.forName(meNull, this.getName(), this.getTypeName(), "Autobuild");
+	    	port.forName(meNull, this.getName(), this.getTypeName(), "Autobuild");
 	    } catch (RemoteException e) { 
-		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-		e.printStackTrace();
+	    	DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+	    	e.printStackTrace();
 	    }
 	}
 	
@@ -130,10 +131,10 @@ public class Graph {
 	 */
 	public void runGenerator(MetaEditAPIPortType port, String generator) {
 	    try {
-		port.forGraphRun(this.toMEOop(), generator);
+	    	port.forGraphRun(this.toMEOop(), generator);
 	    } catch (RemoteException e) { 
-		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-		e.printStackTrace();
+			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+			e.printStackTrace();
 	    }
 	}
 		
@@ -143,6 +144,7 @@ public class Graph {
 	 */
 	private void removeIniFile(String path) {	    
 	    IniHandler h = new IniHandler(path);
+	    this.setClassToLaunch(h.GetSetting("classToLaunch"));
 	    if (h.GetSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
 	    Importer.removeIniFile(new File(path));
 	}
@@ -153,14 +155,15 @@ public class Graph {
 	 */
 	private void importProject(String workDir) {
 	    if (workDir.equals("")) {
-		DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
-			"Can't read working directory path from .mer file.",
-			"MER file doesn't exist");
-		return;
+	    	DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
+				"Can't read working directory path from .mer file.",
+				"MER file doesn't exist");
+	    	return;
 	    }
 	    if (this.compileAndExecute) {
-		Importer.importAndExecuteProject(this.getName());
-		this.compileAndExecute  = false;
+	    	// if classToLaunch is not empty, give it as parameter. Else use name as classToLaunch.
+			Importer.importAndExecuteProject(this.getName(), this.getClassToLaunch().isEmpty() ? this.getName() : this.getClassToLaunch());
+			this.compileAndExecute  = false;
 	    }
 	}
 	
@@ -305,6 +308,15 @@ public class Graph {
 	 */
 	public void setChildren(Graph[] children){
 	    this.children = children;
+	}
+	
+	public String getClassToLaunch() {
+		return this.classToLaunch;
+	}
+	
+	public void setClassToLaunch(String className) {
+		if (className == null) className = "";
+		this.classToLaunch = className; 
 	}
 	
 	/**
