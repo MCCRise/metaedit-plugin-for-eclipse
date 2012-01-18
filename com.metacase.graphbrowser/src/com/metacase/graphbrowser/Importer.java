@@ -40,18 +40,25 @@ public class Importer {
 	    	} else {
 	    		project.create(description, monitor);
 	    	}
+	    	
+	    	boolean isJavaProject = description.hasNature("org.eclipse.jdt.core.javanature") ? true : false;
+	    	boolean isAndroidProject = description.hasNature("com.android.ide.eclipse.adt.AndroidNature") ? true : false;
+	    	
 	    	project.open(IResource.PROJECT, monitor);
 	    	// Build the project.
 	    	project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-	    	// Cast project to IJavaProject and run it.
-	    	IJavaProject iproject = JavaCore.create(project);
-	    	IVMInstall vm = JavaRuntime.getVMInstall(iproject);
-	    	if (vm == null) vm = JavaRuntime.getDefaultVMInstall();
-	    	IVMRunner vmr = vm.getVMRunner(ILaunchManager.RUN_MODE);
-	    	String[] cp = JavaRuntime.computeDefaultRuntimeClassPath(iproject);
-	    	VMRunnerConfiguration config = new VMRunnerConfiguration("_" + applicationName, cp);
-	    	ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
-	    	vmr.run(config, launch, monitor);
+	    	if (isJavaProject && !isAndroidProject) {
+		    	// Cast project to IJavaProject and run it.
+		    	IJavaProject iproject = JavaCore.create(project);
+	
+		    	IVMInstall vm = JavaRuntime.getVMInstall(iproject);
+		    	if (vm == null) vm = JavaRuntime.getDefaultVMInstall();
+		    	IVMRunner vmr = vm.getVMRunner(ILaunchManager.RUN_MODE);
+		    	String[] cp = JavaRuntime.computeDefaultRuntimeClassPath(iproject);
+		    	VMRunnerConfiguration config = new VMRunnerConfiguration("com.metacase.watch.generated" + "._" + applicationName, cp);
+		    	ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
+		    	vmr.run(config, launch, monitor);
+	    	}
 	    	}
 	    catch (CoreException e) { 	
 		// MetaEdit+ doesn't generate Eclipse project every time.
