@@ -47,7 +47,7 @@ public class Importer {
 	    	project.open(IResource.PROJECT, monitor);
 	    	// Build the project.
 	    	project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-	    	if (isJavaProject && !isAndroidProject) {
+	    	if (isJavaProject && !isAndroidProject ) {
 		    	// Cast project to IJavaProject and run it.
 		    	IJavaProject iproject = JavaCore.create(project);
 	
