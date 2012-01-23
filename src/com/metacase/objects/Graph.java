@@ -162,7 +162,7 @@ public class Graph {
 	    }
 	    if (this.compileAndExecute) {
 	    	// if classToLaunch is not empty, give it as parameter. Else use name as classToLaunch.
-			Importer.importAndExecuteProject(this.getName(), this.getClassToLaunch().isEmpty() ? this.getName() : this.getClassToLaunch());
+			Importer.importAndExecuteProject(this.getName(), this.getClassToLaunch() == null ? this.getName() : this.getClassToLaunch());
 			this.compileAndExecute  = false;
 	    }
 	}
@@ -315,7 +315,6 @@ public class Graph {
 	}
 	
 	public void setClassToLaunch(String className) {
-		if (className == null) className = "";
 		this.classToLaunch = className; 
 	}
 	

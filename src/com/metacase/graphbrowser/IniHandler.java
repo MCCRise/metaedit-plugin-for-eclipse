@@ -5,8 +5,7 @@ import java.util.*;
 
 public class IniHandler
 {
-    private Hashtable<String, String> values = new Hashtable<String, String>();
-    private String key;
+    private HashMap<String, String> values = new HashMap<String, String>();
     private String iniFilePath;
 
     /**
@@ -30,10 +29,15 @@ public class IniHandler
 	        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
 	                while ((strLine = br.readLine()) != null)
 	                {
-	                    //strLine = strLine.trim();
+	                    strLine = strLine.trim();
 	                    if (!strLine.isEmpty() && !strLine.startsWith("#"))
 	                    {
-	                        keyPair = strLine.split("=");
+	                    	if (strLine.endsWith("=")) {
+	                    		// rows with key only have null values.
+	                    		keyPair = new String [] {strLine.substring(0, strLine.length()-1), ""};
+	                    	} else {
+	                    		keyPair = strLine.split("=");
+	                    	}
 	                        values.put(keyPair[0], keyPair[1]);
 	                    }
 	                }
@@ -43,11 +47,11 @@ public class IniHandler
             finally
             {
                 if (fis != null)
-		    try {
-			fis.close();
-		    } catch (IOException e) {
-			e.printStackTrace();
-		    }
+                	try {
+                		fis.close();
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
             }
         }
     }
@@ -56,7 +60,7 @@ public class IniHandler
      * Removes old values from the inifile.
      */
     public void flushValues() {
-	this.values = new Hashtable<String, String>();
+	this.values = new HashMap<String, String>();
     }
 
 
@@ -110,10 +114,11 @@ public class IniHandler
     {
         String tmpValue = "";
         String strToSave = "";
-        Enumeration<String> e = values.keys();
-        while(e.hasMoreElements())
+        Set<String> e = values.keySet();
+        for (String key : e)
+        //while(e.hasMoreElements())
         {
-            key = e.nextElement();
+          //  key = e.nextElement();
             tmpValue = (String) values.get(key);
             if (tmpValue != null)
                 tmpValue = "=" + tmpValue;
