@@ -54,29 +54,4 @@ public class DialogProvider {
 		}
 	    }); 
 	}
-	
-	/**
-	 * Shows dialog with to options and returns the answer value.
-	 * @param message Message to show
-	 * @param title Window title
-	 * @param firstButtonText
-	 * @param secondButtonText
-	 * @return result of dialog (ID of pressed button).
-	 */
-	public static int showTwoButtonsDialog(String message, String title, String firstButtonText, String secondButtonText) {
-	    try {
-		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-	    } catch (Exception e) { 
-		e.printStackTrace();
-	    }
-	    Object[] buttonOptions = new Object[] {firstButtonText, secondButtonText};
-	    return JOptionPane.showOptionDialog(null,
-		    message,
-		    title,
-	            JOptionPane.DEFAULT_OPTION,
-	            JOptionPane.QUESTION_MESSAGE,
-	            null,
-	            buttonOptions,
-	            buttonOptions[0]);
-	}
 }

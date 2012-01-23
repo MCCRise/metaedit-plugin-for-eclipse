@@ -48,8 +48,16 @@ public class SettingsDialog extends JDialog {
 	public SettingsDialog() {
 	}
 	
+	/**
+	 * Constructor.
+	 * 
+	 * Contains as commented lines the code for the hostname and logging options.
+	 * 
+	 * @param modal
+	 */
 	private SettingsDialog(boolean modal){
 		this.setModal(modal);
+		
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		
 		programDirBox = Box.createHorizontalBox();
@@ -64,25 +72,25 @@ public class SettingsDialog extends JDialog {
 		buttonBox = Box.createHorizontalBox();		
 		
 		//Labels
-                programDirLabel = createLabel("MetaEdit+ program path: ");
-                workingDirLabel = createLabel("MetaEdit+ working directory: ");
-                databaseLabel = createLabel("Database name: ");
-                usernameLabel = createLabel("Username: ");
-                passwordLabel = createLabel("Password: ");
-                projectsLabel = createLabel("Projects: ");
-                // hostnameLabel = createLabel("Hostaname: ");
-                portLabel = createLabel("Port: ");
-                // loggingLabel = createLabel("Logging: ");
-                
-                // Icon labels and tooltiptexts 
-                programDirIconLabel = createIconLabel();
-                workingDirIconLabel = createIconLabel();
-                databaseIconLabel = createIconLabel();
-                usernameIconLabel = createIconLabel();
-                passwordIconLabel = createIconLabel();
-                projectsIconLabel = createIconLabel();
-                // hostnameIconLabel = createIconLabel();
-                portIconLabel = createIconLabel();
+        programDirLabel = createLabel("MetaEdit+ program path: ");
+        workingDirLabel = createLabel("MetaEdit+ working directory: ");
+        databaseLabel = createLabel("Database name: ");
+        usernameLabel = createLabel("Username: ");
+        passwordLabel = createLabel("Password: ");
+        projectsLabel = createLabel("Projects: ");
+        // hostnameLabel = createLabel("Hostaname: ");
+        portLabel = createLabel("Port: ");
+        // loggingLabel = createLabel("Logging: ");
+        
+        // Icon labels and tooltiptexts 
+        programDirIconLabel = createIconLabel();
+        workingDirIconLabel = createIconLabel();
+        databaseIconLabel = createIconLabel();
+        usernameIconLabel = createIconLabel();
+        passwordIconLabel = createIconLabel();
+        projectsIconLabel = createIconLabel();
+        // hostnameIconLabel = createIconLabel();
+        portIconLabel = createIconLabel();
 		
                 // Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
 		tooltipTexts.put(programDirIconLabel, new String [] {"MetaEdit+ program file not properly set.", "", ""});
@@ -291,21 +299,6 @@ public class SettingsDialog extends JDialog {
 
 			}
 		});
-		
-//		    saveButton = new JButton(new AbstractAction("Open MetaEdit+") {
-//    			private static final long serialVersionUID = 1L;
-//    			public void actionPerformed(ActionEvent e) {
-//    				SwingUtilities.invokeLater(new Runnable() {
-//    	                public void run() {
-//    	                    settings.createEmptyMerFile();
-//    	                    saveSettings();
-//    	                    Launcher.launchMetaEdit();
-//    	                    exitDialog();
-//    	                }
-//    	            });
-//
-//    			}
-//    		});
     	
 		// Create "Cancel" button ---------->
 		cancelButton = new JButton(new AbstractAction("Cancel") {
@@ -777,7 +770,7 @@ public class SettingsDialog extends JDialog {
 	}
 	
 	/**
-	 * Cheks the given port number. Port number should be an integer between 0 and 65535.
+	 * Checks the given port number. Port number should be an integer between 0 and 65535.
 	 * If possible numbers less than 1023 should not be used.
 	 */
 	public class PortVerifier implements SettingsVerifier {

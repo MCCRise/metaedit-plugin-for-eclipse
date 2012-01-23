@@ -69,7 +69,7 @@ public class IniHandler
      * @param settingName key for the value
      * @return value
      */
-    public String GetSetting(String settingName)
+    public String getSetting(String settingName)
     {
         return (String)values.get(settingName);
     }
@@ -79,7 +79,7 @@ public class IniHandler
      * @param settingName key for the value
      * @param settingValue value
      */
-    public void AddSetting(String settingName, String settingValue)
+    public void addSetting(String settingName, String settingValue)
     {
         if (values.containsKey(settingName))
             values.remove(settingName);
@@ -91,16 +91,16 @@ public class IniHandler
      * Adds or replaces a setting to the table to be saved with a null value.
      * @param settingName key for the value
      */
-    public void AddSetting(String settingName)
+    public void addSetting(String settingName)
     {
-        AddSetting(settingName, null);
+        addSetting(settingName, null);
     }
 
     /**
      * Removes setting from the file
      * @param settingName key for the value that will be removed.
      */
-    public void DeleteSetting(String settingName)
+    public void deleteSetting(String settingName)
     {
         if (values.containsKey(settingName))
             values.remove(settingName);
@@ -110,15 +110,13 @@ public class IniHandler
      * Save settings to new file.
      * @param newFilePath path to the new file
      */
-    public void SaveSettings(String newFilePath)
+    public void saveSettings(String newFilePath)
     {
         String tmpValue = "";
         String strToSave = "";
         Set<String> e = values.keySet();
         for (String key : e)
-        //while(e.hasMoreElements())
         {
-          //  key = e.nextElement();
             tmpValue = (String) values.get(key);
             if (tmpValue != null)
                 tmpValue = "=" + tmpValue;
@@ -129,18 +127,18 @@ public class IniHandler
         
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(newFilePath));
-	    out.write(strToSave);
-	    out.close();
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	}
+            out.write(strToSave);
+	    	out.close();
+        } catch (IOException ex) {
+        	ex.printStackTrace();
+        }
     }
 
     /**
      * Save settings back to ini file.
      */
-    public void SaveSettings()
+    public void saveSettings()
     {
-        SaveSettings(iniFilePath);
+        saveSettings(iniFilePath);
     }
 }
