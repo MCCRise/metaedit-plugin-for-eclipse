@@ -75,14 +75,14 @@ public class Importer {
         	if (_temp.exists()) _temp.deleteOnExit();
         	IniHandler writer = new IniHandler(path);
         	writer.flushValues();
-        	writer.AddSetting("IDE", "eclipse");
+        	writer.addSetting("IDE", "eclipse");
         	// workspace path
-        	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
+        	writer.addSetting("workspace", new File(root.getLocation().toString()).toString());
         	// If we are running Autobuild generator mark to the ini file that the generated source
         	// code should be compiled and run in Eclipse.
         	String _runValue = generatorName.equalsIgnoreCase("autobuild") ? "true" : "false";
-        	writer.AddSetting("runGenerated", _runValue);
-        	writer.SaveSettings();
+        	writer.addSetting("runGenerated", _runValue);
+        	writer.saveSettings();
         	// Return the path of written ini file so that it can be read later.  
         	return path;
 	}

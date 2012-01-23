@@ -46,8 +46,8 @@ public class Graph {
 	    this.setObjectID(objectID);
 	    Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(areaID);
 	    if ( graphTable == null ) {
-		graphTable = new Hashtable<Integer, Graph>();
-		projectTable.put(areaID, graphTable);
+	    	graphTable = new Hashtable<Integer, Graph>();
+	    	projectTable.put(areaID, graphTable);
 	    }
 	    graphTable.put(objectID, this);
 	}
@@ -109,7 +109,7 @@ public class Graph {
 	    else this.runGenerator(port, generator);
 	    // Remove the written INI file and Import generated project.
 	    this.removeIniFile(pluginINIpath);
-	    this.importProject(Settings.getSettings().getWorkingDirectory());
+	    this.callForImportAndExecute();
 	}
 
 	/**
@@ -140,35 +140,28 @@ public class Graph {
 	}
 		
 	/**
-	 * Calls file remove method with correct path. Read compileAndExecute info written by MetaEdit+ before removing the file. 
+	 * Calls file remove method with correct path. Before that, reads the values from ini file written by MetaEdit+ to memory.
 	 * @param path path to the file.
 	 */
 	private void removeIniFile(String path) {	    
 	    IniHandler h = new IniHandler(path);
-	    this.setClassToLaunch(h.GetSetting("classToLaunch"));
-	    this.setProjectName(h.GetSetting("projectName"));
-	    if (h.GetSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
+	    this.setClassToLaunch(h.getSetting("classToLaunch"));
+	    this.setProjectName(h.getSetting("projectName"));
+	    if (h.getSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
 	    Importer.removeIniFile(new File(path));
 	}
 
 	/**
-	 * Imports generated project.
-	 * @param s Settings instance
+	 * Calls the import and execute method with suitable parameters
 	 */
-	private void importProject(String workDir) {
-	    if (workDir.equals("")) {
-	    	DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
-				"Can't read working directory path from .mer file.",
-				"MER file doesn't exist");
-	    	return;
-	    }
+	private void callForImportAndExecute() {
 	    if (this.compileAndExecute) {
 	    	Importer.importAndExecuteProject(
-	    	// null values point that those values were not included in ini file
-	    	// in that case graph's name is used both in project name starting class name.
+	    		 /* null values point that those values were not included in ini file
+		    		in that case graph's name is used both in project name and as starting class name. */
 	    			this.getProjectName()   == null ? this.getName() : this.getProjectName(),
 					this.getClassToLaunch() == null ? this.getName() : this.getClassToLaunch()
-						);
+			 );
 			this.compileAndExecute  = false;
 	    }
 	}
