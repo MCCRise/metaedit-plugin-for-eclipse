@@ -23,30 +23,27 @@ public class Importer {
 	/**
 	 * Imports eclipse project to workspace and opens it. If project already exists, refreshes the project.
 	 * Finally builds and runs the imported project.
-	 * If no .project file found, does nothing.
-	 * @param applicationName name of the project that should be imported. Used for compiling and running the project.
-	 */
-	public static void importAndExecuteProject(String applicationName, String classToLaunch) {
+	 * If no .project file found, does nothing. 
+	 * @param projectName name of the project that should be imported. Used for compiling and running the project.
+	 * @param classToLaunch name of the class that is launched. If the parameter is empty launch nothing. In case of null parameter try
+	 * to launch class named after the project name.
+	 */	
+	public static void importAndExecuteProject(String projectName, String classToLaunch) {
 	    IProjectDescription description = null;
 	    IProject project = null;
 	    IProgressMonitor monitor =  new NullProgressMonitor();
 	    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 	    try {
-	    	description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(root.getLocation().toString() + "/" + applicationName + "/.project"));
+	    	description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(root.getLocation().toString() + "/" + projectName + "/.project"));
 	    	project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 	    	if (project.exists()) {
 	    		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	    	} else {
 	    		project.create(description, monitor);
 	    	}
-	    	
-//	    	boolean isJavaProject = description.hasNature("org.eclipse.jdt.core.javanature") ? true : false;
-//	    	boolean isAndroidProject = description.hasNature("com.android.ide.eclipse.adt.AndroidNature") ? true : false;
-	    	
 	    	project.open(IResource.PROJECT, monitor);
 	    	// Build the project.
 	    	project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-	    	//if (isJavaProject && !isAndroidProject) {
 	    	if (!classToLaunch.isEmpty()) {
 		    	// Cast project to IJavaProject and run it.
 		    	IJavaProject iproject = JavaCore.create(project);

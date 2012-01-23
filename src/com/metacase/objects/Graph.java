@@ -26,6 +26,7 @@ public class Graph {
 	private boolean isChild  = false;
 	private boolean compileAndExecute = false;
 	private String classToLaunch = "";
+	private String projectName = "";
 	private Graph[] children = new Graph[0];
 	private static Hashtable<String, String> typeNameTable = new Hashtable<String, String>();
 	private static Hashtable<Integer, Hashtable<Integer, Graph>> projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
@@ -145,6 +146,7 @@ public class Graph {
 	private void removeIniFile(String path) {	    
 	    IniHandler h = new IniHandler(path);
 	    this.setClassToLaunch(h.GetSetting("classToLaunch"));
+	    this.setProjectName(h.GetSetting("projectName"));
 	    if (h.GetSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
 	    Importer.removeIniFile(new File(path));
 	}
@@ -161,8 +163,12 @@ public class Graph {
 	    	return;
 	    }
 	    if (this.compileAndExecute) {
-	    	// if classToLaunch is not empty, give it as parameter. Else use name as classToLaunch.
-			Importer.importAndExecuteProject(this.getName(), this.getClassToLaunch() == null ? this.getName() : this.getClassToLaunch());
+	    	Importer.importAndExecuteProject(
+	    	// null values point that those values were not included in ini file
+	    	// in that case graph's name is used both in project name starting class name.
+	    			this.getProjectName()   == null ? this.getName() : this.getProjectName(),
+					this.getClassToLaunch() == null ? this.getName() : this.getClassToLaunch()
+						);
 			this.compileAndExecute  = false;
 	    }
 	}
@@ -316,6 +322,14 @@ public class Graph {
 	
 	public void setClassToLaunch(String className) {
 		this.classToLaunch = className; 
+	}
+	
+	public String getProjectName() {
+		return this.projectName;
+	}
+	
+	public void setProjectName(String _projectName) {
+		this.projectName = _projectName;
 	}
 	
 	/**
