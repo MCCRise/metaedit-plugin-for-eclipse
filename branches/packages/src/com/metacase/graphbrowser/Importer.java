@@ -6,7 +6,6 @@
 package com.metacase.graphbrowser;
 
 import java.io.File;
-
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
@@ -41,8 +40,8 @@ public class Importer {
 	    		project.create(description, monitor);
 	    	}
 	    	
-	    	boolean isJavaProject = description.hasNature("org.eclipse.jdt.core.javanature") ? true : false;
-	    	boolean isAndroidProject = description.hasNature("com.android.ide.eclipse.adt.AndroidNature") ? true : false;
+//	    	boolean isJavaProject = description.hasNature("org.eclipse.jdt.core.javanature") ? true : false;
+//	    	boolean isAndroidProject = description.hasNature("com.android.ide.eclipse.adt.AndroidNature") ? true : false;
 	    	
 	    	project.open(IResource.PROJECT, monitor);
 	    	// Build the project.
@@ -82,7 +81,7 @@ public class Importer {
         	writer.AddSetting("IDE", "eclipse");
         	// workspace path
         	writer.AddSetting("workspace", new File(root.getLocation().toString()).toString());
-        	// If we are running Autobuild generator mark to the file that the generated source
+        	// If we are running Autobuild generator mark to the ini file that the generated source
         	// code should be compiled and run in Eclipse.
         	String _runValue = generatorName.equalsIgnoreCase("autobuild") ? "true" : "false";
         	writer.AddSetting("runGenerated", _runValue);
