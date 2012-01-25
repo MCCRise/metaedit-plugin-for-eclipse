@@ -160,7 +160,7 @@ public class Graph {
 	    		 /* null values point that those values were not included in ini file
 		    		in that case graph's name is used both in project name and as starting class name. */
 	    			this.getProjectName()   == null ? this.getName() : this.getProjectName(),
-					this.getClassToLaunch() == null ? this.getName() : this.getClassToLaunch()
+					this.getClassToLaunch() == null ? "_" + this.getName() : this.getClassToLaunch()
 			 );
 			this.compileAndExecute  = false;
 	    }
