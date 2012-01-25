@@ -16,7 +16,7 @@ public class SelectionDialog extends JPanel {
 	 * JPanel for selecting MetaEdit+ projects from given database.
 	 */
 	private static final long serialVersionUID = 1L;
-	JList projectList;
+	JList<String> projectList;
 	JLabel topLabel;
 	JButton selectAllButton;
 	JButton OKbutton, cancelButton;

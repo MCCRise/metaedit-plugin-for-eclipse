@@ -181,6 +181,10 @@ public class Launcher {
 	    }
 	}
 	
+	/**
+	 * Getter for instance of Settings class
+	 * @return instance of Settings class
+	 */
 	public static Settings getSettings() {
 	    return Settings.getSettings();
 	}
