@@ -173,11 +173,11 @@ public class GraphView extends ViewPart implements Observer {
 		 */
 		public void initialize() {
 		    Runnable init = new Runnable() {
-			public void run() {
-			    invisibleRoot = new TreeObject();
-			    graphs = GraphHandler.init();
-			    invisibleRoot.populate(graphs, new ArrayList<Graph>());
-			}
+				public void run() {
+				    invisibleRoot = new TreeObject();
+				    graphs = GraphHandler.init();
+				    invisibleRoot.populate(graphs, new ArrayList<Graph>());
+				}
 		    };
 		    BusyIndicator.showWhile(getSite().getShell().getDisplay(), init);
 		}		

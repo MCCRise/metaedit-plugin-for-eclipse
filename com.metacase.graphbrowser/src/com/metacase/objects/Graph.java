@@ -8,7 +8,6 @@ package com.metacase.objects;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.*;
-
 import com.metacase.API.*;
 import com.metacase.graphbrowser.*;
 
@@ -25,6 +24,8 @@ public class Graph {
 	private int objectID;
 	private boolean isChild  = false;
 	private boolean compileAndExecute = false;
+	private String classToLaunch = "";
+	private String projectName = "";
 	private Graph[] children = new Graph[0];
 	private static Hashtable<String, String> typeNameTable = new Hashtable<String, String>();
 	private static Hashtable<Integer, Hashtable<Integer, Graph>> projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
@@ -44,8 +45,8 @@ public class Graph {
 	    this.setObjectID(objectID);
 	    Hashtable<Integer, Graph> graphTable = (Hashtable<Integer, Graph>) projectTable.get(areaID);
 	    if ( graphTable == null ) {
-		graphTable = new Hashtable<Integer, Graph>();
-		projectTable.put(areaID, graphTable);
+	    	graphTable = new Hashtable<Integer, Graph>();
+	    	projectTable.put(areaID, graphTable);
 	    }
 	    graphTable.put(objectID, this);
 	}
@@ -107,7 +108,7 @@ public class Graph {
 	    else this.runGenerator(port, generator);
 	    // Remove the written INI file and Import generated project.
 	    this.removeIniFile(pluginINIpath);
-	    this.importProject(Settings.getSettings().getWorkingDirectory());
+	    this.callForImportAndExecute();
 	}
 
 	/**
@@ -116,10 +117,10 @@ public class Graph {
 	public void runAutobuild(MetaEditAPIPortType port) {
 	    MENull meNull = new MENull();
 	    try {
-		port.forName(meNull, this.getName(), this.getTypeName(), "Autobuild");
+	    	port.forName(meNull, this.getName(), this.getTypeName(), "Autobuild");
 	    } catch (RemoteException e) { 
-		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-		e.printStackTrace();
+	    	DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+	    	e.printStackTrace();
 	    }
 	}
 	
@@ -130,37 +131,37 @@ public class Graph {
 	 */
 	public void runGenerator(MetaEditAPIPortType port, String generator) {
 	    try {
-		port.forGraphRun(this.toMEOop(), generator);
+	    	port.forGraphRun(this.toMEOop(), generator);
 	    } catch (RemoteException e) { 
-		DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-		e.printStackTrace();
+			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
+			e.printStackTrace();
 	    }
 	}
 		
 	/**
-	 * Calls file remove method with correct path. Read compileAndExecute info written by MetaEdit+ before removing the file. 
+	 * Calls file remove method with correct path. Before that, reads the values from ini file written by MetaEdit+ to memory.
 	 * @param path path to the file.
 	 */
 	private void removeIniFile(String path) {	    
 	    IniHandler h = new IniHandler(path);
-	    if (h.GetSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
+	    this.setClassToLaunch(h.getSetting("classToLaunch"));
+	    this.setProjectName(h.getSetting("projectName"));
+	    if (h.getSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
 	    Importer.removeIniFile(new File(path));
 	}
 
 	/**
-	 * Imports generated project.
-	 * @param s Settings instance
+	 * Calls the import and execute method with suitable parameters
 	 */
-	private void importProject(String workDir) {
-	    if (workDir.equals("")) {
-		DialogProvider.showMessageDialog("Error when importing generated project to workspace. " +
-			"Can't read working directory path from .mer file.",
-			"MER file doesn't exist");
-		return;
-	    }
+	private void callForImportAndExecute() {
 	    if (this.compileAndExecute) {
-		Importer.importAndExecuteProject(this.getName());
-		this.compileAndExecute  = false;
+	    	Importer.importAndExecuteProject(
+	    		 /* null values point that those values were not included in ini file
+		    		in that case graph's name is used both in project name and as starting class name. */
+	    			this.getProjectName()   == null ? this.getName() : this.getProjectName(),
+					this.getClassToLaunch() == null ? "_" + this.getName() : this.getClassToLaunch()
+			 );
+			this.compileAndExecute  = false;
 	    }
 	}
 	
@@ -305,6 +306,22 @@ public class Graph {
 	 */
 	public void setChildren(Graph[] children){
 	    this.children = children;
+	}
+	
+	public String getClassToLaunch() {
+		return this.classToLaunch;
+	}
+	
+	public void setClassToLaunch(String className) {
+		this.classToLaunch = className; 
+	}
+	
+	public String getProjectName() {
+		return this.projectName;
+	}
+	
+	public void setProjectName(String _projectName) {
+		this.projectName = _projectName;
 	}
 	
 	/**

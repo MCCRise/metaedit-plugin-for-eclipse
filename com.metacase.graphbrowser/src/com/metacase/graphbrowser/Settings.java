@@ -155,11 +155,11 @@ public class Settings extends Observable {
 	 */
 	public void writeConfigFile(String comment) {
 	    IniHandler writer = new IniHandler(this.getMerFile().toString());
-	    writer.AddSetting("metaEditDir", this.getProgramPath());
-	    writer.AddSetting("workingDir", this.getWorkingDirectory());
-	    writer.AddSetting("database", this.getDatabase());
-	    writer.AddSetting("username", this.getUsername());
-	    writer.AddSetting("password", this.getPassword());
+	    writer.addSetting("metaEditDir", this.getProgramPath());
+	    writer.addSetting("workingDir", this.getWorkingDirectory());
+	    writer.addSetting("database", this.getDatabase());
+	    writer.addSetting("username", this.getUsername());
+	    writer.addSetting("password", this.getPassword());
 	    // Write all projects to one string with separator.
 	    String projects = "";
 	    String separator = "";
@@ -167,11 +167,11 @@ public class Settings extends Observable {
 		projects += separator + s;
 		separator = ";";
 	    }
-	    writer.AddSetting("projects", projects);
-	    writer.AddSetting("hostname", this.getHostname());
-	    writer.AddSetting("port", String.valueOf(this.getPort()));
-	    writer.AddSetting("logging", String.valueOf(this.isLogging()));
-	    writer.SaveSettings();
+	    writer.addSetting("projects", projects);
+	    writer.addSetting("hostname", this.getHostname());
+	    writer.addSetting("port", String.valueOf(this.getPort()));
+	    writer.addSetting("logging", String.valueOf(this.isLogging()));
+	    writer.saveSettings();
 	}
 	
 	/**
@@ -182,15 +182,15 @@ public class Settings extends Observable {
 	 */
 	private void readFromConfigFile(){
 	    IniHandler reader = new IniHandler(this.getMerFile().toString());	
-	    this.setProgramPath(new File(reader.GetSetting("metaEditDir")).toString());
-	    this.setWorkingDirectory(new File(reader.GetSetting("workingDir")).toString());
-	    this.setDatabase(reader.GetSetting("database"));
-	    this.setUsername(reader.GetSetting("username"));
-	    this.setPassword(reader.GetSetting("password"));
-	    this.setProjects(reader.GetSetting("projects").split(";"));
-	    this.setHostname(reader.GetSetting("hostname"));
-	    this.setPort(Integer.valueOf(reader.GetSetting("port")));
-	    this.setLogging(reader.GetSetting("logging").equals("true"));
+	    this.setProgramPath(new File(reader.getSetting("metaEditDir")).toString());
+	    this.setWorkingDirectory(new File(reader.getSetting("workingDir")).toString());
+	    this.setDatabase(reader.getSetting("database"));
+	    this.setUsername(reader.getSetting("username"));
+	    this.setPassword(reader.getSetting("password"));
+	    this.setProjects(reader.getSetting("projects").split(";"));
+	    this.setHostname(reader.getSetting("hostname"));
+	    this.setPort(Integer.valueOf(reader.getSetting("port")));
+	    this.setLogging(reader.getSetting("logging").equals("true"));
 	}
 	
 	/**
