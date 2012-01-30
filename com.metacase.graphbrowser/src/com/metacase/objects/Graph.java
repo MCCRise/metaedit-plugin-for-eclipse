@@ -227,11 +227,11 @@ public class Graph {
 	    return this.type;
 	}
 	
-	private String getTypeName() {
+	public String getTypeName() {
 	    return typeName;
 	}
 
-	private void setTypeName(String typeName) {
+	public void setTypeName(String typeName) {
 	    this.typeName = typeName;
 	}
 

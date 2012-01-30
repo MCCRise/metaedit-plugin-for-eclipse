@@ -3,8 +3,8 @@ package com.metacase.graphbrowser;
 import java.io.*;
 import java.util.*;
 
-public class IniHandler
-{
+public class IniHandler {
+	
     private HashMap<String, String> values = new HashMap<String, String>();
     private String iniFilePath;
 
@@ -12,26 +12,21 @@ public class IniHandler
      * Constructor. Reads data from ini file.
      * @param _iniPath path to ini file.
      */
-    public IniHandler(String _iniPath)
-    {
+    public IniHandler(String _iniPath) {
         FileInputStream fis = null;
         String strLine = null;
         String[] keyPair = null;
         this.iniFilePath = _iniPath;
         File iniFile = new File(this.iniFilePath);
         
-        if (iniFile.exists())
-        {
-            try
-            {
+        if (iniFile.exists()) {
+            try {
 	            fis = new FileInputStream(iniFile);
 	        	DataInputStream in = new DataInputStream(fis);
 	        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	                while ((strLine = br.readLine()) != null)
-	                {
+	                while ((strLine = br.readLine()) != null) {
 	                    strLine = strLine.trim();
-	                    if (!strLine.isEmpty() && !strLine.startsWith("#"))
-	                    {
+	                    if (!strLine.isEmpty() && !strLine.startsWith("#")) {
 	                    	if (strLine.endsWith("=")) {
 	                    		// rows with key only have null values.
 	                    		keyPair = new String [] {strLine.substring(0, strLine.length()-1), ""};
@@ -44,14 +39,14 @@ public class IniHandler
             } catch (Exception e) {    
             	e.printStackTrace();
             }
-            finally
-            {
-                if (fis != null)
+            finally {
+                if (fis != null) {
                 	try {
                 		fis.close();
                 	} catch (IOException e) {
                 		e.printStackTrace();
                 	}
+                }
             }
         }
     }
@@ -60,7 +55,7 @@ public class IniHandler
      * Removes old values from the inifile.
      */
     public void flushValues() {
-	this.values = new HashMap<String, String>();
+    	this.values = new HashMap<String, String>();
     }
 
 
@@ -69,8 +64,7 @@ public class IniHandler
      * @param settingName key for the value
      * @return value
      */
-    public String getSetting(String settingName)
-    {
+    public String getSetting(String settingName) {
         return (String)values.get(settingName);
     }
 
@@ -79,8 +73,7 @@ public class IniHandler
      * @param settingName key for the value
      * @param settingValue value
      */
-    public void addSetting(String settingName, String settingValue)
-    {
+    public void addSetting(String settingName, String settingValue) {
         if (values.containsKey(settingName))
             values.remove(settingName);
 
@@ -90,9 +83,8 @@ public class IniHandler
     /**
      * Adds or replaces a setting to the table to be saved with a null value.
      * @param settingName key for the value
-     */
-    public void addSetting(String settingName)
-    {
+     */ 
+    public void addSetting(String settingName) {
         addSetting(settingName, null);
     }
 
@@ -100,8 +92,7 @@ public class IniHandler
      * Removes setting from the file
      * @param settingName key for the value that will be removed.
      */
-    public void deleteSetting(String settingName)
-    {
+    public void deleteSetting(String settingName) {
         if (values.containsKey(settingName))
             values.remove(settingName);
     }
@@ -110,17 +101,14 @@ public class IniHandler
      * Save settings to new file.
      * @param newFilePath path to the new file
      */
-    public void saveSettings(String newFilePath)
-    {
+    public void saveSettings(String newFilePath) {
         String tmpValue = "";
         String strToSave = "";
         Set<String> e = values.keySet();
-        for (String key : e)
-        {
+        for (String key : e) {
             tmpValue = (String) values.get(key);
             if (tmpValue != null)
                 tmpValue = "=" + tmpValue;
-
             strToSave += (key + tmpValue + "\r\n");
         }
         strToSave += "\r\n";
@@ -137,8 +125,7 @@ public class IniHandler
     /**
      * Save settings back to ini file.
      */
-    public void saveSettings()
-    {
+    public void saveSettings() {
         saveSettings(iniFilePath);
     }
 }

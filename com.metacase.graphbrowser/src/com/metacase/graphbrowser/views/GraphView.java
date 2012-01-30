@@ -68,7 +68,9 @@ public class GraphView extends ViewPart implements Observer {
 	private Action actionOpenSettings;
 	private Action actionOpenCreateGraphDialog;
 	private Action actionOpenEditPropertiesDialog;
+	private Action actionToggleGraphTypeText;
 	private ViewContentProvider viewContentProvider;
+	private static boolean isGraphTypeText;
 	public Graph[] graphs;
 	 
 	class TreeObject implements IAdaptable {
@@ -98,7 +100,8 @@ public class GraphView extends ViewPart implements Observer {
 		    return this.graph;
 		}
 		public String toString() {
-		    return getName();
+			String s = isGraphTypeText ? getName() + ": " + getGraph().getTypeName() : getName();
+		    return s;
 		}
 		public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 		    return null;
@@ -345,14 +348,16 @@ public class GraphView extends ViewPart implements Observer {
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-	    	manager.add(actionRunAutobuild);
-	    	manager.add(actionGenerateGraph);
+	    manager.add(actionRunAutobuild);
+	    manager.add(actionGenerateGraph);
 		manager.add(new Separator());
 		manager.add(actionOpenInMetaEdit);
 		manager.add(actionOpenCreateGraphDialog);
 		manager.add(new Separator());
 		manager.add(actionUpdateGraphList);
 		manager.add(actionOpenSettings);
+		manager.add(new Separator());
+		manager.add(actionToggleGraphTypeText);
 	}
 	
 	/**
@@ -510,6 +515,7 @@ public class GraphView extends ViewPart implements Observer {
 			    actionOpenInMetaEdit.run();
 			}
 		};
+		
 		actionUpdateGraphList = new Action() {
 			public void run() {
 			    Object oldInput = viewer.getInput();
@@ -559,6 +565,17 @@ public class GraphView extends ViewPart implements Observer {
 		this.setActionDetails(actionOpenEditPropertiesDialog,
 				"Edit Graph Properties",
 				"icons/edit_properties_icon.png");
+		
+		actionToggleGraphTypeText = new Action("", Action.AS_CHECK_BOX) {
+			public void run() {
+				isGraphTypeText = actionToggleGraphTypeText.isChecked() ? true : false; 
+				viewContentProvider.inputChanged(viewer, null, null);
+			}
+		};
+		
+		this.setActionDetails(actionToggleGraphTypeText,
+				"Show/Hide Graph Type", 
+				"icons/folder_explore.png");
 	}
 	
 	/**
@@ -577,7 +594,7 @@ public class GraphView extends ViewPart implements Observer {
 	private void hookDoubleClickAction() {
 	    viewer.addDoubleClickListener(new IDoubleClickListener() {
 		public void doubleClick(DoubleClickEvent event) {
-		    doubleClickAction.run();
+			doubleClickAction.run();
 		}
 	    });
 	}
