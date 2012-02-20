@@ -18,6 +18,8 @@ The plugin provides commands that may be used from buttons in the views toolbar 
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/settings_icon.png *Open Settings* opens a dialog that contains the !MetaEdit+ launch parameters. The parameters are saved in 'default.mer' file in the Eclipse workspace root and are read when launching !MetaEdit+ or when initalizing the settings dialog. The dialog provides a three step verifier for each text field. green when content is correct, yellow if the entry could not be verified, or red when entry is not correct.
 
+ http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/folder_explore.png *Show/Hide graph type* toggles the graph typename on or off.
+
 In the popup menu (mouse right click) there are two commands that are not shown in the view toolbar. These commands are only for !MetaEdit+ 5.0 version.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/com.metacase.graphbrowser/icons/create_graph_icon.png *Create a new Graph* will open a !MetaEdit+ dialog for creating a new graph. If no graph is selected, a dialog opens to ask which type of graph will be created. If graph is selected the dialog will automatically have the same type as the selected graph.
