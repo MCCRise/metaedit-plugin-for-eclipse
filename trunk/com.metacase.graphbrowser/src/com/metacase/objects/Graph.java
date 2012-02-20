@@ -32,10 +32,15 @@ public class Graph {
 	
 	/**
 	 * Constructor.
-	 * @param name Graph name
-	 * @param type Graph type name
-	 * @param areaID Area id of MEOop
-	 * @param objectID Object id of MEOop
+	 * 
+	 * @param name
+	 * 			Graph name
+	 * @param type
+	 * 			Graph type name
+	 * @param areaID
+	 * 			Area id of MEOop
+	 * @param objectID
+	 * 			Object id of MEOop
 	 */
 	private Graph(String name, String type, String typeName, int areaID, int objectID) {
 	    this.setName(name);
@@ -56,8 +61,11 @@ public class Graph {
 	 * Checks if the graph is already in the hashtable. Does not
 	 * duplicate graphs. If graph already exists checks if its name
 	 * has changed and edits it if needed.
-	 * @param m MEOop object
-	 * @return created Graph
+	 * 
+	 * @param m
+	 * 			MEOop object
+	 * @return graph
+	 * 			The created Graph
 	 * @throws RemoteException 
 	 */
 	public static Graph MEOopToGraph(MEOop m) throws RemoteException {
@@ -97,8 +105,11 @@ public class Graph {
 	/**
 	 * Prepares for running the generator, calls method to run generator and
 	 * imports the project to Eclipse.
-	 * @param generator Name of the generator,
+	 * 
+	 * @param generator
+	 * 			Name of the generator.
 	 * @param autobuild
+	 * 			For running the Autobuild or not.
 	 */
 	public void runGenerator(String generator, boolean autobuild) {
 	    String pluginINIpath = this.writePluginIniFile(generator);
@@ -127,7 +138,11 @@ public class Graph {
 	/**
 	 * Runs generator for caller Graph. After calling ME+ to run generator, tries
 	 * to import project with same name as the graph to workspace. Used for MetaEdit+ 5.0 API
-	 * @param generator name of the generator to be run.
+	 * 
+	 * @param port
+	 * 			Connection to MetaEdit+
+	 * @param generator
+	 * 			Generator name that is to be run.
 	 */
 	public void runGenerator(MetaEditAPIPortType port, String generator) {
 	    try {
@@ -140,7 +155,9 @@ public class Graph {
 		
 	/**
 	 * Calls file remove method with correct path. Before that, reads the values from ini file written by MetaEdit+ to memory.
-	 * @param path path to the file.
+	 * 
+	 * @param path
+	 * 			Path to the file.
 	 */
 	private void removeIniFile(String path) {	    
 	    IniHandler h = new IniHandler(path);
@@ -148,7 +165,7 @@ public class Graph {
 	    this.setProjectName(h.getSetting("projectName"));
 	    if (h.getSetting("runGenerated").equalsIgnoreCase("true")) this.compileAndExecute = true;
 	    Importer.removeIniFile(new File(path));
-	}
+	} 
 
 	/**
 	 * Calls the import and execute method with suitable parameters
@@ -168,7 +185,9 @@ public class Graph {
 	/**
 	 * Method stub for importer's plugin.ini writer. Writes the plugin.ini file under
 	 * the MetaEdit+ working directory.
-	 * @param generatorName name of the generator in MetaEdit+.
+	 * 
+	 * @param generatorName
+	 * 				name of the generator in MetaEdit+.
 	 * @return path of the written ini file.
 	 */
 	private String writePluginIniFile(String generatorName) {
@@ -179,6 +198,7 @@ public class Graph {
 	
 	/**
 	 * Creates a MEOop object from Graph object.
+	 * 
 	 * @return created MEOop object.
 	 */
 	public MEOop toMEOop() {
@@ -187,6 +207,7 @@ public class Graph {
 	
 	/**
 	 * Method that return METype of Graph object.
+	 * 
 	 * @return METype corresponding to Graphs attribute (String) type.
 	 */
 	public METype getMEType() {
@@ -197,6 +218,7 @@ public class Graph {
 	
 	/**
 	 * Setter for Graphs name
+	 * 
 	 * @param _name Graphs name
 	 */
 	public void setName(String _name) {
@@ -205,6 +227,7 @@ public class Graph {
 	
 	/**
 	 * Getter for Graphs name.
+	 * 
 	 * @return graph name.
 	 */
 	public String getName() {
@@ -213,6 +236,7 @@ public class Graph {
 	
 	/**
 	 * Setter for Graphs type name.
+	 * 
 	 * @param _type name of type.
 	 */
 	public void setType(String _type) {
@@ -221,6 +245,7 @@ public class Graph {
 	
 	/**
 	 * Getter for Graph type name
+	 * 
 	 * @return name of graph type.
 	 */
 	public String getType() {
@@ -237,6 +262,7 @@ public class Graph {
 
 	/**
 	 * Graphs area id setter.
+	 * 
 	 * @param _areaID area id integer.
 	 */
     	public void setAreaID(int _areaID) {
@@ -245,6 +271,7 @@ public class Graph {
 	
 	/**
 	 * Getter for graphs area id.
+	 * 
 	 * @return - id of graphs area. 
 	 */
 	public int getAreaID(){
@@ -253,6 +280,7 @@ public class Graph {
 	
 	/**
 	 * Setter for graphs object id.
+	 * 
 	 * @param _objectID - graphs object id.
 	 */
 	public void setObjectID(int _objectID){
@@ -261,6 +289,7 @@ public class Graph {
 	
 	/**
 	 * Getter of graph object id.
+	 * 
 	 * @return object id integer.
 	 */
 	public int getObjectID() {
@@ -268,7 +297,8 @@ public class Graph {
 	}
 
 	/**
-	 * Graphs toString methdod
+	 * Graphs toString method.
+	 * 
 	 * @return Graphs name.
 	 */
 	public String toString() {
@@ -278,6 +308,7 @@ public class Graph {
 	/**
 	 * Sets the graph isChild property showing if the graph is subgraph of
 	 * another graph or not.
+	 * 
 	 * @param _isChild
 	 */
 	public void setIsChild(boolean _isChild){
@@ -286,6 +317,7 @@ public class Graph {
 	
 	/**
 	 * Getter for graphs isChild property.  
+	 * 
 	 * @return isChild boolean property.
 	 */
 	public boolean getIsChild(){
@@ -294,6 +326,7 @@ public class Graph {
 	
 	/**
 	 * Get Graph's children
+	 * 
 	 * @return children in array.
 	 */
 	public Graph[] getChildren() {
@@ -302,24 +335,47 @@ public class Graph {
 	
 	/**
 	 * Setter for children array.
-	 * @param children - array of children graphs.
+	 * 
+	 * @param children 
+	 *   		array of children graphs.
 	 */
 	public void setChildren(Graph[] children){
 	    this.children = children;
 	}
 	
+	/**
+	 * Getter for the main class name.
+	 * 
+	 * @return name of the main class.
+	 */
 	public String getClassToLaunch() {
 		return this.classToLaunch;
 	}
 	
+	/**
+	 * Setter for the main class name.
+	 * 
+	 * @param className
+	 * 			main class name.
+	 */
 	public void setClassToLaunch(String className) {
 		this.classToLaunch = className; 
 	}
 	
+	/**
+	 * Getter for the project name.
+	 * 	
+	 * @return name of the project.
+	 */
 	public String getProjectName() {
 		return this.projectName;
 	}
 	
+	/**
+	 * Setter for the project name.
+	 * 
+	 * @param _projectName The project name.
+	 */
 	public void setProjectName(String _projectName) {
 		this.projectName = _projectName;
 	}
@@ -327,8 +383,11 @@ public class Graph {
 	/**
 	 * Init graphs children recursively calling method for every children. Except
 	 * those that are already initialized.
-	 * @param port - Port for API calls.
-	 * @param done - Array of graphs that are initialized.
+	 * 
+	 * @param port 
+	 * 			Port for API calls.
+	 * @param done 
+	 * 			Array of graphs that are initialized.
 	 * @throws Exception
 	 */
 	public void initChildren(MetaEditAPIPortType port, ArrayList<Graph> done) throws  Exception {
