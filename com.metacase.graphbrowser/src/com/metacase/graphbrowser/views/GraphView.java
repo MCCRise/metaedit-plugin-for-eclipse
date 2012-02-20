@@ -64,11 +64,11 @@ public class GraphView extends ViewPart implements Observer {
 	private Action actionGenerateGraph;
 	private Action actionUpdateGraphList;
 	private Action actionStartMetaEdit;
-	private Action doubleClickAction;
 	private Action actionOpenSettings;
 	private Action actionOpenCreateGraphDialog;
 	private Action actionOpenEditPropertiesDialog;
 	private Action actionToggleGraphTypeText;
+	private Action doubleClickAction;
 	private ViewContentProvider viewContentProvider;
 	private static boolean isGraphTypeText;
 	public Graph[] graphs;

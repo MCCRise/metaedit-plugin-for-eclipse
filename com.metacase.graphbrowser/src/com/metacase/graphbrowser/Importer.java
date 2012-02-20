@@ -23,10 +23,13 @@ public class Importer {
 	/**
 	 * Imports eclipse project to workspace and opens it. If project already exists, refreshes the project.
 	 * Finally builds and runs the imported project.
-	 * If no .project file found, does nothing. 
-	 * @param projectName name of the project that should be imported. Used for compiling and running the project.
-	 * @param classToLaunch name of the class that is launched. If the parameter is empty launch nothing. In case of null parameter try
-	 * to launch class named after the project name.
+	 * If no .project file found, does nothing.
+	 *  
+	 * @param projectName 
+	 * 			Name of the project that should be imported. Used for compiling and running the project.
+	 * @param classToLaunch 
+	 * 			Name of the class that is launched. If the parameter is empty launch nothing. 
+	 * 			In case of null parameter try to launch class named after the project name.
 	 */	
 	public static void importAndExecuteProject(String projectName, String classToLaunch) {
 	    IProjectDescription description = null;
@@ -45,6 +48,7 @@ public class Importer {
 	    	// Build the project.
 	    	project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
 	    	if (!classToLaunch.isEmpty()) {
+	    		
 		    	// Cast project to IJavaProject and run it.
 		    	IJavaProject iproject = JavaCore.create(project);
 	
@@ -66,6 +70,9 @@ public class Importer {
 	/**
 	 * Writes the plugin.ini file that is written for MetaEdit+ generator. 
 	 * The file contains information for the generator.
+	 * 
+	 * @return path
+	 * 			The path to the plugin.ini file.
 	 */
 	public static String writePluginIniFile(String path, String generatorName) {
 	    	IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
@@ -75,13 +82,10 @@ public class Importer {
         	if (_temp.exists()) _temp.deleteOnExit();
         	IniHandler writer = new IniHandler(path);
         	writer.flushValues();
+        	// write the IDE information for MetaEdit+
         	writer.addSetting("IDE", "eclipse");
         	// workspace path
         	writer.addSetting("workspace", new File(root.getLocation().toString()).toString());
-        	// If we are running Autobuild generator mark to the ini file that the generated source
-        	// code should be compiled and run in Eclipse.
-        	String _runValue = generatorName.equalsIgnoreCase("autobuild") ? "true" : "false";
-        	writer.addSetting("runGenerated", _runValue);
         	writer.saveSettings();
         	// Return the path of written ini file so that it can be read later.  
         	return path;
