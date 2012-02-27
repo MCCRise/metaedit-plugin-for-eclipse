@@ -6,7 +6,11 @@
 package com.metacase.graphbrowser;
 
 import java.rmi.RemoteException;
+
+import org.eclipse.swt.widgets.Display;
+
 import com.metacase.API.*;
+import com.metacase.graphbrowser.views.GraphView;
 import com.metacase.objects.Graph;
 
 /**
@@ -37,19 +41,30 @@ public class MEDialog extends Thread {
 	 */
 	public void run() {
 	    MetaEditAPIPortType port = Launcher.getPort();
+	    
+	   	final Object o;
+	    
 	    switch (this.dialogType) {
 	    	case CREATE_NEW_GRAPH:
 	    	    // Opens "Create Graph" dialog in MetaEdit+
 	    	    METype m  = null;
 	    	    try {
-	    		if (selectedGraph == null) {
-	    		    m = new METype();
-	    		    m.setName("Graph");
-	    		}
-	    		else {
-	    		    m = selectedGraph.getMEType(); 
-	    		}
-	    		port.createGraphDialog(m);
+		    		if (selectedGraph == null) {
+		    		    m = new METype();
+		    		    m.setName("Graph");
+		    		}
+		    		else {
+		    		    m = selectedGraph.getMEType(); 
+		    		}
+		    		// If new graph is created, update the graph list
+		    		o = port.createGraphDialog(m);
+		    		if (o instanceof MEAny) {
+	    	    		Display.getDefault().syncExec( new Runnable() {  
+	    	    			public void run() {
+	    	    				GraphView.updateView();
+	    	    			} 
+	    	    		});
+		    		}
 	    	    } catch (RemoteException e) {
 	    	    	e.printStackTrace();
 	    	    }
@@ -57,7 +72,13 @@ public class MEDialog extends Thread {
 	    	case EDIT_GRAPH_PROPERTIES:
 	    	    // Opens "Properties" dialog for the selected graph in MetaEdit+
 	    	    try {
-	    	    	port.propertyDialog(this.selectedGraph.toMEOop());
+	    	    	if ( port.propertyDialog(this.selectedGraph.toMEOop()) ) {
+	    	    		Display.getDefault().syncExec( new Runnable() {  
+	    	    			public void run() {
+	    	    				GraphView.updateView();
+	    	    			} 
+	    	    		});
+	    	    	}
 	    	    } catch (RemoteException e) { 
 	    	    	e.printStackTrace();
 	    	    }
