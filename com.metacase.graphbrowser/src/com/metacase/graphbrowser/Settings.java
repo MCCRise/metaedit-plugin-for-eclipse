@@ -45,6 +45,12 @@ public class Settings extends Observable {
 	    this.setInitialized(true);
 	}
 	
+	/**
+	 * Getter for the Settings instance. Returns previously created if exists.
+	 * Else, creates a new one.
+	 * 
+	 * @return the Settings instance
+	 */
 	public static Settings getSettings() {
 	    if (singleton == null) singleton = new Settings();
 	    return singleton;
@@ -160,14 +166,16 @@ public class Settings extends Observable {
 	    writer.addSetting("database", this.getDatabase());
 	    writer.addSetting("username", this.getUsername());
 	    writer.addSetting("password", this.getPassword());
-	    // Write all projects to one string with separator.
-	    String projects = "";
-	    String separator = "";
+	    // Write all projects to StringBuilder with separator.
+	    StringBuilder sb = new StringBuilder();
 	    for (String s : this.getProjects()) {
-		projects += separator + s;
-		separator = ";";
+			sb.append(s);
+			sb.append(";");
 	    }
-	    writer.addSetting("projects", projects);
+	    // delete the last separator
+	    sb.deleteCharAt(sb.length()-1);
+
+	    writer.addSetting("projects", sb.toString());
 	    writer.addSetting("hostname", this.getHostname());
 	    writer.addSetting("port", String.valueOf(this.getPort()));
 	    writer.addSetting("logging", String.valueOf(this.isLogging()));
@@ -198,9 +206,9 @@ public class Settings extends Observable {
 	 */
 	public void createEmptyMerFile(){
 	    try {
-		merFile.createNewFile();
+	    	merFile.createNewFile();
 	    } catch (IOException e) {
-		e.printStackTrace();
+	    	e.printStackTrace();
 	    }
 	}
 	

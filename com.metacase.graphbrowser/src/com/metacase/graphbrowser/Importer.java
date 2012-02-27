@@ -25,11 +25,9 @@ public class Importer {
 	 * Finally builds and runs the imported project.
 	 * If no .project file found, does nothing.
 	 *  
-	 * @param projectName 
-	 * 			Name of the project that should be imported. Used for compiling and running the project.
-	 * @param classToLaunch 
-	 * 			Name of the class that is launched. If the parameter is empty launch nothing. 
-	 * 			In case of null parameter try to launch class named after the project name.
+	 * @param projectName Name of the project that should be imported. Used for compiling and running the project.
+	 * @param classToLaunch Name of the class that is launched. If the parameter is empty launch nothing. 
+	 * 		  In case of null parameter try to launch class named after the project name.
 	 */	
 	public static void importAndExecuteProject(String projectName, String classToLaunch) {
 	    IProjectDescription description = null;
@@ -71,8 +69,7 @@ public class Importer {
 	 * Writes the plugin.ini file that is written for MetaEdit+ generator. 
 	 * The file contains information for the generator.
 	 * 
-	 * @return path
-	 * 			The path to the plugin.ini file.
+	 * @return path The path to the plugin.ini file.
 	 */
 	public static String writePluginIniFile(String path, String generatorName) {
 	    	IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 

@@ -51,7 +51,7 @@ public class SettingsDialog extends JDialog {
 	/**
 	 * Constructor.
 	 * 
-	 * Contains as commented lines the code for the hostname and logging options.
+	 * Contains in comments code for the hostname and logging options.
 	 * 
 	 * @param modal
 	 */

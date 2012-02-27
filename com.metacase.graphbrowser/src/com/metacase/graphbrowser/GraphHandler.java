@@ -33,6 +33,7 @@ public class GraphHandler {
 		MEOop [] meOops = new MEOop[0];
 		if (!Launcher.isApiOK()) return topLevelGraphs.toArray(new Graph[topLevelGraphs.size()]);
 		try {
+			// fetch all instances type of "graph"
 			meOops = port.allSimilarInstances(graphType);
 		} catch (RemoteException e) { 
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
@@ -41,6 +42,7 @@ public class GraphHandler {
 		for (MEOop m : meOops) {
 			Graph g = null;
 			try {
+				// cast MeOop objects to Graph objects
 			    g = Graph.MEOopToGraph(m);
 			} catch (RemoteException e) {
 			    e.printStackTrace();
@@ -50,15 +52,16 @@ public class GraphHandler {
 		ArrayList<Graph> done = new ArrayList<Graph>();
 		for (Graph g : graphs) {
 			try {
+				// init every graph with its children
 				g.initChildren(port, done);
 			} catch (Exception e) { 
 			    e.printStackTrace();
 			}
 		}
+		// Separate "top level"or "parent" graphs (graphs that are not children of any other graph)
 		for (Graph g : graphs) {
 			if (!g.getIsChild()) topLevelGraphs.add(g);
 		}
-		ArrayList<Graph> reachableGraphs = reachableGraphs(topLevelGraphs);
 		
 		Collections.sort(graphs, new Comparator(){
 			public int compare(Object o1, Object o2) {
@@ -67,6 +70,8 @@ public class GraphHandler {
 			    return g2.getChildren().length -(g1.getChildren().length);
 			}
 		});
+		
+		ArrayList<Graph> reachableGraphs = reachableGraphs(topLevelGraphs);
 		
 		for ( Graph g : graphs ) {
 			if (!reachableGraphs.contains(g)) {

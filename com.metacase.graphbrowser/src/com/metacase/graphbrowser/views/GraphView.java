@@ -59,16 +59,16 @@ public class GraphView extends ViewPart implements Observer {
 	private Composite errorView;
 	private Composite container;
 	private StackLayout layout;
-	private Action actionOpenInMetaEdit;
-	private Action actionRunAutobuild;
-	private Action actionGenerateGraph;
-	private Action actionUpdateGraphList;
-	private Action actionStartMetaEdit;
-	private Action actionOpenSettings;
-	private Action actionOpenCreateGraphDialog;
-	private Action actionOpenEditPropertiesDialog;
-	private Action actionToggleGraphTypeText;
-	private Action doubleClickAction;
+	private static Action actionOpenInMetaEdit;
+	private static Action actionRunAutobuild;
+	private static Action actionGenerateGraph;
+	private static Action actionUpdateGraphList;
+	private static Action actionStartMetaEdit;
+	private static Action actionOpenSettings;
+	private static Action actionOpenCreateGraphDialog;
+	private static Action actionOpenEditPropertiesDialog;
+	private static Action actionToggleGraphTypeText;
+	private static Action doubleClickAction;
 	private ViewContentProvider viewContentProvider;
 	private static boolean isGraphTypeText;
 	public Graph[] graphs;
@@ -130,7 +130,7 @@ public class GraphView extends ViewPart implements Observer {
     			    if (g.getChildren() != null && g.getChildren().length > 0) {
     				to.populate(g.getChildren(), stack);
     			    }
-			}
+				}
 		    }
 		}
 	}
@@ -267,8 +267,8 @@ public class GraphView extends ViewPart implements Observer {
         		    
 	    	    @Override
 	    	    public void selectionChanged(SelectionChangedEvent event) {
-	    		setToolBarButtonsEnabled();
-	    		setView();
+	    	    	setToolBarButtonsEnabled();
+	    	    	setView();
 	    	    }
 	    	});
 	}
@@ -297,9 +297,9 @@ public class GraphView extends ViewPart implements Observer {
 	    errorLabel.setText("No API connection found.");
 	    	
 	    Listener listener = new Listener() {
-		public void handleEvent(Event event) {
-		    actionStartMetaEdit.run();
-		}
+	    	public void handleEvent(Event event) {
+	    		actionStartMetaEdit.run();
+	    	}
 	    };
 	    Button errorButton = new Button(errorView, SWT.NORMAL);
 	    errorButton.addListener(SWT.Selection, listener);
@@ -311,8 +311,6 @@ public class GraphView extends ViewPart implements Observer {
 	    errorView.layout();
 	}
 	
-	
-
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
@@ -437,7 +435,7 @@ public class GraphView extends ViewPart implements Observer {
 		    public void run() {
 			Graph _graph = getSelectedGraph();
 			if (_graph == null) return;
-			_graph.runGenerator("Autobuild", true);
+			_graph.executeGenerator("Autobuild", true);
 		    }
 		};
 		
@@ -482,7 +480,7 @@ public class GraphView extends ViewPart implements Observer {
 				    public void windowClosing(WindowEvent e) {	}
 				    public void windowClosed(WindowEvent e) { 
 					if (p.getIsOKd()) {
-					    _graph.runGenerator(p.getOpenProjectsAsArray()[0], false);
+					    _graph.executeGenerator(p.getOpenProjectsAsArray()[0], false);
 					}
 				    }
 				    public void windowActivated(WindowEvent e) { }
@@ -495,7 +493,7 @@ public class GraphView extends ViewPart implements Observer {
 			}
 		};
 		this.setActionDetails(actionGenerateGraph,
-				"Select Generator to Run",
+				"Select the generator to run",
 				"icons/select_generator_to_run_icon.png");
 		
 		// Open settings dialog.
@@ -638,5 +636,12 @@ public class GraphView extends ViewPart implements Observer {
 			    }
 			});
 	    }
+	}
+	
+	/**
+	 * Updated the view by calling the update action. For use outside the UI thread.
+	 */
+	public static synchronized void updateView() {
+		actionUpdateGraphList.run();
 	}
 }
