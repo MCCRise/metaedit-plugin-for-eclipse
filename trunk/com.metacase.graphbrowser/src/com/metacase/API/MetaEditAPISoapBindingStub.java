@@ -12,6 +12,8 @@
 
 package com.metacase.API;
 
+import org.eclipse.swt.internal.win32.OS;
+
 public class MetaEditAPISoapBindingStub extends org.apache.axis.client.Stub implements MetaEditAPIPortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
@@ -1932,7 +1934,8 @@ public class MetaEditAPISoapBindingStub extends org.apache.axis.client.Stub impl
 
     }
 
-    protected org.apache.axis.client.Call createCall() throws java.rmi.RemoteException {
+	protected org.apache.axis.client.Call createCall() throws java.rmi.RemoteException {
+    	OS.AllowSetForegroundWindow(-1);
         try {
             org.apache.axis.client.Call _call = super._createCall();
             if (super.maintainSessionSet) {
