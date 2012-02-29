@@ -15,8 +15,8 @@ import java.util.*;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.part.*;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -250,7 +250,7 @@ public class GraphView extends ViewPart implements Observer {
 	 * @param parent The parent composite for the view.
 	 */
 	private void createTreeView(Composite parent) {
-	    	viewer = new TreeViewer(container, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+	    	viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	    	viewContentProvider = new ViewContentProvider();
 	    	viewer.setContentProvider(viewContentProvider);
 	    	viewer.setLabelProvider(new ViewLabelProvider());
@@ -278,35 +278,36 @@ public class GraphView extends ViewPart implements Observer {
 	 * @param parent The parent composite for the error view.
 	 */
 	private void createErrorView(Composite parent) {
-	    RowLayout layout = new RowLayout();
-	    layout.type = SWT.VERTICAL;
-	    layout.wrap = true;
-	    layout.center = true;
-	    layout.marginLeft = 7;
-	    layout.marginRight = 7;
-	    layout.marginHeight = 10;
+		GridLayout gridLayout = new GridLayout();
+		GridData gridData;
+		
+	    errorView = new Composite(parent, SWT.NONE);
+	    errorView.setLayout(gridLayout);
 	    
-	    errorView = new Composite(container, SWT.CENTER);
-	    errorView.setLayout(layout);
-	    Label errorLabel = new Label(errorView, SWT.CENTER | SWT.WRAP);
+	    // Add a bit empty space above the label.
+	    new Label(errorView, SWT.NONE).setText(""); 
+	    
+	    Label errorLabel = new Label(errorView, SWT.NONE);
 	    errorLabel.setAlignment(SWT.CENTER);
-	    RowData data = new RowData();
-	    data.width = 250;
-	    
-	    errorLabel.setLayoutData(data);
 	    errorLabel.setText("No API connection found.");
-	    	
+	    gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		errorLabel.setLayoutData(gridData);
+	    
 	    Listener listener = new Listener() {
 	    	public void handleEvent(Event event) {
 	    		actionStartMetaEdit.run();
 	    	}
 	    };
-	    Button errorButton = new Button(errorView, SWT.NORMAL);
-	    errorButton.addListener(SWT.Selection, listener);
-	    //Image image = new Image(Display.getCurrent(), this.getClass().getResourceAsStream("/com.metacase.graphbrowser/icons/metaedit_logo.png"));
 	    
-	    //errorButton.setImage(image);
+	    Button errorButton = new Button(errorView, SWT.PUSH);
+	    errorButton.addListener(SWT.Selection, listener);
 	    errorButton.setText("Start MetaEdit+");
+	    gridData = new GridData();
+		gridData.horizontalAlignment = SWT.CENTER;
+		gridData.grabExcessHorizontalSpace = true;
+	    errorButton.setLayoutData(gridData);
 	    	
 	    errorView.layout();
 	}
@@ -450,7 +451,7 @@ public class GraphView extends ViewPart implements Observer {
 			    final Graph _graph = getSelectedGraph();
 			    if (_graph == null) return;
 			   	// Creates dialog that shows available generators and lets user to select one.
-				String okString = "<HTML><p>Choose the generator you want to run for the graph.</p></HTML>";
+				String okString = "<HTML><p>Select the generator to run.</p></HTML>";
 				String notOkString = "<HTML><p>No generators found for the the graph</p></HTML>";
 				MetaEditAPIPortType port = Launcher.getPort();
 				JFrame frame = new JFrame("");
@@ -493,7 +494,7 @@ public class GraphView extends ViewPart implements Observer {
 			}
 		};
 		this.setActionDetails(actionGenerateGraph,
-				"Select the generator to run",
+				"Select Generator to Run",
 				"icons/select_generator_to_run_icon.png");
 		
 		// Open settings dialog.
