@@ -15,6 +15,10 @@ Below you can see a state diagram showing the plugin initialization process.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/state_diagram_eclipse_plugin.png
 
+= Instructions for Metamodelers =
+
+Below you can find intructions for metamodelers. When writing generators the integration to Eclipse needs to be taken into account. The generator output location may differ from the usual generation location. Being able to generate different types of project (Java, Android, MIDP) to Eclipse, they are separated from each other by the project names. This leads to situation where Eclipse cannot expect the project name to be same as the top graph name as this used to be. Additionally, the main class name is also passed to Eclipse along the project name. The information is shared by writing it to a file named 'plugin.ini' located at !MetaEdit+ working directory. The file is used to transform information in both directions between !MetaEdit+ and Eclipse.
+
 == The generation and import process ==
 
 The generation and import process contains stages in which the plugin writes a plugin.ini file for !MetaEdit+, a generator for the selected graph is run in !MetaEdit+, the generated Eclipse project (if any) is imported in Eclipse, opened, built and launched in Eclipse automatically. Let's look next at the individual states in more detail. You may also test these by running the 'Digital Watch' example available in !MetaEdit+.
@@ -26,7 +30,7 @@ workspace=C:\user\Documents and settings\workspace\
 }}}
 The file and its content allow the generator in !MetaEdit+ to see that it is being used from another program. The generator can thus change its behaviour, e.g. instead of compiling and opening generated code itself, it can just generate the source code and project resource files that are needed for importing and building the project in Eclipse. The plugin removes the plugin.ini file at the end of the process.
 
-After !MetaEdit+ has generated the source code files, the plugin looks for a Java project with the same name as the graph selected in the plugin tree view. If a project is found, it is imported into Eclipse and opened. After that the project is built and run, so the user can go straight to seeing the generated program running.
+While generating the source code, !MetaEdit+ writes the main class name and the project name in the ini file during the generation. Eclipse the reads these values, imports the project that is read from the file, compiles and runs the main class. In Digital Watch generators the value from the main class is left empty. This means that Eclipse will only import the generated project but it will not try to launch them. 
 
 The project import automates otherwise manual actions like choosing to create a new project from the File menu and going through the wizard to create a new project. While these actions could be left for the user, the plugin aims to automate integration between code generated from !MetaEdit+ and Eclipse. To provide this automation the !MetaEdit+ generator creates Eclipse project resource files that are needed for opening the project in Eclipse, and the Eclipse plugin provides the project import, build and launch commands.
 
