@@ -1,0 +1,18 @@
+#summary Instructions of publishing the plugin.
+
+= Publishing Eclipse plugin =
+
+This is instruction for exporting and exporting and publishing Eclipse plug-in. There are two ways for exporting a plugin for sharing it to Eclipse users.
+
+  # Exporting the plug-in as single Jar-file and saving it to Eclipse plugins-folder.
+  # Packing the plug-in(s) to Eclipse Feature and publish it in Eclipse Update Site.
+
+== 1. Exporting the plug-in as Jar-file ==
+
+Choose the Eclipse project that contains the source code and Manifest from Package Explorer. Click mouse right button and from the pop-up menu select “Export”.
+
+
+
+== 2. Publishing the plug-in as a feature in Eclipse Update Site ==
+
+http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/export_click.png
