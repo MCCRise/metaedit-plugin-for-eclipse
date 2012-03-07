@@ -5,7 +5,7 @@ This page contains information about how the plugin works, and how to modify or 
 
 == Launching the plugin ==
 
-When the plugin starts it will search for an existing open API connection to MetaEdit+. If it finds one, it will ask for all the graphs in all opened projects in !MetaEdit+ and show them in the view. If the plugin doesn’t find an API connection it will look in the root directory of the current Eclipse workspace for a settings file, ‘default.mer’, that contains !MetaEdit+ launch parameters. If it finds the settings file, the plugin asks the user's permission to launch !MetaEdit+, log in, open projects and start the API server in !MetaEdit+.
+When the plugin starts it will search for an existing open API connection to !MetaEdit+. If it finds one, it will ask for all the graphs in all opened projects in !MetaEdit+ and show them in the view. If the plugin doesn’t find an API connection it will look in the root directory of the current Eclipse workspace for a settings file, ‘default.mer’, that contains !MetaEdit+ launch parameters. If it finds the settings file, the plugin asks the user's permission to launch !MetaEdit+, log in, open projects and start the API server in !MetaEdit+.
 
 When using the plugin for first time there is no settings file and no open API connection to !MetaEdit+. In this case the plugin tries to calculate the values that are needed for launching !MetaEdit+ and shows them in a dialog to user. When the user has checked and edited them if needed, !MetaEdit+ can be launched by clicking the ‘Open !MetaEdit+’ button. The launch parameters are also saved in the ‘default.mer’ file in the workspace root directory, and will be read when the plugin is next launched without an API connection.
 
@@ -42,7 +42,7 @@ The most common scenario for the plugin is for the generated source code to end 
   * Read the Eclipse workspace directory from the plugin.ini file created by the plugin
   * Generate the source files under that directory
   * Generate an Eclipse project file in that directory, with the same name as the graph, and referring to the generated source code
-   * Or look at the Digital Watch demo for writing the main class name and project name to Eclipse
+   * or look at the Digital Watch demo for writing the main class name and project name to Eclipse
 
 == Extending the plugin ==
 
