@@ -42,6 +42,7 @@ The most common scenario for the plugin is for the generated source code to end 
   * Read the Eclipse workspace directory from the plugin.ini file created by the plugin
   * Generate the source files under that directory
   * Generate an Eclipse project file in that directory, with the same name as the graph, and referring to the generated source code
+   * Or look at the Digital Watch demo for writing the main class name and project name to Eclipse
 
 == Extending the plugin ==
 
