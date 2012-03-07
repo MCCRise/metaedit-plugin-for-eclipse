@@ -1,4 +1,4 @@
-#summary Usage of the plugin
+#summary Using the plugin
 
 = Plugin functions =
 
