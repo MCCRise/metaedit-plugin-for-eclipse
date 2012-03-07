@@ -47,3 +47,5 @@ The most common scenario for the plugin is for the generated source code to end 
 == Extending the plugin ==
 
 You can easily modify the plugin to add extra functions that you'd like, or to change the existing behaviour. !MetaEdit+ commands, for example commit and abandon or editing the graphs programmatically, are available via the API similarly to the commands that are used in this plugin. For more information, see the API section in the !MetaEdit+ manual and the [http://code.google.com/p/metaedit-plugin-for-eclipse/source/browse/ source code] of this plugin.
+
+The instructions of how to export and install your plugin is [publishPlugin here].
