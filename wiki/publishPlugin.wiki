@@ -58,13 +58,9 @@ For example graph browser update site project is located at
 
 and contains the following files and folders
   * features/
-   * com.metacase.graphborwser.feature_0.1.6.jar
-   * com.metacase.graphborwser.feature_0.1.7.jar
    * com.metacase.graphborwser.feature_1.0.0.jar
    * com.metacase.graphborwser.feature_1.0.1.jar
   * plugins/
-   * com.metacase.graphborwser _0.1.6.jar
-   * com.metacase.graphborwser _0.1.7.jar
    * com.metacase.graphborwser _1.0.0.jar
    * com.metacase.graphborwser _1.0.1.jar
   * artifacts.jar
