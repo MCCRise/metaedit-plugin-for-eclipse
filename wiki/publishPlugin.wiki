@@ -9,7 +9,7 @@ This is instruction for exporting and publishing Eclipse plug-in. There are two 
 
 == 1. Exporting the plug-in as Jar-file ==
 
-This is the simplier way. It produces a single JAR-file which can be shared to users. The installation is made by copying it under the Eclipse\plugins folder and restarting Eclipse.
+This is the simplier way of these two options. It produces a single JAR-file which can be shared to users. The installation is made by copying it under the Eclipse\plugins folder and restarting Eclipse.
 
   * Choose the Eclipse project that contains the source code and Manifest from Package Explorer. Click mouse right button and from the pop-up menu select “Export”.
 
