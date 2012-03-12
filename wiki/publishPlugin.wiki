@@ -49,7 +49,7 @@ Next, create the Eclipse Update Site project.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/feature_category.PNG
 
-Having plug-in, feature and update site project you may want to provide update to the feature that is published before. Starting from the plug-in, increase the version number in plug-in manifest file. Next, open feature.xml file from Feature project and increase the version number. This is shown to user when new update is installed through the wizard. Then open the site.xml file located in Update Site project. Click “Add Feature” select the new feature with increased version number and click “Build All” to build the feature.
+Having plug-in, feature and update site project you may want to provide update to the feature that is published before. Starting from the plug-in, increase the version number in plug-in manifest file. Next, open feature.xml file from Feature project and increase the version number. This is shown to user when new update is installed through the wizard. Finally, open the site.xml file located in Update Site project. Click “Add Feature” select the new feature with increased version number and click “Build All” to build the feature.
 
 The update site project needs to be uploaded to Internet so that people can download it to their own Eclipse. Place to content of Update site project to server. Put the site.xml in root folder of the URL path. 
 For example graph browser update site project is located at 
