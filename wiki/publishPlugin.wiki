@@ -61,8 +61,8 @@ and contains the following files and folders
    * com.metacase.graphborwser.feature_1.0.0.jar
    * com.metacase.graphborwser.feature_1.0.1.jar
   * plugins/
-   * com.metacase.graphborwser _1.0.0.jar
-   * com.metacase.graphborwser _1.0.1.jar
+   * com.metacase.graphborwser_1.0.0.jar
+   * com.metacase.graphborwser_1.0.1.jar
   * artifacts.jar
   * content.jar
   * site.xml
