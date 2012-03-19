@@ -30,7 +30,22 @@ workspace=C:\user\Documents and settings\workspace\
 }}}
 The file and its content allow the generator in !MetaEdit+ to see that it is being used from another program. The generator can thus change its behaviour, e.g. instead of compiling and opening generated code itself, it can just generate the source code and project resource files that are needed for importing and building the project in Eclipse. The plugin removes the plugin.ini file at the end of the process.
 
-While generating the source code, !MetaEdit+ writes the main class name and the project name in the ini file during the generation. Eclipse the reads these values, imports the project that is read from the file, compiles and runs the main class. In Digital Watch generators the value from the main class is left empty. This means that Eclipse will only import the generated project but it will not try to launch them. 
+While generating the source code, !MetaEdit+ writes the main class name and the project name in the ini file during the generation. Eclipse then reads these values, imports the project that is read from the file, compiles and runs the main class. In Digital Watch generators the value from the main class is left empty. This means that Eclipse will only import the generated project but it will not try to launch them. 
+
+For example normal Java project generation from Eclipse will make the generator to write in the plugin.ini file
+
+{{{
+classToLaunch=com.metacase.watch.generated.2012Models
+}}}
+
+Android generation would cause the generator to write
+
+{{{
+classToLaunch=
+projectName=2012Models_android
+}}}
+
+that would tell the Eclipse plugin not to run any class after importing the project to Eclipse.
 
 The project import automates otherwise manual actions like choosing to create a new project from the File menu and going through the wizard to create a new project. While these actions could be left for the user, the plugin aims to automate integration between code generated from !MetaEdit+ and Eclipse. To provide this automation the !MetaEdit+ generator creates Eclipse project resource files that are needed for opening the project in Eclipse, and the Eclipse plugin provides the project import, build and launch commands.
 
