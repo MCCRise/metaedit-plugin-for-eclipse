@@ -2,24 +2,24 @@
 
 = Publishing Eclipse plugin =
 
-This is instruction for exporting and publishing Eclipse plug-in. There are two ways for exporting a plugin for sharing it to Eclipse users.
+This is instruction for exporting and publishing Eclipse plug-in. There are two ways for exporting a plugin and sharing it to Eclipse users.
 
   # Exporting the plug-in as single Jar-file and saving it to Eclipse plugins-folder.
-  # Packing the plug-in(s) to Eclipse Feature and publish it in Eclipse Update Site.
+  # Packing the plug-in(s) to Eclipse Feature and publishing it in Eclipse Update Site.
 
 == 1. Exporting the plug-in as Jar-file ==
 
 This is the simplier way of these two options. It produces a single JAR-file which can be shared to users. The installation is made by copying it under the Eclipse\plugins folder and restarting Eclipse.
 
-  * Choose the Eclipse project that contains the source code and Manifest from Package Explorer. Click mouse right button and from the pop-up menu select “Export”.
+  * Choose the Eclipse project that contains the source code and Manifest from Package Explorer. Click mouse right button and select “Export” from the pop-up menu.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/export_click.png
 
-  * From “Plug-in Development” folder, select “Deployable plug-ins and fragments” and click “Next”.
+  * Select “Deployable plug-ins and fragments” from “Plug-in Development” folder and click “Next”.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/export_as.PNG
 
-  * Select included plug-ins and the destination where to save the JAR-file on the disk. Click “Finish” and the plug-in is saved on the disk. Locate the Jar-file, copy it to Eclipse\plugins –folder, (re)start Eclipse with (-clean) option and start using the plug-in.
+  * Select included plug-ins and location where to save the JAR-file on the disk. Click “Finish” and the plug-in is saved on the disk. Locate the Jar-file, copy it to Eclipse\plugins –folder, (re)start Eclipse with (-clean) option and start using the plug-in.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/export_dest.PNG
 
@@ -31,11 +31,14 @@ Eclipse plug-ins can be shared and installed from Eclipse plugin site. Before cr
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/new_feature_project.PNG
 
-  * Give the feature a name, version number and provider information and click “Finish”.
+  * Give the feature a name, a version number and provider information and click “Finish”.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/new_feature_wizard_2.PNG
 
-  * Now you have created the feature. Before proceeding to update site project, include the plug-in(s) to the new feature. You can also add other information like description, license and copyright to the feature. From the plug-ins tab click “Add” and start typing the plug-in name in the text field. The plug-in should appear to the list. Select the plug-in and click “OK”. If you have many plug-ins, include them all to the list.
+  * Before proceeding to update site project, include the plug-in(s) to the new feature. You can also add other information like description, license and copyright to the feature.  From the plug-ins tab click “Add” and start typing the plug-in name in the text field. The plug-in should appear to the list. Select the plug-in and click “OK”. If you have many plug-ins, include them all to the list.
+
+  * Now you have created the feature.
+
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/feature_plugin_tab.PNG
 
@@ -45,14 +48,13 @@ Next, create the Eclipse Update Site project.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/new_update_site_project.PNG
 
-  * Add a new feature category to the Update Site. This category is shown to user when update site content is loaded to Eclipse plug-in installation wizard.  When a category is created, select Add Feature and select the created feature from the list. When feature is included, click “Build All” to build the plug-ins into one feature.
+  * Add a new feature category to the Update Site. This category is shown to user when update site content is loaded to Eclipse plug-in installation wizard.  To add feature, select Add Feature and select the created feature from the list. When feature is included, click “Build All” to build the plug-ins into one feature.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/feature_category.PNG
 
-Having plug-in, feature and update site project you may want to provide update to the feature that is published before. Starting from the plug-in, increase the version number in plug-in manifest file. Next, open feature.xml file from Feature project and increase the version number. This is shown to user when new update is installed through the wizard. Finally, open the site.xml file located in Update Site project. Click “Add Feature”, select the new feature with increased version number and click “Build All” to build the feature.
+Having plug-in, feature and update site project you may want to provide update to a feature that is published before. Starting from the plug-in, increase the version number in plug-in manifest file. Next, open feature.xml file from feature project and increase the version number. This is shown to user when new update is installed through the wizard. Finally, open the site.xml file located in Update Site project. Click “Add Feature”, select the new feature with increased version number and click “Build All” to build the feature.
 
-The update site project needs to be uploaded to Internet so that people can download it to their own Eclipse. Place to content of Update site project to server. Put the site.xml in root folder of the URL path. 
-For example graph browser update site project is located at 
+The update site project needs to be uploaded to Internet so that people can download it to their own Eclipse. Place to content of Update site project to server. Put the site.xml in root folder of the URL path. Placing the updated project to the same location as the older one will be shown to users as an update to the existin plug-in. For example graph browser update site project is located at 
 
 `http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/MEplusGraphBrowser/`
 
