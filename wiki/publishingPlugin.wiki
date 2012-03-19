@@ -19,13 +19,13 @@ This is the simplier way of these two options. It produces a single JAR-file whi
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/export_as.PNG
 
-  * Select included plug-ins and location where to save the JAR-file on the disk. Click “Finish” and the plug-in is saved on the disk. Locate the Jar-file, copy it to Eclipse\plugins –folder, (re)start Eclipse with (-clean) option and start using the plug-in.
+  * Select the plug-ins you want to include and the location where to save the JAR-file on the disk. Click “Finish” and the plug-in is saved. Locate the Jar-file, copy it to Eclipse\plugins –folder, (re)start Eclipse with (-clean) option and start using the plug-in.
+
+  * Put the JAR file somewhere where other users are able download and start using it.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/export_dest.PNG
 
 == 2. Publishing the plug-in as a feature in Eclipse Update Site ==
-
-Eclipse plug-ins can be shared and installed from Eclipse plugin site. Before creating Update Site project, we need to create a feature that packs the needed plug-in(s) and xml file that contains the information about the packaged tool (e.g. version, license, name).
 
   * Select File | New | Project | Plug-in Development | Feature Project and click “Next”.
 
@@ -35,14 +35,11 @@ Eclipse plug-ins can be shared and installed from Eclipse plugin site. Before cr
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/new_feature_wizard_2.PNG
 
-  * Before proceeding to update site project, include the plug-in(s) to the new feature. You can also add other information like description, license and copyright to the feature.  From the plug-ins tab click “Add” and start typing the plug-in name in the text field. The plug-in should appear to the list. Select the plug-in and click “OK”. If you have many plug-ins, include them all to the list.
-
-  * Now you have created the feature.
-
+  * From the plug-ins tab click “Add” and start typing the plug-in name in the text field. The plug-in should appear to the list. Select the plug-in and click “OK”. If you have many plug-ins, include them all to the list.
 
  http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/feature_plugin_tab.PNG
 
-Next, create the Eclipse Update Site project.
+Next, create an Eclipse Update Site project.
 
   * Select File | New | Project | Plug-in Development | Update Site Project and click “Next”. Give a name for the Project and click “Finish”.
 
