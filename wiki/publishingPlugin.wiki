@@ -59,12 +59,12 @@ The update site project needs to be uploaded to Internet so that people can down
 `http://metaedit-plugin-for-eclipse.googlecode.com/svn/trunk/MEplusGraphBrowser/`
 
 and contains the following files and folders
-  * features/
-   * com.metacase.graphborwser.feature_1.0.0.jar
-   * com.metacase.graphborwser.feature_1.0.1.jar
-  * plugins/
-   * com.metacase.graphborwser_1.0.0.jar
-   * com.metacase.graphborwser_1.0.1.jar
-  * artifacts.jar
-  * content.jar
-  * site.xml
+ * features/
+  * com.metacase.graphborwser.feature_1.0.0.jar
+  * com.metacase.graphborwser.feature_1.0.1.jar
+ * plugins/
+  * com.metacase.graphborwser_1.0.0.jar
+  * com.metacase.graphborwser_1.0.1.jar
+ * artifacts.jar
+ * content.jar
+ * site.xml
