@@ -55,13 +55,13 @@ public class GraphView extends ViewPart implements Observer {
 	 */
 	public static final String ID = "com.metacase.graphbrowser.views.GraphView";
 
-	private TreeViewer viewer;
+	private TreeViewer treeViewer;
 	private Composite errorView;
 	private Composite container;
 	private StackLayout layout;
 	private static Action actionOpenInMetaEdit;
 	private static Action actionRunAutobuild;
-	private static Action actionGenerateGraph;
+	private static Action actionCallGenerator;
 	private static Action actionUpdateGraphList;
 	private static Action actionStartMetaEdit;
 	private static Action actionOpenSettings;
@@ -228,6 +228,12 @@ public class GraphView extends ViewPart implements Observer {
 	    	createErrorView(container);
 	    	createTreeView(container); 
 	    	
+	    	makeActions();
+	    	hookContextMenu();
+	    	hookDoubleClickAction();
+	    	contributeToActionBars();
+	    	setToolBarButtonsEnabled();
+	    	
 	    	setView();
 	}
 
@@ -237,12 +243,9 @@ public class GraphView extends ViewPart implements Observer {
 	 * shows the errorview.
 	 */
 	private void setView() {
-	    // The errorview is set to stacklayout first and has index 0. It's used 
-	    // when no API connection found.
-	    // The treeview is set second and has index 1.
-	    layout.topControl = container.getChildren()[!this.isAPI() ? 0 : 1];
-	    
+	    layout.topControl = this.isAPI() ? treeViewer.getTree() : errorView; 
 	    container.layout();
+	    setToolBarButtonsEnabled();
 	}
 	
 	/**
@@ -250,20 +253,14 @@ public class GraphView extends ViewPart implements Observer {
 	 * @param parent The parent composite for the view.
 	 */
 	private void createTreeView(Composite parent) {
-	    	viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+	    	treeViewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 	    	viewContentProvider = new ViewContentProvider();
-	    	viewer.setContentProvider(viewContentProvider);
-	    	viewer.setLabelProvider(new ViewLabelProvider());
-	    	viewer.setSorter(new NameSorter());
-	    	viewer.setInput(getViewSite());
-	    	viewer.expandToLevel(2);
-	    	
-	    	makeActions();
-	    	hookContextMenu();
-	    	hookDoubleClickAction();
-	    	contributeToActionBars();
-	    	setToolBarButtonsEnabled();
-	    	viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+	    	treeViewer.setContentProvider(viewContentProvider);
+	    	treeViewer.setLabelProvider(new ViewLabelProvider());
+	    	treeViewer.setSorter(new NameSorter());
+	    	treeViewer.setInput(getViewSite());
+	    	treeViewer.expandToLevel(2);    	
+	    	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
         		    
 	    	    @Override
 	    	    public void selectionChanged(SelectionChangedEvent event) {
@@ -284,7 +281,7 @@ public class GraphView extends ViewPart implements Observer {
 	    errorView = new Composite(parent, SWT.NONE);
 	    errorView.setLayout(gridLayout);
 	    
-	    // Add a bit empty space above the label.
+	    // Add an empty space above the label.
 	    new Label(errorView, SWT.NONE).setText(""); 
 	    
 	    Label errorLabel = new Label(errorView, SWT.NONE);
@@ -320,9 +317,9 @@ public class GraphView extends ViewPart implements Observer {
 			GraphView.this.fillContextMenu(manager);
 		    }
 		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
+		Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
+		treeViewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuMgr, treeViewer);
 	}
 
 	private void contributeToActionBars() {
@@ -331,9 +328,9 @@ public class GraphView extends ViewPart implements Observer {
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		if (!viewer.getSelection().isEmpty()) {
+		if (!treeViewer.getSelection().isEmpty()) {
 		    manager.add(actionRunAutobuild);
-		    if (this.is50()) manager.add(actionGenerateGraph);	
+		    if (this.is50()) manager.add(actionCallGenerator);	
 		    manager.add(new Separator());
 		    manager.add(actionOpenInMetaEdit);
 		    if (this.is50()) manager.add(actionOpenEditPropertiesDialog);
@@ -348,7 +345,7 @@ public class GraphView extends ViewPart implements Observer {
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 	    manager.add(actionRunAutobuild);
-	    manager.add(actionGenerateGraph);
+	    manager.add(actionCallGenerator);
 		manager.add(new Separator());
 		manager.add(actionOpenInMetaEdit);
 		manager.add(actionOpenCreateGraphDialog);
@@ -377,19 +374,20 @@ public class GraphView extends ViewPart implements Observer {
 	}
 	
 	/**
-	 * Sets the seleceted toolbar buttons enabled or disabled.
+	 * Sets the toolbar buttons enabled or disabled.
 	 */
 	private void setToolBarButtonsEnabled() {
 	    boolean _is50 = this.is50();
 	    boolean _isAPI = this.isAPI();
-	    boolean _isSelection = !viewer.getSelection().isEmpty();
+	    boolean _isSelection = !treeViewer.getSelection().isEmpty();
 	    
 	    actionRunAutobuild.setEnabled(_isAPI && _isSelection);
-	    actionGenerateGraph.setEnabled( _is50 && _isAPI && _isSelection);
+	    actionCallGenerator.setEnabled( _is50 && _isAPI && _isSelection);
 	    actionOpenInMetaEdit.setEnabled(_isAPI && _isSelection);
 	    actionOpenCreateGraphDialog.setEnabled(_is50 && _isAPI);
 	    actionUpdateGraphList.setEnabled(true);
 	    actionOpenSettings.setEnabled(true);
+	    actionToggleGraphTypeText.setEnabled(isAPI());
 	    
 	    IActionBars bars = getViewSite().getActionBars();
 	    IToolBarManager manager = bars.getToolBarManager();
@@ -401,7 +399,7 @@ public class GraphView extends ViewPart implements Observer {
 	 * @return selected Graph or null
 	 */
 	private Graph getSelectedGraph(){
-		ISelection selection = viewer.getSelection();
+		ISelection selection = treeViewer.getSelection();
 		TreeObject to = (TreeObject) ((IStructuredSelection)selection).getFirstElement();
 		if (to == null) return null;
 		return to.getGraph();
@@ -436,7 +434,7 @@ public class GraphView extends ViewPart implements Observer {
 		    public void run() {
 			Graph _graph = getSelectedGraph();
 			if (_graph == null) return;
-			_graph.executeGenerator("Autobuild", true);
+			_graph.executeGenerator("Autobuild");
 		    }
 		};
 		
@@ -446,54 +444,59 @@ public class GraphView extends ViewPart implements Observer {
 		
 		// Runs seleceted generator for graph. Shows all available generators to user in 
 		// a list where user can choose one to be run.
-		actionGenerateGraph = new Action() {
+		actionCallGenerator = new Action() {
 		    	public void run() {
-			    final Graph _graph = getSelectedGraph();
-			    if (_graph == null) return;
-			   	// Creates dialog that shows available generators and lets user to select one.
-				String okString = "<HTML><p>Select the generator to run.</p></HTML>";
-				String notOkString = "<HTML><p>No generators found for the the graph</p></HTML>";
-				MetaEditAPIPortType port = Launcher.getPort();
-				JFrame frame = new JFrame("");
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				String [] generators = null;
-				try {
-				    String line = port.generatorNames(_graph.getMEType());
-				    generators = line.split("\r");
-				} catch (RemoteException e) {
-				    e.printStackTrace();
-				}
+		    		final Graph _graph = getSelectedGraph();
+		    		if (_graph == null) return;
+		    		// Creates dialog that shows available generators and lets user to select one.
+					String okString = "<HTML><p>Select the generator to run.</p></HTML>";
+					String notOkString = "<HTML><p>No generators found for the the graph</p></HTML>";
+					MetaEditAPIPortType port = Launcher.getPort();
 					
-				ArrayList<String> generatorList = new ArrayList<String>();
-				for (int i=generators.length-1; i>=0; i--) {
-				    if (!generators[i].startsWith("_") && !generators[i].startsWith("!")) {
-					generatorList.add(generators[i]);
-				    }
-				}
-				final SelectionDialog p = new SelectionDialog(frame, generatorList, true, okString ,notOkString);
-				JComponent newContentPane = p;
-				frame.setContentPane(newContentPane);
-				frame.addWindowListener(new WindowListener() {
-				    public void windowOpened(WindowEvent e) { }
-				    public void windowIconified(WindowEvent e) { }
-				    public void windowDeiconified(WindowEvent e) { }
-				    public void windowDeactivated(WindowEvent e) { }
-				    public void windowClosing(WindowEvent e) {	}
-				    public void windowClosed(WindowEvent e) { 
-					if (p.getIsOKd()) {
-					    _graph.executeGenerator(p.getOpenProjectsAsArray()[0], false);
+					JFrame frame = new JFrame("");
+					
+					String [] generators = null;
+					try {
+					    String line = port.generatorNames(_graph.getMEType());
+					    generators = line.split("\r");
+					} catch (RemoteException e) {
+					    e.printStackTrace();
 					}
-				    }
-				    public void windowActivated(WindowEvent e) { }
-				});
-				frame.setResizable(false);
-				frame.setVisible(true);
-				frame.setSize(new Dimension(200, 300)); 
-				frame.setIconImage(SettingsDialog.getImage("icons/metaedit_logo.png"));
-				frame.setLocation(300, 300);
-			}
+					
+					ArrayList<String> generatorList = new ArrayList<String>();
+					
+					for (int i=generators.length-1; i >= 0; i--) {
+					    if (!generators[i].startsWith("_") && !generators[i].startsWith("!")) {
+					    	generatorList.add(generators[i]);
+					    }
+					}
+					
+					final SelectionDialog p = new SelectionDialog(frame, generatorList, true, okString ,notOkString);
+					JComponent newContentPane = p;
+					frame.setContentPane(newContentPane);
+					frame.addWindowListener(new WindowListener() {
+					    public void windowOpened(WindowEvent e) { }
+					    public void windowIconified(WindowEvent e) { }
+					    public void windowDeiconified(WindowEvent e) { }
+					    public void windowDeactivated(WindowEvent e) { }
+					    public void windowClosing(WindowEvent e) {	}
+					    public void windowClosed(WindowEvent e) { 
+					    	if (p.getIsOKd()) {
+					    		_graph.executeGenerator(p.getItemsAsArray()[0]);
+							}
+					    }
+					    public void windowActivated(WindowEvent e) { }
+					});
+					
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setResizable(true);
+					frame.setVisible(true);
+					frame.setSize(new Dimension(250, 300));
+					frame.setIconImage(SettingsDialog.getImage("icons/metaedit_logo.png"));
+					frame.setLocation(300, 300);
+				}
 		};
-		this.setActionDetails(actionGenerateGraph,
+		this.setActionDetails(actionCallGenerator,
 				"Select Generator to Run",
 				"icons/select_generator_to_run_icon.png");
 		
@@ -517,10 +520,10 @@ public class GraphView extends ViewPart implements Observer {
 		
 		actionUpdateGraphList = new Action() {
 			public void run() {
-			    Object oldInput = viewer.getInput();
+			    Object oldInput = treeViewer.getInput();
 			    viewContentProvider.initialize();
-			    viewContentProvider.inputChanged(viewer, oldInput, viewer.getInput());
-			    viewer.expandToLevel(2);
+			    viewContentProvider.inputChanged(treeViewer, oldInput, treeViewer.getInput());
+			    treeViewer.expandToLevel(2);
 			    setView();
 			}
 		};
@@ -568,7 +571,7 @@ public class GraphView extends ViewPart implements Observer {
 		actionToggleGraphTypeText = new Action("", Action.AS_CHECK_BOX) {
 			public void run() {
 				isGraphTypeText = actionToggleGraphTypeText.isChecked() ? true : false; 
-				viewContentProvider.inputChanged(viewer, null, null);
+				viewContentProvider.inputChanged(treeViewer, null, null);
 			}
 		};
 		
@@ -591,7 +594,7 @@ public class GraphView extends ViewPart implements Observer {
 	}
 	
 	private void hookDoubleClickAction() {
-	    viewer.addDoubleClickListener(new IDoubleClickListener() {
+	    treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 		public void doubleClick(DoubleClickEvent event) {
 			doubleClickAction.run();
 		}
@@ -602,7 +605,7 @@ public class GraphView extends ViewPart implements Observer {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-	    viewer.getControl().setFocus();
+	    treeViewer.getControl().setFocus();
 	}
 	
 	/**

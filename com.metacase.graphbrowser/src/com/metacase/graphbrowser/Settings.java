@@ -13,6 +13,12 @@ import javax.swing.JFileChooser;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 
+/**
+ * <p>
+ * Settings class that contains the settings properties and methods for reading and
+ * writing the to file. If no file is found, the values are "calculated".
+ * </p>
+ */
 public class Settings extends Observable {
  
 	private String programPath;
@@ -28,12 +34,8 @@ public class Settings extends Observable {
 	private File merFile;
 	private static Settings singleton;
 
-	
 	/**
-	 * <p>
-	 * Settings class that contains the settings properties and methods for reading and
-	 * writing the to file. If no file is found, the values are "calculated".
-	 * </p>
+	 * Constructor. Reads or creates the setting values.
 	 */
 	private Settings() {
 	    setMerFile("default.mer");
@@ -167,15 +169,15 @@ public class Settings extends Observable {
 	    writer.addSetting("username", this.getUsername());
 	    writer.addSetting("password", this.getPassword());
 	    // Write all projects to StringBuilder with separator.
-	    StringBuilder sb = new StringBuilder();
+	    StringBuilder sb1 = new StringBuilder();
 	    for (String s : this.getProjects()) {
-			sb.append(s);
-			sb.append(";");
+			sb1.append(s);
+			sb1.append(";");
 	    }
 	    // delete the last separator
-	    sb.deleteCharAt(sb.length()-1);
+	    sb1.deleteCharAt(sb1.length()-1);
 
-	    writer.addSetting("projects", sb.toString());
+	    writer.addSetting("projects", sb1.toString());
 	    writer.addSetting("hostname", this.getHostname());
 	    writer.addSetting("port", String.valueOf(this.getPort()));
 	    writer.addSetting("logging", String.valueOf(this.isLogging()));
@@ -188,7 +190,7 @@ public class Settings extends Observable {
 	 * Saves the values to attributes.
 	 * </p>
 	 */
-	private void readFromConfigFile(){
+	private void readFromConfigFile() {
 	    IniHandler reader = new IniHandler(this.getMerFile().toString());	
 	    this.setProgramPath(new File(reader.getSetting("metaEditDir")).toString());
 	    this.setWorkingDirectory(new File(reader.getSetting("workingDir")).toString());

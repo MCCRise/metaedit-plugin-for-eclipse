@@ -63,7 +63,7 @@ public class GraphHandler {
 			if (!g.getIsChild()) topLevelGraphs.add(g);
 		}
 		
-		Collections.sort(graphs, new Comparator(){
+		Collections.sort(graphs, new Comparator() {
 			public int compare(Object o1, Object o2) {
 			    Graph g1 = (Graph) o1;
 			    Graph g2 = (Graph) o2;
