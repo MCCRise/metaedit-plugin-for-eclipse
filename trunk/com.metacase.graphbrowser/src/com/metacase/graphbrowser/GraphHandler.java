@@ -5,7 +5,6 @@
 
 package com.metacase.graphbrowser;
 
-import java.io.*;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -96,68 +95,5 @@ public class GraphHandler {
 		for(Graph child : g.getChildren()) {
 			buildReachableGraphs(child, done);
 		}
-	}
-
-	/**
-	 * Reads usernames and passwords or projects from manager.ab file depending on the section parameter.
-	 * @param path to manager.ab file.
-	 * @param section if "areas" reads the project names. If "users" reads usernames and passwords and returns
-	 * them as single String separated with ';'. (eg. "root;root")
-	 * @return Array containing Strings.
-	 */
-	public static String [] readFromManagerAb(File path, String section) {
-		ArrayList <String> list = new ArrayList<String>();
-		Scanner scanner = null;
-	    String line;
-	    if (!path.exists()) return list.toArray(new String[list.size()]);
-	    try {
-			scanner = new Scanner(path);
-		} catch (FileNotFoundException e) { 
-		    e.printStackTrace();
-		}
-	    try {
-	    	while (scanner.hasNextLine()){
-	    		line = scanner.nextLine();
-	    		if (line.contains("[" + section + "]")) {
-	    			line = scanner.nextLine();
-	    			while (!line.startsWith("[")) {
-	    				if (line.length() > 1) {
-	    					if (section == "areas") list.add(parseProjectFromLine(line));
-	    					if (section == "users") list.add(parseNameAndPasswordFromLine(line));
-	    				}
-	    				line = scanner.nextLine();
-	    			}  
-	    		}
-	    	}
-	    }
-	    finally {
-	      scanner.close();
-	    }
-	    list.removeAll(Collections.singleton(null));
-		return list.toArray(new String[list.size()]);
-	}
-	
-	/**
-	 * Parses project name from manager.ab file line.
-	 * @param line read from manager.ab
-	 * @return project name.
-	 */
-	private static String parseProjectFromLine(String line) {	
-		String [] inValidProjects = {"Administration-Common", "Administration-System" };
-		String project = line.split(";")[1];
-		for (int i=0; i<inValidProjects.length; i++) {
-			if (project.equalsIgnoreCase(inValidProjects[i])) return null;
-		}
-		return project;
-	}
-	
-	/**
-	 * Parses name and password from manager.ab file line
-	 * @param line read from manager.ab [users] section.
-	 * @return name and password (name;password)
-	 */
-	private static String parseNameAndPasswordFromLine(String line) {
-		String [] splitted = line.split(";");
-		return splitted[1] + ";" + splitted[2];
 	}
 }

@@ -15,7 +15,6 @@ public class IniHandler {
     public IniHandler(String _iniPath) {
         FileInputStream fis = null;
         String strLine = null;
-        String[] keyPair = null;
         this.iniFilePath = _iniPath;
         File iniFile = new File(this.iniFilePath);
         
@@ -26,14 +25,9 @@ public class IniHandler {
 	        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
 	                while ((strLine = br.readLine()) != null) {
 	                    strLine = strLine.trim();
-	                    if (!strLine.isEmpty() && !strLine.startsWith("#")) {
-	                    	if (strLine.endsWith("=")) {
-	                    		// rows with key have only null values.
-	                    		keyPair = new String [] {strLine.substring(0, strLine.length()-1), ""};
-	                    	} else {
-	                    		keyPair = strLine.split("=");
-	                    	}
-	                        values.put(keyPair[0], keyPair[1]);
+	                    int equalsIndex = strLine.indexOf("=");
+	                    if (!strLine.isEmpty() && !strLine.startsWith("#") && equalsIndex != -1) {
+	                    	values.put(strLine.substring(0, equalsIndex), strLine.substring(equalsIndex+1));
 	                    }
 	                }
             } catch (Exception e) {    
