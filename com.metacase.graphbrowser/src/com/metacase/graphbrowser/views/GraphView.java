@@ -549,8 +549,8 @@ public class GraphView extends ViewPart implements Observer {
 		// Open graph creation dialog in MetaEdit+
 		actionOpenCreateGraphDialog = new Action() {
 		    public void run() {
-			MEDialog md = new MEDialog(MEDialog.CREATE_NEW_GRAPH, getSelectedGraph());
-			md.start();
+		    	MEDialog md = new MEDialog(MEDialog.CREATE_NEW_GRAPH, getSelectedGraph());
+		    	md.start();
 		    }
 		};
 		this.setActionDetails(actionOpenCreateGraphDialog,

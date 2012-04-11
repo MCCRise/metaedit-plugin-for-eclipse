@@ -31,15 +31,15 @@ public class Launcher {
 	private static MetaEditAPIPortType apiPort() {
 	    java.net.URL address = null;
 	    try {
-		try {
-		    address = new URL("http://"+ getSettings().getHostname() +
-			    ":"+ getSettings().getPort() +"/MetaEditAPI");
-		} catch (MalformedURLException e) {
-		    e.printStackTrace();
-		}
-		return service.getMetaEditAPIPort(address);
+			try {
+				address = new URL("http://"+ getSettings().getHostname() +
+					":"+ getSettings().getPort() +"/MetaEditAPI");
+			} catch (MalformedURLException e) {
+			    e.printStackTrace();
+			}
+			return service.getMetaEditAPIPort(address);
 	    } catch (ServiceException e) { 
-		e.printStackTrace();
+	    	e.printStackTrace();
 	    }
 	    return null;
 	}
@@ -65,10 +65,10 @@ public class Launcher {
 	 */
 	public static boolean doInitialLaunch() {
 	    if (getSettings().checkIfMerExists() || isApiOK()) {
-		initializeAPI();
+	    	initializeAPI();
 	    }
 	    else {
-		DialogProvider.showSettingsDialog(false);
+	    	DialogProvider.showSettingsDialog(false);
 	    }
 	    return isApiOK();
 	}
