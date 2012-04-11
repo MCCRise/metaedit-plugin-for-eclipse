@@ -99,34 +99,23 @@ public class Graph {
 	 * reads and removes the plugin.ini file and imports and executes (maybe) the imported project. 
 	 * 
 	 * @param generator Name of the generator.
-	 * @param autobuild For running the Autobuild or not.
 	 */
-	public void executeGenerator(String generator, boolean autobuild) {
-	    String pluginINIpath = this.writePluginIniFile(generator);
+	public void executeGenerator(String generator) {
+	    String pluginINIpath = this.writePluginIniFile();
 	    MetaEditAPIPortType port = Launcher.getPort();
 	    // Run generator
-	    if (autobuild) this.runAutobuild(port);
-	    else this.runGenerator(port, generator);
-	    // Remove the written INI file and Import generated project.
-	    this.removeIniFile(pluginINIpath);
-	    this.callForImportAndExecute();
+	    this.runGenerator(port, generator);
+	    // Remove the written INI file and import generated project.
+	    this.readAndRemoveIniFile(pluginINIpath);
+	    
+	    /* null values show that those values were not included in ini file.
+	       In that case graph's name is used for both project name and main class name. */
+	    Importer.importAndExecute(
+		    	this.getProjectName()   == null ? this.getName() 		: this.getProjectName(),
+				this.getClassToLaunch() == null ? "_" + this.getName() 	: this.getClassToLaunch()
+		    );
 	}
 
-	/**
-	 * Method for running the autobuild for the selected graph.
-	 * 
-	 * @param port the port instance for connection MetaEdit+ API
-	 */
-	public void runAutobuild(MetaEditAPIPortType port) {
-	    MENull meNull = new MENull();
-	    try {
-	    	port.forName(meNull, this.getName(), this.getTypeName(), "Autobuild");
-	    } catch (RemoteException e) { 
-	    	DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
-	    	e.printStackTrace();
-	    }
-	}
-	
 	/**
 	 * Runs generator for caller Graph. After calling ME+ to run generator, tries
 	 * to import project with same name as the graph to workspace. Used for MetaEdit+ 5.0 API
@@ -135,8 +124,15 @@ public class Graph {
 	 * @param generator Generator name that is to be run.
 	 */
 	public void runGenerator(MetaEditAPIPortType port, String generator) {
+		Settings s = Settings.getSettings();
 	    try {
-	    	port.forGraphRun(this.toMEOop(), generator);
+	    	if (s.getIs50()) {
+	    		port.forGraphRun(this.toMEOop(), generator);
+	    	}
+	    	else {
+	    		MENull meNull = new MENull();
+		    	port.forName(meNull, this.getName(), this.getTypeName(), generator);
+	    	}
 	    } catch (RemoteException e) { 
 			DialogProvider.showMessageDialog("API error: " + e.toString(), "API error");
 			e.printStackTrace();
@@ -144,30 +140,18 @@ public class Graph {
 	}
 		
 	/**
-	 * Calls file remove method with correct path. Before that, reads the values from ini file written by MetaEdit+ to memory.
+	 * Reads and removes ini file.
 	 * 
 	 * @param path Path to the file.
 	 */
-	private void removeIniFile(String path) {	    
+	private void readAndRemoveIniFile(String path) {	    
 	    IniHandler h = new IniHandler(path);
 	    this.setClassToLaunch(h.getSetting("classToLaunch"));
 	    this.setProjectName(h.getSetting("projectName"));
-	    //if (h.getSetting("runGenerated").equalsIgnoreCase("true"))
-	    //this.compileAndExecute = true;
+
 	    Importer.removeIniFile(new File(path));
 	} 
 
-	/**
-	 * Calls the import and execute method with suitable parameters
-	 */
-	private void callForImportAndExecute() {
-	    Importer.importAndExecuteProject(
-	    	/* null values point that those values were not included in ini file
-		    in that case graph's name is used both in project name and as starting class name. */
-	    	this.getProjectName()   == null ? this.getName() : this.getProjectName(),
-			this.getClassToLaunch() == null ? "_" + this.getName() : this.getClassToLaunch()
-	    	);
-	}
 	
 	/**
 	 * Method stub for importer's plugin.ini writer. Writes the plugin.ini file under
@@ -176,10 +160,10 @@ public class Graph {
 	 * @param generatorName name of the generator in MetaEdit+.
 	 * @return path of the written ini file.
 	 */
-	private String writePluginIniFile(String generatorName) {
+	private String writePluginIniFile() {
 	    Settings s = Settings.getSettings();
 	    // TODO: what if working directory is null or empty?
-	    return Importer.writePluginIniFile(s.getWorkingDirectory(), generatorName);
+	    return Importer.writePluginIniFile(s.getWorkingDirectory());
 	}
 	
 	/**

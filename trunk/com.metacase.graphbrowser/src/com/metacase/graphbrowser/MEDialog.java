@@ -19,7 +19,7 @@ import com.metacase.objects.Graph;
  */
 public class MEDialog extends Thread {
 	
-    	// Dialog types
+    // Dialog types
 	public static final int CREATE_NEW_GRAPH = 1;
 	//public static final int CREATE_NEW_GRAPH_OF_SAME_TYPE = 2;
 	public static final int EDIT_GRAPH_PROPERTIES = 3;

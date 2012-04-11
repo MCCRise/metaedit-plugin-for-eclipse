@@ -30,6 +30,7 @@ public class SettingsDialog extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
 	private static JDialog dialog;
+	private JPanel panel;
 	Box programDirBox, workingDirBox, databaseBox, usernameBox, passwordBox, projectsBox, portNumberBox, buttonBox;
 	JLabel headerLabel, programDirLabel, workingDirLabel, databaseLabel, usernameLabel, passwordLabel,
 	projectsLabel, hostnameLabel, loggingLabel, portLabel;
@@ -58,7 +59,9 @@ public class SettingsDialog extends JDialog {
 	private SettingsDialog(boolean modal){
 		this.setModal(modal);
 		
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+		panel = new JPanel();
+		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		
 		programDirBox = Box.createHorizontalBox();
 		workingDirBox = Box.createHorizontalBox();
@@ -92,7 +95,7 @@ public class SettingsDialog extends JDialog {
         // hostnameIconLabel = createIconLabel();
         portIconLabel = createIconLabel();
 		
-                // Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
+        // Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
 		tooltipTexts.put(programDirIconLabel, new String [] {"MetaEdit+ program file not properly set.", "", ""});
 		tooltipTexts.put(workingDirIconLabel, new String [] {"Given path not recognized as a MetaEdit+ working directory.", "", ""});
 		tooltipTexts.put(databaseIconLabel, new String [] {"Given path not recognized as a MetaEdit+ database",
@@ -245,7 +248,7 @@ public class SettingsDialog extends JDialog {
 	                @Override
 	                public void run() {
 	                	JFrame frame = new JFrame("");
-	                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	                	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	                    final SelectionDialog p = new SelectionDialog(frame,
 	                    		Arrays.asList(GraphHandler.readFromManagerAb(managerAbPath, "areas")), false,
 	                    		"<HTML>Choose the project(s) to open.<br>Multiple selections are allowed.<br></HTML>",
@@ -261,7 +264,7 @@ public class SettingsDialog extends JDialog {
 							public void windowClosing(WindowEvent e) {	}
 							public void windowClosed(WindowEvent e) { 
 								if (p.getIsOKd()) {
-									setProjectsToTextField(p.getOpenProjectsAsArray());
+									setProjectsToTextField(p.getItemsAsArray());
 									verifyField(new ProjectsVerifier(getManagerAbPath()), projectsField, projectsIconLabel);
 								}
 							}
@@ -269,10 +272,10 @@ public class SettingsDialog extends JDialog {
 						});
 	                    //Display the window.
 	                    //frame.pack();
-	                    frame.setResizable(false);
+	                    frame.setResizable(true);
 	                    frame.setVisible(true);
 	                    frame.setLocationRelativeTo(dialog);
-	                    frame.setSize(new Dimension(200, 500)); 
+	                    frame.setSize(new Dimension(250, 500)); 
 	                }
 	            });
 			}
@@ -348,20 +351,21 @@ public class SettingsDialog extends JDialog {
             buttonBox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
             
             // Add boxes to JFrame
-            add(programDirBox);
-            add(workingDirBox);
-            add(databaseBox);
-            add(usernameBox);
-            add(passwordBox);
-            add(projectsBox);
-            // add(hostnameBox);
-            add(portNumberBox);
-            //add(loggingBox);
-            add(buttonBox);
+            panel.add(programDirBox);
+            panel.add(workingDirBox);
+            panel.add(databaseBox);
+            panel.add(usernameBox);
+            panel.add(passwordBox);
+            panel.add(projectsBox);
+            // panel.add(hostnameBox);
+            panel.add(portNumberBox);
+            //panel.add(loggingBox);
+            panel.add(buttonBox);
             
-            //setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
             
-    		
+            getContentPane().add(panel);
+            
             SwingUtilities.invokeLater( new Runnable() 
             { 
             	public void run() { 

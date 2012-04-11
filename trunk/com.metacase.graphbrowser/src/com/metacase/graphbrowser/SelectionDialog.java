@@ -16,11 +16,11 @@ public class SelectionDialog extends JPanel {
 	 * JPanel for selecting MetaEdit+ projects from given database.
 	 */
 	private static final long serialVersionUID = 1L;
-	JList projectList;
+	JList<Object> itemsList;
 	JLabel topLabel;
 	JButton selectAllButton;
 	JButton OKbutton, cancelButton;
-	String [] selectedProjects;
+	String [] selectedItems;
 	JFrame parent;
 	boolean isOKd;
 	int itemCount;
@@ -34,13 +34,12 @@ public class SelectionDialog extends JPanel {
 	 * @param headerOkString String for label if itemslist contains items.
 	 * @param headerNotOkString String for label if itemslist doesn't contain anything.
 	 */
-	public SelectionDialog (final JFrame _parent, List<String> items, boolean singleSelection, String headerOkString, String headerNotOkString){
+	public SelectionDialog (final JFrame _parent, List<String> items, boolean singleSelection, String headerOkString, String headerNotOkString) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		
 		parent = _parent;
     	String labelStr;
 		setIsOKd(false);
@@ -51,11 +50,11 @@ public class SelectionDialog extends JPanel {
     	} else {
     		labelStr = headerOkString;
     	}
-    	projectList = new JList(items.toArray());
-    	if (singleSelection) projectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    	itemsList = new JList<Object>(items.toArray());
+    	if (singleSelection) itemsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     	itemCount = items.size();
     	
-    	projectList.addMouseListener(new MouseAdapter() {
+    	itemsList.addMouseListener(new MouseAdapter() {
     	    public void mouseClicked(MouseEvent evt) {
     	        if (evt.getClickCount() == 2) {
     	        	okButtonClicked();
@@ -63,7 +62,7 @@ public class SelectionDialog extends JPanel {
     	    }
     	});
 
-    	JScrollPane scrollPane = new JScrollPane(projectList);
+    	JScrollPane scrollPane = new JScrollPane(itemsList);
     	
 		topLabel = new JLabel(labelStr);	
 		Box topLabelBox= Box.createHorizontalBox();
@@ -98,7 +97,7 @@ public class SelectionDialog extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
-							projectList.addSelectionInterval(0, projectList.getModel().getSize()-1);
+							itemsList.addSelectionInterval(0, itemsList.getModel().getSize()-1);
 						}
 		            });
 				}			
@@ -122,7 +121,7 @@ public class SelectionDialog extends JPanel {
     	buttonBox2.add(Box.createRigidArea(new Dimension(15, 10)));
     	buttonBox2.add(cancelButton);
     	
-    	setBorder(BorderFactory.createTitledBorder(""));
+    	setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     	add(topLabelBox);
     	add(Box.createRigidArea(new Dimension(15, 10)));
     	add(scrollPane);
@@ -134,29 +133,29 @@ public class SelectionDialog extends JPanel {
 	
 	private void okButtonClicked() {
 		setIsOKd(true);
-		setSelectedProjects();
+		setSelectedItems();
 		exitDialog();
 	}
 	
 	/**
 	 * Sets selected projects to array from list.
 	 */
-	private void setSelectedProjects() {
-		ArrayList<String> _projects = new ArrayList<String>(); 
-		int[] selectedIndex = projectList.getSelectedIndices();
+	private void setSelectedItems() {
+		ArrayList<String> _items = new ArrayList<String>(); 
+		int[] selectedIndex = itemsList.getSelectedIndices();
 		for (int i=0; i<selectedIndex.length; i++) {
-		    Object selected = projectList.getModel().getElementAt(selectedIndex[i]);
-		    _projects.add(selected.toString());
+		    Object selected = itemsList.getModel().getElementAt(selectedIndex[i]);
+		    _items.add(selected.toString());
 		}
-		this.selectedProjects = _projects.toArray(new String[_projects.size()]);
+		this.selectedItems = _items.toArray(new String[_items.size()]);
 	}
 
 	/**
-	 * Getter for openProjects array.
-	 * @return array of openProjects as strings
+	 * Getter for selectedItems array.
+	 * @return array of selected items as strings
 	 */
-	public String [] getOpenProjectsAsArray() {
-		return selectedProjects;
+	public String [] getItemsAsArray() {
+		return selectedItems;
 	}
 	
 	/**

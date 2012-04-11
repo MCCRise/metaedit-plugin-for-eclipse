@@ -28,7 +28,7 @@ public class IniHandler {
 	                    strLine = strLine.trim();
 	                    if (!strLine.isEmpty() && !strLine.startsWith("#")) {
 	                    	if (strLine.endsWith("=")) {
-	                    		// rows with key only have null values.
+	                    		// rows with key have only null values.
 	                    		keyPair = new String [] {strLine.substring(0, strLine.length()-1), ""};
 	                    	} else {
 	                    		keyPair = strLine.split("=");
