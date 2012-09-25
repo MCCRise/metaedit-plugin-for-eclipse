@@ -18,7 +18,7 @@ When running, the plugin will show the hierarchy of your models from !MetaEdit+.
 
 http://metaedit-plugin-for-eclipse.googlecode.com/svn/wiki/eclipse_running_plugin.PNG
 
-In the !MetaEdit+ 5.0 beta version, the Digital Watch example has been updated to show the plugin's ability to import generated code into an Eclipse project. To see this: 
+In !MetaEdit+ 5.0, the Digital Watch example has been updated to show the plugin's ability to import generated code into an Eclipse project. To see this: 
   * Select the top-level graph in the plugin
   * Choose *Edit Graph Properties* from the pop-up menu and set the *Generation target platform* to *Java: Windows* or *Java: API*
   * Press the plugin's Run Autobuild toolbar button.
