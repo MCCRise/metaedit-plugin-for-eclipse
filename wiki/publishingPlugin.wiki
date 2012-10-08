@@ -2,7 +2,7 @@
 
 = Publishing your Eclipse plug-in =
 
-These are instructions for exporting and publishing an Eclipse plug-in. It describes two ways of exporting a plug-in from existing source code and sharing it with Eclipse users.
+These are instructions for exporting and publishing an Eclipse plug-in. They describe two ways of exporting a plug-in from existing source code and sharing it with Eclipse users.
 
   # Exporting the plug-in as a single Jar-file and saving it to the Eclipse plugins folder.
   # Packaging the plug-in(s) as an Eclipse Feature and publishing it on an Eclipse Update Site.
