@@ -12,8 +12,9 @@
 
 package com.metacase.API;
 
-import org.eclipse.swt.internal.win32.OS;
+// import org.eclipse.swt.internal.win32.OS;
 
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class MetaEditAPISoapBindingStub extends org.apache.axis.client.Stub implements MetaEditAPIPortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
@@ -1935,7 +1936,11 @@ public class MetaEditAPISoapBindingStub extends org.apache.axis.client.Stub impl
     }
 
 	protected org.apache.axis.client.Call createCall() throws java.rmi.RemoteException {
-    	OS.AllowSetForegroundWindow(-1);
+		try {
+			// OS.AllowSetForegroundWindow(-1);
+			Class.forName("org.eclipse.swt.internal.win32.OS").getMethod("AllowSetForegroundWindow", int.class).invoke(null, -1);
+			}
+		catch (Exception e) {}
         try {
             org.apache.axis.client.Call _call = super._createCall();
             if (super.maintainSessionSet) {

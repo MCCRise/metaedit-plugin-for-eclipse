@@ -12,6 +12,7 @@
 
 package com.metacase.API;
 
+@SuppressWarnings({"rawtypes", "serial", "unused"})
 public class MEOop  implements java.io.Serializable {
     private int areaID;
 

@@ -16,7 +16,7 @@ public class SelectionDialog extends JPanel {
 	 * JPanel for selecting MetaEdit+ projects from given database.
 	 */
 	private static final long serialVersionUID = 1L;
-	JList<Object> itemsList;
+	JList itemsList;
 	JLabel topLabel;
 	JButton selectAllButton;
 	JButton OKbutton, cancelButton;
@@ -50,7 +50,7 @@ public class SelectionDialog extends JPanel {
     	} else {
     		labelStr = headerOkString;
     	}
-    	itemsList = new JList<Object>(items.toArray());
+    	itemsList = new JList(items.toArray());
     	if (singleSelection) itemsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     	itemCount = items.size();
     	
