@@ -128,7 +128,7 @@ public class Settings extends Observable {
 		merFile = f;
 	}
 	public boolean getIs50() {
-		return this.programPath.contains("50");
+		return this.programPath.contains("mep50") || this.programPath.contains("MetaEdit+ 5.0");
 	}
 	
 	/**
@@ -140,7 +140,7 @@ public class Settings extends Observable {
 	private void setMerFile(String filename) {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();  
 		File workSpaceDirectory = workspace.getRoot().getLocation().toFile();
-		merFile = new File(workSpaceDirectory.toString() + "\\" + filename);
+		merFile = new File(workSpaceDirectory.toString() + File.separator + filename);
 	}
 	
 	public File getMerFile() {
@@ -263,24 +263,24 @@ public class Settings extends Observable {
 		if (x86) tempProgramDir = variables.get("ProgramFiles(x86)");
 		else tempProgramDir = variables.get("ProgramFiles");
 		
-		File f = new File(tempProgramDir + "\\MetaEdit+ 5.0\\mep50.exe");
-		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + "\\MetaEdit+ 5.0";
+		File f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0" + File.separator + "mep50.exe");
+		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 5.0";
 		
 		if (!f.exists()) {
 			// Try with MetaEdit+ 5.0 evaluation version.
-			f = new File(tempProgramDir + "\\MetaEdit+ 5.0\\mep50eval.exe");
+			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0" + File.separator + "mep50eval.exe");
 		}
 		
 		if (!f.exists()) {
 			// Try with MetaEdit+ 4.5
-			f = new File(tempProgramDir + "\\MetaEdit+ 4.5\\mep45.exe"); 
+			f = new File(tempProgramDir + File.separator + "MetaEdit+ 4.5" + File.separator + "mep45.exe"); 
 			// No MetaEdit+ 5.0 found, make the working directory for version 4.5
-			this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + "\\MetaEdit+ 4.5";
+			this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 4.5";
 		}
 		
 		// if no mep45.exe found it MUST be the 4.5 evaluation version ;)
 		if (!f.exists()) {
-			f = new File(tempProgramDir + "\\MetaEdit+ 4.5 Evaluation\\mep45eval.exe");
+			f = new File(tempProgramDir + File.separator + "MetaEdit+ 4.5 Evaluation" + File.separator + "mep45eval.exe");
 		}
 		this.programPath = f.getPath();
 	}

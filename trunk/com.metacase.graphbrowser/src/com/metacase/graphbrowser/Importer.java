@@ -74,7 +74,7 @@ public class Importer {
 	public static String writePluginIniFile(String path) {
 	    	IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
         	// set the ini file
-        	path = path + "\\plugin.ini";
+        	path = path + File.separator + "plugin.ini";
         	File _temp = new File(path);
         	if (_temp.exists()) _temp.deleteOnExit();
         	IniHandler writer = new IniHandler(path);

@@ -527,7 +527,7 @@ public class SettingsDialog extends JDialog {
    	 * path and database name and adding "manager.ab" to it.
    	 */
    	public void setManagerAbPath() {
-	   	File f = new File(this.workingDirField.getText() + "\\" + this.databaseField.getText() + "\\" + "manager.ab");
+	   	File f = new File(this.workingDirField.getText() + File.separator + this.databaseField.getText() + File.separator + "manager.ab");
 	   	if (f.exists()) {
 		   	setManagerAbPath(f);
 	   	} else {
@@ -791,7 +791,7 @@ public class SettingsDialog extends JDialog {
 				return 0;
 			}
 			JTextField tf = (JTextField) input;
-			File f = new File(workingDirPath + "\\" + tf.getText());
+			File f = new File(workingDirPath + File.separator + tf.getText());
 			if (f.isDirectory()) {
 				File [] files = f.listFiles();
 				for (File _f : files) {

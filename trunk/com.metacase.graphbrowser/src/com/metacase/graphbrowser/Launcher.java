@@ -159,12 +159,17 @@ public class Launcher {
 		
 	    String [] projects = getSettings().getProjects();
 	    for (String s : projects) {
-		if (!s.equals("")) {
-		    line += " setProject: " + "\"" + s + "\"";
-		}
+	    	if (!s.equals("")) {
+	    		line += " setProject: " + "\"" + s + "\"";
+	    	}
 	    }
 				
 	    line += " startAPIHostname:port:logEvents: " + hostname + " " + port + " " + logging;
+	    
+	    if (System.getProperty("os.name").contains("OS X")) {
+	    	line = "open " + line;
+	    }
+
 	    return line;
 	}
 
