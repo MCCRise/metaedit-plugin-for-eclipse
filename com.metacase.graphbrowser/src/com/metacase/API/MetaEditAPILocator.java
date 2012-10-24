@@ -12,6 +12,7 @@
 
 package com.metacase.API;
 
+@SuppressWarnings({"rawtypes", "serial", "unchecked"})
 public class MetaEditAPILocator extends org.apache.axis.client.Service implements MetaEditAPI {
 
     public MetaEditAPILocator() {

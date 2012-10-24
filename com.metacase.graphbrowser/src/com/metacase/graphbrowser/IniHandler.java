@@ -14,29 +14,34 @@ public class IniHandler {
      */
     public IniHandler(String _iniPath) {
         FileInputStream fis = null;
+        BufferedReader br = null;
         String strLine = null;
         this.iniFilePath = _iniPath;
         File iniFile = new File(this.iniFilePath);
         
         if (iniFile.exists()) {
-            try {
+        	try {
 	            fis = new FileInputStream(iniFile);
-	        	DataInputStream in = new DataInputStream(fis);
-	        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	                while ((strLine = br.readLine()) != null) {
-	                    strLine = strLine.trim();
-	                    int equalsIndex = strLine.indexOf("=");
-	                    if (!strLine.isEmpty() && !strLine.startsWith("#") && equalsIndex != -1) {
-	                    	values.put(strLine.substring(0, equalsIndex), strLine.substring(equalsIndex+1));
-	                    }
+	            DataInputStream in = new DataInputStream(fis);
+        	    br = new BufferedReader(new InputStreamReader(in));
+                while ((strLine = br.readLine()) != null) {
+	                strLine = strLine.trim();
+	                int equalsIndex = strLine.indexOf("=");
+	                if (!strLine.isEmpty() && !strLine.startsWith("#") && equalsIndex != -1) {
+	                    values.put(strLine.substring(0, equalsIndex), strLine.substring(equalsIndex+1));
 	                }
+	            }
             } catch (Exception e) {    
             	e.printStackTrace();
             }
             finally {
                 if (fis != null) {
                 	try {
-                		fis.close();
+                		if (br != null) {
+                			br.close();
+                		} else {
+                			fis.close();
+                		}
                 	} catch (IOException e) {
                 		e.printStackTrace();
                 	}

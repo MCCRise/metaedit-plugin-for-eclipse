@@ -12,6 +12,7 @@
 
 package com.metacase.API;
 
+@SuppressWarnings({"serial","rawtypes","unused"})
 public class METype  implements java.io.Serializable {
     private java.lang.String name;
 
