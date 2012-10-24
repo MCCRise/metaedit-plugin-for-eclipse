@@ -678,7 +678,20 @@ public class SettingsDialog extends JDialog {
 		public int verify(final JComponent input) {
 			JTextField tf = (JTextField) input;
 			File file = new File(tf.getText());
-			if (file.exists() &&  file.getName().contains("mep") && file.getName().contains(".exe")) return 1;
+			String os = System.getProperty("os.name").toLowerCase();
+			if (file.exists()) {
+				String fn = file.getName();
+				if (os.indexOf("win") >= 0)
+					if (fn.contains("mep") && fn.endsWith(".exe")) 
+						return 1;
+				if (os.contains("os x"))
+					if (fn.contains("MetaEdit+") && fn.endsWith(".app"))
+						return 1;
+				if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0)
+					if (fn.contains("mep") && fn.endsWith("metaedit"))
+						return 1;
+			}
+			
 			return -1;
 	  	}
 	}

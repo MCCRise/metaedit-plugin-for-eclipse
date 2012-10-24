@@ -5,10 +5,13 @@
 
 package com.metacase.graphbrowser;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+
 import javax.xml.rpc.ServiceException;
 import com.metacase.API.*;
 
@@ -144,33 +147,39 @@ public class Launcher {
 	 * opens one or more projects and starts API server.
 	 * @return command that can be executed.
 	 */
-	private static String createLaunchParameters(){
-	    String metaEditDir = "\"" + getSettings().getProgramPath() + "\"";
-	    String workingDir = "\"" + getSettings().getWorkingDirectory() + "\"";
-	    String db = "\"" + getSettings().getDatabase() + "\"";
-	    String user = "\"" + getSettings().getUsername() + "\"";
-	    String password = "\"" + getSettings().getPassword() + "\"";
-	    int port = getSettings().getPort();
-	    String hostname = getSettings().getHostname();
-	    boolean logging = getSettings().isLogging();
-		
-	    String line = metaEditDir + " currentDir: " + workingDir + " " + "loginDB:user:password: " + db + " " + 
-		    user + " " + password; 
+	private static String[] createLaunchParameters(){
+	    ArrayList<String> cmdLine = new ArrayList<String>();
+	    String executable = getSettings().getProgramPath();
+	    if (System.getProperty("os.name").contains("OS X")) {
+	    	executable += File.separator + "Contents" + File.separator + "Resources" + File.separator + "script";
+	    }
+	    cmdLine.add(executable);
+	    
+	    cmdLine.add("currentDir:");
+	    cmdLine.add(getSettings().getWorkingDirectory());
+	    
+	    // Any existing fileInPatches, e.g. in Linux & Mac OS X scripts, will be done in the wrong dir, so repeat
+	    cmdLine.add("fileInPatches");
+	    
+	    cmdLine.add("loginDB:user:password:");
+	    cmdLine.add(getSettings().getDatabase());
+	    cmdLine.add(getSettings().getUsername());
+	    cmdLine.add(getSettings().getPassword());
 		
 	    String [] projects = getSettings().getProjects();
 	    for (String s : projects) {
 	    	if (!s.equals("")) {
-	    		line += " setProject: " + "\"" + s + "\"";
+	    		cmdLine.add("setProject:");
+	    		cmdLine.add(s);
 	    	}
 	    }
 				
-	    line += " startAPIHostname:port:logEvents: " + hostname + " " + port + " " + logging;
+	    cmdLine.add("startAPIHostname:port:logEvents:");
+	    cmdLine.add(getSettings().getHostname());
+	    cmdLine.add(String.valueOf(getSettings().getPort()));
+	    cmdLine.add(String.valueOf(getSettings().isLogging()));
 	    
-	    if (System.getProperty("os.name").contains("OS X")) {
-	    	line = "open " + line;
-	    }
-
-	    return line;
+	    return cmdLine.toArray(new String[0]);
 	}
 
 	/**
