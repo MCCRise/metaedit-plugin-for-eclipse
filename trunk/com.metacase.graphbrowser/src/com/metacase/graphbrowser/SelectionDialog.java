@@ -35,11 +35,7 @@ public class SelectionDialog extends JPanel {
 	 * @param headerNotOkString String for label if itemslist doesn't contain anything.
 	 */
 	public SelectionDialog (final JFrame _parent, List<String> items, boolean singleSelection, String headerOkString, String headerNotOkString) {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+		DialogProvider.setLookAndFeel();
 		parent = _parent;
     	String labelStr;
 		setIsOKd(false);
@@ -104,16 +100,17 @@ public class SelectionDialog extends JPanel {
 			});
     	}
     	Dimension d = new Dimension(75, 25);
+    	Dimension m = new Dimension(100, 25);
     	OKbutton.setPreferredSize(d);
-    	OKbutton.setMaximumSize(d);
-    	OKbutton.setMinimumSize(d);
-    	cancelButton.setPreferredSize(new Dimension(75, 25));
-    	cancelButton.setMaximumSize(d);
-    	cancelButton.setMinimumSize(d);
+    	OKbutton.setMaximumSize(m);
+    	OKbutton.setMinimumSize(m);
+    	cancelButton.setPreferredSize(d);
+    	cancelButton.setMaximumSize(m);
+    	cancelButton.setMinimumSize(m);
     	if (!singleSelection) {
-	    	selectAllButton.setPreferredSize(new Dimension(75, 25));
-	    	selectAllButton.setMaximumSize(d);
-	    	selectAllButton.setMinimumSize(d);
+	    	selectAllButton.setPreferredSize(d);
+	    	selectAllButton.setMaximumSize(m);
+	    	selectAllButton.setMinimumSize(m);
 	    	buttonBox1.add(selectAllButton);
     	}
     	topLabelBox.add(topLabel);

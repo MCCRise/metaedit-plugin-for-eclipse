@@ -11,6 +11,26 @@ import javax.swing.UIManager;
 /**
  * Dialog provider class offers some basic dialogs. Used in the plugin.
  */
+/**
+ * @author metacase
+ *
+ */
+/**
+ * @author metacase
+ *
+ */
+/**
+ * @author metacase
+ *
+ */
+/**
+ * @author metacase
+ *
+ */
+/**
+ * @author metacase
+ *
+ */
 public class DialogProvider {
 
 	/**
@@ -19,12 +39,8 @@ public class DialogProvider {
 	 * @param title the title for the dialog window.
 	 */
 	public static void showMessageDialog(String message, String title){
-	    try {
-		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
-	    JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+		setLookAndFeel();
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	/**
@@ -34,13 +50,8 @@ public class DialogProvider {
 	 * @return true if <b>OK</b> clicked, false if <b>Cancel</b> cliked.
 	 */
 	public static boolean showYesNoMessageDialog(String message, String title){
-	    try {
-		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-	    } catch (Exception e) { 
-		e.printStackTrace();
-	    }
-	    if (JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) return true;
-	    else return false;
+		setLookAndFeel();
+		return (JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
 	}
 	
 	/**
@@ -48,10 +59,23 @@ public class DialogProvider {
 	 * @param modal
 	 */
 	public static void showSettingsDialog(final boolean modal){
-	    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-		public void run() {
-		    SettingsDialog.createAndShowGUI(modal);
-		}
-	    }); 
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				SettingsDialog.createAndShowGUI(modal);
+			}
+		}); 
 	}
+	
+
+	/**
+	 * Ensure correct look and feel on Windows
+	 */
+	public static void setLookAndFeel(){
+		if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
+			try {
+				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			} catch (Exception e) { }
+		}
+	}
+
 }
