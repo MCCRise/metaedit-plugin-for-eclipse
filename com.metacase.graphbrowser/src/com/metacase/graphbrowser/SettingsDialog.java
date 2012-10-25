@@ -80,8 +80,8 @@ public class SettingsDialog extends JDialog {
 		
 		//Labels
 		programDirLabel = createLabel("MetaEdit+ program path: ");
-		workingDirLabel = createLabel("MetaEdit+ working directory: ");
-		databaseLabel = createLabel("Database name: ");
+		workingDirLabel = createLabel("MetaEdit+ working dir: ");
+		databaseLabel = createLabel("Repository name: ");
 		usernameLabel = createLabel("Username: ");
 		passwordLabel = createLabel("Password: ");
 		projectsLabel = createLabel("Projects: ");
@@ -102,14 +102,14 @@ public class SettingsDialog extends JDialog {
 		// Tooltiptexts for textfields. First the error message then neutral message and third the succesfull message (left empty mostly).
 		tooltipTexts.put(programDirIconLabel, new String [] {"MetaEdit+ program file not properly set.", "", ""});
 		tooltipTexts.put(workingDirIconLabel, new String [] {"Given path not recognized as a MetaEdit+ working directory.", "", ""});
-		tooltipTexts.put(databaseIconLabel, new String [] {"Given path not recognized as a MetaEdit+ database",
-			"Can't do the verification for given database. Make sure that the given working directory path is correct.", ""});
-		tooltipTexts.put(usernameIconLabel, new String [] {"Username not found from the given database",
-			"Can't check the given username.", ""});
-		tooltipTexts.put(passwordIconLabel, new String [] {"Wrong password!", "Can't check the given password.", ""});
-		tooltipTexts.put(projectsIconLabel, new String [] {"One or more projects not found from the database!",
-			"Can't check the project name. Make sure the working directory" +
-				" and database fields are correct.", ""});
+		tooltipTexts.put(databaseIconLabel, new String [] {"Given path not recognized as a MetaEdit+ repository",
+			"Cannnot do the verification for given repository. Make sure that the given working directory is correct.", ""});
+		tooltipTexts.put(usernameIconLabel, new String [] {"Username not found from the given repository",
+			"Cannot check the given username.", ""});
+		tooltipTexts.put(passwordIconLabel, new String [] {"Wrong password!", "Cannot check the given password.", ""});
+		tooltipTexts.put(projectsIconLabel, new String [] {"One or more projects not found from the repository!",
+			"Cannot check the project name. Make sure the working directory" +
+				" and repository fields are correct.", ""});
 		// tooltipTexts.put(hostnameIconLabel, new String [] {"", "", ""});
 		tooltipTexts.put(portIconLabel, new String [] {"Port number should be an number between 1024 and 65535." +
 				" By default it's 6390.", "Ports 0-1023 are normally reserved by the system.", ""});
@@ -139,9 +139,7 @@ public class SettingsDialog extends JDialog {
 		workingDirField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) { }
 			public void keyReleased(KeyEvent e) {
-				verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
-				verifyField(new PasswordVerifier(getManagerAbPath(), usernameField.getText()), passwordField,  passwordIconLabel);
-				verifyField(new ProjectsVerifier(getManagerAbPath()), projectsField, projectsIconLabel);
+				workingDirVerificationInvalidated();
 			}
 			public void keyPressed(KeyEvent e) { }
 		});
@@ -149,9 +147,7 @@ public class SettingsDialog extends JDialog {
 		databaseField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {	}
 			public void keyReleased(KeyEvent e) { 
-				verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
-				verifyField(new PasswordVerifier(getManagerAbPath(), usernameField.getText()), passwordField,  passwordIconLabel);
-				verifyField(new ProjectsVerifier(getManagerAbPath()), projectsField, projectsIconLabel);
+				databaseVerificationInvalidated();
 			}
 			public void keyPressed(KeyEvent e)  { }
 		});
@@ -159,8 +155,7 @@ public class SettingsDialog extends JDialog {
 		usernameField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {	}
 			public void keyReleased(KeyEvent e) {
-				verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
-				verifyField(new PasswordVerifier(getManagerAbPath(), usernameField.getText()), passwordField,  passwordIconLabel);
+				usernameVerificationInvalidated();
 			}
 			public void keyPressed(KeyEvent e) { }
 		});
@@ -237,8 +232,8 @@ public class SettingsDialog extends JDialog {
 						if (returnVal == JFileChooser.APPROVE_OPTION) {
 							File file = fc.getSelectedFile();
 							workingDirField.setText(file.toString());
+							workingDirVerificationInvalidated();
 						}
-						verifyField(new WorkingDirectoryVerifier(), workingDirField, workingDirIconLabel);
 					}
 				});
 			}
@@ -387,7 +382,7 @@ public class SettingsDialog extends JDialog {
 	 */
 	private JLabel createLabel(String title) {
 		JLabel lbl = new JLabel(title);
-		lbl.setPreferredSize(new Dimension(180, 25));
+		lbl.setPreferredSize(new Dimension(190, 25));
 		return lbl;
 	}
 	
@@ -441,6 +436,22 @@ public class SettingsDialog extends JDialog {
 		if ( !verifyField(new PortVerifier(), portField, portIconLabel) ) allOk = false;
 		// if ( !verifyField(new HostnameVerifier(), hostnameField, hostnameIconLabel) ) allOk = false;
 		return allOk;
+	}
+	
+	private void workingDirVerificationInvalidated(){
+		verifyField(new WorkingDirectoryVerifier(), workingDirField, workingDirIconLabel);
+		databaseVerificationInvalidated();
+	}
+	
+	private void databaseVerificationInvalidated(){
+		verifyField(new DatabaseVerifier(workingDirField.getText()), databaseField, databaseIconLabel);
+		usernameVerificationInvalidated();
+		verifyField(new ProjectsVerifier(getManagerAbPath()), projectsField, projectsIconLabel);
+	}
+	
+	private void usernameVerificationInvalidated(){
+		verifyField(new UsernameVerifier(getManagerAbPath()), usernameField,  usernameIconLabel);
+		verifyField(new PasswordVerifier(getManagerAbPath(), usernameField.getText()), passwordField,  passwordIconLabel);
 	}
 	
 	/**
@@ -596,10 +607,10 @@ public class SettingsDialog extends JDialog {
 	 * @return project name.
 	 */
 	private String parseProjectFromLine(String line) {	
-		String [] inValidProjects = {"Administration-Common", "Administration-System" };
+		String [] invalidProjects = {"Administration-Common", "Administration-System" };
 		String project = line.split(";")[1];
-		for (int i=0; i<inValidProjects.length; i++) {
-			if (project.equalsIgnoreCase(inValidProjects[i])) return null;
+		for (int i=0; i<invalidProjects.length; i++) {
+			if (project.equalsIgnoreCase(invalidProjects[i])) return null;
 		}
 		return project;
 	}
@@ -623,11 +634,7 @@ public class SettingsDialog extends JDialog {
 	public static void createAndShowGUI(boolean modal) {
 		if ( dialog == null) {
 				String title = "MetaEdit+ Launch Parameters";
-				try {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				} catch (Exception e) { 
-					e.printStackTrace();
-				}
+				DialogProvider.setLookAndFeel();
 				dialog = new SettingsDialog(modal);
 				dialog.setIconImage(getImage("icons/metaedit_logo.png"));
 				dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -688,7 +695,7 @@ public class SettingsDialog extends JDialog {
 					if (fn.contains("MetaEdit+") && fn.endsWith(".app"))
 						return 1;
 				if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0)
-					if (fn.contains("mep") && fn.endsWith("metaedit"))
+					if (fn.equals("metaedit"))
 						return 1;
 			}
 			
@@ -697,7 +704,7 @@ public class SettingsDialog extends JDialog {
 	}
 	
 	/**
-	 * Verifier class for verifyin the MetaEdit+ working directory. Looks
+	 * Verifier class for verifying the MetaEdit+ working directory. Looks
 	 * for artbase.roo file from given path.
 	 */
 	public class WorkingDirectoryVerifier implements SettingsVerifier {
@@ -816,7 +823,7 @@ public class SettingsDialog extends JDialog {
 	}
 	
 	/**
-	 * Verifies projectsfield. Looks if the given project names can be found from
+	 * Verifies projects field. Looks if the given project names can be found from
 	 * manager.ab file which is located in databases folder.
 	 */
 	public class ProjectsVerifier implements SettingsVerifier {
@@ -855,7 +862,7 @@ public class SettingsDialog extends JDialog {
 	
 	/**
 	 * Checks the given port number. Port number should be an integer between 0 and 65535.
-	 * If possible numbers less than 1023 should not be used.
+	 * If possible numbers less than 1024 should not be used.
 	 */
 	public class PortVerifier implements SettingsVerifier {
 

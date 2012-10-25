@@ -231,18 +231,9 @@ public class Settings extends Observable {
 	}
 	
 	/**
-	 * <p>
 	 * Calculates default values for settings dialog if no .mer file is found.
-	 * Searches for username and program files (x86) folder from environment variable
-	 * to form the MetaEdit+ exe file path and working directory as they were when default
-	 * installation is made.
-	 * </p> 
-	 * <p>
-	 * Works only for Windows.
-	 * </p>
 	 */
 	public void calculateValues() {
-		boolean x86 = false;
 		this.database = "demo";
 		this.username = "user";
 		this.password = "user";
@@ -251,10 +242,42 @@ public class Settings extends Observable {
 		this.hostname = "localhost";
 		this.logging = false;
 		
+		setPaths();
+	}
+
+	/**
+	 * Try to set reasonable initial values for programPath and workingDirectory
+	 */
+	private void setPaths() {
+		// Set basic values, in case we can't find platform
+		this.programPath = "metaedit";
+		this.workingDirectory = "~/metaedit";
+
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("win") >= 0) {
+			setWinPaths();
+		}
+		if (os.contains("os x")) {
+			this.programPath = "/Applications/MetaEdit+ 5.0 Evaluation.app";
+			this.workingDirectory = System.getProperty("user.home") + "/MetaEdit+ 5.0";
+		}
+		if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0) {
+			this.programPath = "/usr/local/mep50eval/metaedit";
+			this.workingDirectory = System.getProperty("user.home") + "/metaedit";
+		}
+	}
+
+	/**
+	 * Searches for username and program files (x86) folder from environment variable
+	 * to form the MetaEdit+ exe file path and working directory as they were when default
+	 * installation is made.
+	 */
+	private void setWinPaths() {
+		boolean x86 = false;
 		String tempProgramDir = "";
-		
+
 		Map<String, String> variables = System.getenv();  
-		// Search for Program File (x86) folder from env. varible.
+		// Search for Program File (x86) folder from env. variable.
 		for (Map.Entry<String, String> entry : variables.entrySet())  
 		{  
 			String name = entry.getKey();
@@ -268,7 +291,7 @@ public class Settings extends Observable {
 		
 		if (!f.exists()) {
 			// Try with MetaEdit+ 5.0 evaluation version.
-			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0" + File.separator + "mep50eval.exe");
+			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0 Evaluation" + File.separator + "mep50eval.exe");
 		}
 		
 		if (!f.exists()) {

@@ -222,7 +222,7 @@ public class GraphView extends ViewPart implements Observer {
 	    	Settings.getSettings().addObserver(this);
 	    	
 	    	layout = new StackLayout();
-	    	container = new Composite(parent, SWT.CENTER);
+	    	container = new Composite(parent, SWT.NONE);
 	    	container.setLayout(layout);
 	    	
 	    	createErrorView(container);
@@ -605,7 +605,7 @@ public class GraphView extends ViewPart implements Observer {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-	    treeViewer.getControl().setFocus();
+		layout.topControl.setFocus();
 	}
 	
 	/**
