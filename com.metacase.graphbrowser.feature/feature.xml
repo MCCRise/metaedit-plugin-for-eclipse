@@ -6,8 +6,7 @@
       provider-name="MetaCase">
 
    <description url="http://code.google.com/p/metaedit-plugin-for-eclipse/">
-      Plugin for Eclipse that provides integration between MetaEdit+
-and Eclipse
+      Plugin for Eclipse that provides integration between MetaEdit+ and Eclipse
    </description>
 
    <copyright url="http://www.opensource.org/licenses/mit-license.php">
