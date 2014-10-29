@@ -128,7 +128,8 @@ public class Settings extends Observable {
 		merFile = f;
 	}
 	public boolean getIs50() {
-		return this.programPath.contains("mep50") || this.programPath.contains("MetaEdit+ 5.0");
+		return this.programPath.contains("mep50") || this.programPath.contains("MetaEdit+ 5.0") ||
+				this.programPath.contains("mep51") || this.programPath.contains("MetaEdit+ 5.1");
 	}
 	
 	/**
@@ -258,11 +259,22 @@ public class Settings extends Observable {
 			setWinPaths();
 		}
 		if (os.contains("os x")) {
-			this.programPath = "/Applications/MetaEdit+ 5.0 Evaluation.app";
-			this.workingDirectory = System.getProperty("user.home") + "/MetaEdit+ 5.0";
+			this.programPath = "/Applications/MetaEdit+ 5.1 Evaluation.app";
+			this.workingDirectory = System.getProperty("user.home") + "/MetaEdit+ 5.1";
+			
+			File f = new File(this.programPath);			
+			if (!f.exists()) {
+				this.programPath = "/Applications/MetaEdit+ 5.0 Evaluation.app";
+				this.workingDirectory = System.getProperty("user.home") + "/MetaEdit+ 5.0";
+			}
 		}
 		if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0) {
-			this.programPath = "/usr/local/mep50eval/metaedit";
+			this.programPath = "/usr/local/mep51eval/metaedit";
+			
+			File f = new File(this.programPath);
+			if (!f.exists()) {
+				this.programPath = "/usr/local/mep50eval/metaedit";				
+			}
 			this.workingDirectory = System.getProperty("user.home") + "/metaedit";
 		}
 	}
@@ -286,8 +298,20 @@ public class Settings extends Observable {
 		if (x86) tempProgramDir = variables.get("ProgramFiles(x86)");
 		else tempProgramDir = variables.get("ProgramFiles");
 		
-		File f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0" + File.separator + "mep50.exe");
-		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 5.0";
+		File f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.1" + File.separator + "mep51.exe");
+		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 5.1";
+
+		if (!f.exists()) {
+			// Try with MetaEdit+ 5.1 evaluation version.
+			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.1 Evaluation" + File.separator + "mep51eval.exe");
+		}
+		
+		if (!f.exists()) {
+			// Try with MetaEdit+ 5.0
+			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0" + File.separator + "mep50.exe"); 
+			// No MetaEdit+ 5.1 found, make the working directory for version 5.0
+			this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 5.0";
+		}
 		
 		if (!f.exists()) {
 			// Try with MetaEdit+ 5.0 evaluation version.
