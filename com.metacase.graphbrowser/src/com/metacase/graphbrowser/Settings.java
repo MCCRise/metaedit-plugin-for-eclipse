@@ -260,12 +260,12 @@ public class Settings extends Observable {
 		}
 		if (os.contains("os x")) {
 			this.programPath = "/Applications/MetaEdit+ 5.1 Evaluation.app";
-			this.workingDirectory = System.getProperty("user.home") + "/MetaEdit+ 5.1";
+			this.workingDirectory = System.getProperty("user.home") + "/Documents/MetaEdit+ 5.1";
 			
 			File f = new File(this.programPath);			
 			if (!f.exists()) {
 				this.programPath = "/Applications/MetaEdit+ 5.0 Evaluation.app";
-				this.workingDirectory = System.getProperty("user.home") + "/MetaEdit+ 5.0";
+				this.workingDirectory = System.getProperty("user.home") + "/Documents/MetaEdit+ 5.0";
 			}
 		}
 		if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0) {
