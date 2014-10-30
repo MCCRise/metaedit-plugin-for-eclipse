@@ -2,7 +2,7 @@
 <feature
       id="com.metacase.graphbrowser.feature"
       label="MetaEdit+ Graph Browser"
-      version="1.0.5"
+      version="1.0.6"
       provider-name="MetaCase">
 
    <description url="http://code.google.com/p/metaedit-plugin-for-eclipse/">
@@ -40,6 +40,6 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
          id="com.metacase.graphbrowser"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.6"/>
 
 </feature>
