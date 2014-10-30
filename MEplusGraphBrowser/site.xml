@@ -15,6 +15,9 @@
    <feature url="features/com.metacase.graphbrowser.feature_1.0.5.jar" id="com.metacase.graphbrowser.feature" version="1.0.5">
       <category name="ME_category"/>
    </feature>
+   <feature url="features/com.metacase.graphbrowser.feature_1.0.6.jar" id="com.metacase.graphbrowser.feature" version="1.0.6">
+      <category name="ME_category"/>
+   </feature>
    <category-def name="ME_category" label="MetaEdit+ plugin for Eclipse">
       <description>
          MetaEdit+ plugin for integrating MetaEdit+ to Eclipse.
