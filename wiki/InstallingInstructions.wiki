@@ -6,7 +6,7 @@ Download and install [http://eclipse.org/downloads/ Eclipse]. (Tested with [http
 
 == Install !MetaEdit+ ==
 
-Download and install [http://www.metacase.com/download/ MetaEdit+ 5.0]. (Basic plugin functionality will also work with the 4.5 version, but since all instructions and examples are for 5.0, it's best to start with 5.0.)
+Download and install [http://www.metacase.com/download/ MetaEdit+ 5.1]. (Basic plugin functionality will also work with the 4.5 version, but since all instructions and examples are for 5.0 and 5.1, it's best to start with the latest version, i.e. 5.1.)
 
 == Install the plugin ==
 
