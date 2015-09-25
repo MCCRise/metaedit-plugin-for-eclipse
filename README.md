@@ -9,6 +9,6 @@ The integration between MetaEdit+ models and Eclipse includes:
 - opening and editing MetaEdit+ models from Eclipse,
 - running generators on MetaEdit+ models, and importing the results as Eclipse solutions. 
 
-See installation instructions, getting started and the plugin guide for details.
+See wiki pages for installation instructions, getting started and the plugin guide for details.
 
-See the plugin guide for developers and the source code for extending the plugin further.
+See the wiki page for plugin guide for developers and the source code for extending the plugin further.
