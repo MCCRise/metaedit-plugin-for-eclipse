@@ -12,5 +12,3 @@ The integration between MetaEdit+ models and Eclipse includes:
 See [installation instructions](https://github.com/MetaCase/metaedit-plugin-for-eclipse/wiki/Installation-instructions), [getting started](https://github.com/MetaCase/metaedit-plugin-for-eclipse/wiki/Getting-started) and the [plugin guide](https://github.com/MetaCase/metaedit-plugin-for-eclipse/wiki/Plugin-guide) for details.
 
 See the [plugin guide for developers](https://github.com/MetaCase/metaedit-plugin-for-eclipse/wiki/Plugin-guide-for-developers) and the [source code](https://github.com/MetaCase/metaedit-plugin-for-eclipse/tree/master/com.metacase.graphbrowser) for extending the plugin further. 
-
-![](https://cloud.githubusercontent.com/assets/9478151/10095469/c3b5d526-6372-11e5-9c98-5ce9fd37b09d.png)
