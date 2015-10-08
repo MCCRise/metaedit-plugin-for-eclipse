@@ -93,6 +93,15 @@ public class Graph {
             }
             return graph;
 	}
+
+	/**
+     * Resets all cached graph and type information from MetaEdit+
+    */
+    public static void resetCaches()
+    {
+    	projectTable = new Hashtable<Integer, Hashtable<Integer, Graph>>();
+        typeNameTable = new Hashtable<String, String>();
+    }
 	
 	/**
 	 * The generator run process. Calls for plugin.ini file writer, runs the generator,
@@ -357,6 +366,17 @@ public class Graph {
 	public void setProjectName(String _projectName) {
 		this.projectName = _projectName;
 	}
+
+	public static Comparator<Graph> GraphComparator
+			= new Comparator<Graph>() {
+		public int compare(Graph g1, Graph g2) {
+			int result = g1.getType().compareTo(g2.getType());
+			if (result == 0) {
+				result = g1.getName().compareTo(g2.getName());
+			}
+			return result; 
+		}
+	};
 	
 	/**
 	 * Init graphs children recursively calling method for every children. Except
@@ -379,6 +399,7 @@ public class Graph {
 	    		g.setIsChild(true);
 	    		g.initChildren(port, done);
 	    	}
+	    Arrays.sort(graphs, Graph.GraphComparator);	
 		this.setChildren(graphs);
 	    }
 	}

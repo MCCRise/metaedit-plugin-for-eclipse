@@ -178,6 +178,7 @@ public class GraphView extends ViewPart implements Observer {
 		    Runnable init = new Runnable() {
 				public void run() {
 				    invisibleRoot = new TreeObject();
+				    Graph.resetCaches();
 				    graphs = GraphHandler.init();
 				    invisibleRoot.populate(graphs, new ArrayList<Graph>());
 				}
@@ -257,7 +258,6 @@ public class GraphView extends ViewPart implements Observer {
 	    	viewContentProvider = new ViewContentProvider();
 	    	treeViewer.setContentProvider(viewContentProvider);
 	    	treeViewer.setLabelProvider(new ViewLabelProvider());
-	    	treeViewer.setSorter(new NameSorter());
 	    	treeViewer.setInput(getViewSite());
 	    	treeViewer.expandToLevel(2);    	
 	    	treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
