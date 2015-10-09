@@ -122,7 +122,7 @@ public class GraphView extends ViewPart implements Observer {
 		}
 		
 		public void populate(Graph[] graphs, ArrayList<Graph> stack) {
-		    if (!stack.contains(this.getGraph())) {
+			if (!stack.contains(this.getGraph())) {
 			stack.add(this.getGraph());
 			for (Graph g : graphs) {
 			    TreeObject to = new TreeObject(g);
@@ -132,6 +132,7 @@ public class GraphView extends ViewPart implements Observer {
     			    }
 				}
 		    }
+		    stack.remove(stack.size()-1);
 		}
 	}
 
