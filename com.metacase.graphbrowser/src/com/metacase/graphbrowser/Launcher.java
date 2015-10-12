@@ -13,6 +13,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.xml.rpc.ServiceException;
+
+import org.apache.axis.AxisProperties;
+
 import com.metacase.API.*;
 
 /**
@@ -67,6 +70,7 @@ public class Launcher {
 	 * Launcher method for doing initialization launch.
 	 */
 	public static boolean doInitialLaunch() {
+		AxisProperties.setProperty("http.nonProxyHost", "localhost");
 	    if (getSettings().checkIfMerExists() || isApiOK()) {
 	    	initializeAPI();
 	    }
