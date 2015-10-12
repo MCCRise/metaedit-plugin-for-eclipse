@@ -370,9 +370,9 @@ public class Graph {
 	public static Comparator<Graph> GraphComparator
 			= new Comparator<Graph>() {
 		public int compare(Graph g1, Graph g2) {
-			int result = g1.getType().compareTo(g2.getType());
+			int result = g1.getName().compareTo(g2.getName());
 			if (result == 0) {
-				result = g1.getName().compareTo(g2.getName());
+				result = g1.getType().compareTo(g2.getType());
 			}
 			return result; 
 		}
@@ -399,8 +399,7 @@ public class Graph {
 	    		g.setIsChild(true);
 	    		g.initChildren(port, done);
 	    	}
-	    Arrays.sort(graphs, Graph.GraphComparator);	
-		this.setChildren(graphs);
+	    this.setChildren(graphs);
 	    }
 	}
 }

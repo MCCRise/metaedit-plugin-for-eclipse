@@ -8,6 +8,7 @@ package com.metacase.graphbrowser.views;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -123,16 +124,18 @@ public class GraphView extends ViewPart implements Observer {
 		
 		public void populate(Graph[] graphs, ArrayList<Graph> stack) {
 			if (!stack.contains(this.getGraph())) {
-			stack.add(this.getGraph());
-			for (Graph g : graphs) {
-			    TreeObject to = new TreeObject(g);
-			    this.addChild(to);
-    			    if (g.getChildren() != null && g.getChildren().length > 0) {
-    				to.populate(g.getChildren(), stack);
+				stack.add(this.getGraph());
+				for (Graph g : graphs) {
+					TreeObject to = new TreeObject(g);
+					this.addChild(to);
+					Graph[] children = g.getChildren();
+    			    if (children != null && children.length > 0) {
+    			    	Arrays.sort(children, Graph.GraphComparator);
+    			    	to.populate(children, stack);
     			    }
 				}
+				stack.remove(stack.size()-1);
 		    }
-		    stack.remove(stack.size()-1);
 		}
 	}
 
