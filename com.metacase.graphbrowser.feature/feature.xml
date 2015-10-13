@@ -2,7 +2,7 @@
 <feature
       id="com.metacase.graphbrowser.feature"
       label="MetaEdit+ Graph Browser"
-      version="1.0.6.1"
+      version="1.0.7"
       provider-name="MetaCase">
 
    <description url="https://dl.bintray.com/metacase/metaedit-plugin-for-eclipse">
@@ -11,7 +11,7 @@ and Eclipse
    </description>
 
    <copyright url="http://www.opensource.org/licenses/mit-license.php">
-      Copyright (C) 2015 by MetaCase Consulting
+      Copyright (C) 2011-2015 by MetaCase Consulting
    </copyright>
 
    <license url="http://www.opensource.org/licenses/mit-license.php">
@@ -41,7 +41,7 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
          id="com.metacase.graphbrowser"
          download-size="0"
          install-size="0"
-         version="1.0.6"
+         version="1.0.7"
          unpack="false"/>
 
 </feature>
