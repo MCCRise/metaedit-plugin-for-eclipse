@@ -334,13 +334,13 @@ public class GraphView extends ViewPart implements Observer {
 	private void fillContextMenu(IMenuManager manager) {
 		if (!treeViewer.getSelection().isEmpty()) {
 		    manager.add(actionRunAutobuild);
-		    if (this.is50()) manager.add(actionCallGenerator);	
+		    if (this.is50OrLater()) manager.add(actionCallGenerator);	
 		    manager.add(new Separator());
 		    manager.add(actionOpenInMetaEdit);
-		    if (this.is50()) manager.add(actionOpenEditPropertiesDialog);
-		    if (this.is50()) manager.add(actionOpenCreateGraphDialog);
+		    if (this.is50OrLater()) manager.add(actionOpenEditPropertiesDialog);
+		    if (this.is50OrLater()) manager.add(actionOpenCreateGraphDialog);
 		} else {
-		    if (this.is50()) manager.add(actionOpenCreateGraphDialog);
+		    if (this.is50OrLater()) manager.add(actionOpenCreateGraphDialog);
 		}
 		manager.add(new Separator());
 		// Other plug-ins can contribute their actions here
@@ -364,9 +364,9 @@ public class GraphView extends ViewPart implements Observer {
 	 * Check if set MetaEdit+ program version is 4.5 or 5.0
 	 * @return true if version is 5.0 false if not.
 	 */
-	private boolean is50() {
+	private boolean is50OrLater() {
 	    Settings s = Settings.getSettings();
-	    return s.getIs50();
+	    return (s.getVersion().isEqualOrGreaterThan("5.0"));
 	}
 	
 	/**
@@ -381,14 +381,14 @@ public class GraphView extends ViewPart implements Observer {
 	 * Sets the toolbar buttons enabled or disabled.
 	 */
 	private void setToolBarButtonsEnabled() {
-	    boolean _is50 = this.is50();
+	    boolean _is50OrLater = this.is50OrLater();
 	    boolean _isAPI = this.isAPI();
 	    boolean _isSelection = !treeViewer.getSelection().isEmpty();
 	    
 	    actionRunAutobuild.setEnabled(_isAPI && _isSelection);
-	    actionCallGenerator.setEnabled( _is50 && _isAPI && _isSelection);
+	    actionCallGenerator.setEnabled( _is50OrLater && _isAPI && _isSelection);
 	    actionOpenInMetaEdit.setEnabled(_isAPI && _isSelection);
-	    actionOpenCreateGraphDialog.setEnabled(_is50 && _isAPI);
+	    actionOpenCreateGraphDialog.setEnabled(_is50OrLater && _isAPI);
 	    actionUpdateGraphList.setEnabled(true);
 	    actionOpenSettings.setEnabled(true);
 	    actionToggleGraphTypeText.setEnabled(isAPI());

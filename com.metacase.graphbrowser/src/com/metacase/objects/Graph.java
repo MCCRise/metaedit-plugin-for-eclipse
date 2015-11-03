@@ -135,7 +135,7 @@ public class Graph {
 	public void runGenerator(MetaEditAPIPortType port, String generator) {
 		Settings s = Settings.getSettings();
 	    try {
-	    	if (s.getIs50()) {
+	    	if (s.getVersion().isEqualOrGreaterThan("5.0")) {
 	    		port.forGraphRun(this.toMEOop(), generator);
 	    	}
 	    	else {

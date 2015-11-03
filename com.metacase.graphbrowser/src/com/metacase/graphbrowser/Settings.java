@@ -6,6 +6,7 @@
 package com.metacase.graphbrowser;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Observable; 
@@ -30,6 +31,7 @@ public class Settings extends Observable {
 	private String hostname;
 	private int port;
 	private boolean logging;
+	private MEVersion version;
 	private boolean initialized;
 	private File merFile;
 	private static Settings singleton;
@@ -127,10 +129,6 @@ public class Settings extends Observable {
 	public void setMerFile(File f) {
 		merFile = f;
 	}
-	public boolean getIs50() {
-		return this.programPath.contains("mep50") || this.programPath.contains("MetaEdit+ 5.0") ||
-				this.programPath.contains("mep51") || this.programPath.contains("MetaEdit+ 5.1");
-	}
 	
 	/**
 	 * <p>
@@ -148,6 +146,21 @@ public class Settings extends Observable {
 		if (merFile == null) setMerFile("default.mer");
 		return merFile;
 	}
+	
+	public MEVersion getVersion() {
+		return this.version;
+	}
+	
+	public MEVersion setVersion(MEVersion version) {
+		return this.version = version;
+	}
+	
+    private MEVersion parseVersion(String path)
+    {
+        String versionString = path.substring((path.indexOf("MetaEdit+") + 10));
+        String[] tokens = versionString.split("[\\\\.\\s+]+");
+        return new MEVersion(tokens[0]+"."+tokens[1]);
+    }
 	
 	/**
 	 * Method stub
@@ -202,6 +215,7 @@ public class Settings extends Observable {
 		this.setHostname(reader.getSetting("hostname"));
 		this.setPort(Integer.valueOf(reader.getSetting("port")));
 		this.setLogging(reader.getSetting("logging").equals("true"));
+		this.setVersion(this.parseVersion(this.getProgramPath()));
 	}
 	
 	/**
@@ -242,6 +256,7 @@ public class Settings extends Observable {
 		this.port = 6390;
 		this.hostname = "localhost";
 		this.logging = false;
+		this.version = new MEVersion("0.0"); 
 		
 		setPaths();
 	}
@@ -279,6 +294,17 @@ public class Settings extends Observable {
 		}
 	}
 
+    private String composeProgramPath(MEVersion version, String programFilesPath, String pathAddendum, String exeAddendum)
+    {
+        return programFilesPath + File.separator + "MetaEdit+ " + version.versionString() + pathAddendum + File.separator + "mep" + version.shortVersionString() + exeAddendum + ".exe";
+    }
+
+    private boolean checkExe(MEVersion version, String programFilesPath, String pathAddendum, String exeAddendum)
+    {
+    	File f = new File(this.composeProgramPath(version, programFilesPath, pathAddendum, exeAddendum));
+        return f.exists();
+    }
+	
 	/**
 	 * Searches for username and program files (x86) folder from environment variable
 	 * to form the MetaEdit+ exe file path and working directory as they were when default
@@ -286,7 +312,7 @@ public class Settings extends Observable {
 	 */
 	private void setWinPaths() {
 		boolean x86 = false;
-		String tempProgramDir = "";
+		String programFilesPath = "";
 
 		Map<String, String> variables = System.getenv();  
 		// Search for Program File (x86) folder from env. variable.
@@ -295,40 +321,65 @@ public class Settings extends Observable {
 			String name = entry.getKey();
 			if (name.contains("ProgramFiles(x86)")) x86 = true; 
 		}
-		if (x86) tempProgramDir = variables.get("ProgramFiles(x86)");
-		else tempProgramDir = variables.get("ProgramFiles");
-		
-		File f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.1" + File.separator + "mep51.exe");
-		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 5.1";
+		if (x86) programFilesPath = variables.get("ProgramFiles(x86)");
+		else programFilesPath = variables.get("ProgramFiles");
 
-		if (!f.exists()) {
-			// Try with MetaEdit+ 5.1 evaluation version.
-			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.1 Evaluation" + File.separator + "mep51eval.exe");
-		}
+		File file = new File(programFilesPath);
+		String[] programFilesDirectories = file.list(new FilenameFilter() {
+		  @Override
+		  public boolean accept(File current, String name) {
+		    return new File(current, name).isDirectory();
+		  }
+		});
+
+        boolean isEval = false;
+        boolean isClient = false;
+        String pathAddendum = "";
+        String exeAddendum = "";
 		
-		if (!f.exists()) {
-			// Try with MetaEdit+ 5.0
-			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0" + File.separator + "mep50.exe"); 
-			// No MetaEdit+ 5.1 found, make the working directory for version 5.0
-			this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 5.0";
-		}
-		
-		if (!f.exists()) {
-			// Try with MetaEdit+ 5.0 evaluation version.
-			f = new File(tempProgramDir + File.separator + "MetaEdit+ 5.0 Evaluation" + File.separator + "mep50eval.exe");
-		}
-		
-		if (!f.exists()) {
-			// Try with MetaEdit+ 4.5
-			f = new File(tempProgramDir + File.separator + "MetaEdit+ 4.5" + File.separator + "mep45.exe"); 
-			// No MetaEdit+ 5.0 found, make the working directory for version 4.5
-			this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ 4.5";
-		}
-		
-		// if no mep45.exe found it MUST be the 4.5 evaluation version ;)
-		if (!f.exists()) {
-			f = new File(tempProgramDir + File.separator + "MetaEdit+ 4.5 Evaluation" + File.separator + "mep45eval.exe");
-		}
-		this.programPath = f.getPath();
+		for (String dir : programFilesDirectories) {
+            if(dir.contains("MetaEdit+") && !dir.contains("Server"))
+            {
+                MEVersion version = this.parseVersion(dir);
+                isEval = dir.contains("Evaluation");
+                isClient = dir.contains("Client");
+                if (version.isEqualWith(this.version))
+                {
+                    if (!isEval && !isClient && this.checkExe(version, programFilesPath, "", ""))
+                    {
+                        pathAddendum = "";
+                        exeAddendum = "";
+                    }
+                    if (pathAddendum == " Client" && isEval && checkExe(version, programFilesPath, " Evaluation", "eval"))
+                    {
+                        pathAddendum = " Evaluation";
+                        exeAddendum = "eval";
+                    }
+                }
+                if (version.isGreaterThan(this.version))
+                { 
+                    String tempPathAddendum = "";
+                    String tempExeAddendum = "";
+                    if (isEval)
+                    {
+                        tempPathAddendum = " Evaluation";
+                        tempExeAddendum = "eval";
+                    }
+                    if (isClient)
+                    {
+                        tempPathAddendum = " Client";
+                        tempExeAddendum = "m";
+                    }
+                    if(this.checkExe(version, programFilesPath, tempPathAddendum, tempExeAddendum)) {
+                    	this.version = version;
+                    	pathAddendum = tempPathAddendum;
+                    	exeAddendum = tempExeAddendum;
+                    }
+                }
+            }
+        }
+
+		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ " + this.version.versionString();
+		this.programPath = this.composeProgramPath(this.version, programFilesPath, pathAddendum, exeAddendum);
 	}
 }
