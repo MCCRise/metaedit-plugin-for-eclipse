@@ -366,7 +366,7 @@ public class GraphView extends ViewPart implements Observer {
 	 */
 	private boolean is50OrLater() {
 	    Settings s = Settings.getSettings();
-	    return (s.getVersion().isEqualOrGreaterThan("5.0"));
+	    return (s.getVersion().isAtLeast("5.0"));
 	}
 	
 	/**

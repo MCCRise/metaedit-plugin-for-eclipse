@@ -155,13 +155,6 @@ public class Settings extends Observable {
 		return this.version = version;
 	}
 	
-    private MEVersion parseVersion(String path)
-    {
-        String versionString = path.substring((path.indexOf("MetaEdit+") + 10));
-        String[] tokens = versionString.split("[\\\\.\\s+]+");
-        return new MEVersion(tokens[0]+"."+tokens[1]);
-    }
-	
 	/**
 	 * Method stub
 	 * @param propertiesTable
@@ -215,7 +208,7 @@ public class Settings extends Observable {
 		this.setHostname(reader.getSetting("hostname"));
 		this.setPort(Integer.valueOf(reader.getSetting("port")));
 		this.setLogging(reader.getSetting("logging").equals("true"));
-		this.setVersion(this.parseVersion(this.getProgramPath()));
+		this.setMEVersion(this.getProgramPath(), this.getPlatform());
 	}
 	
 	/**
@@ -256,9 +249,64 @@ public class Settings extends Observable {
 		this.port = 6390;
 		this.hostname = "localhost";
 		this.logging = false;
-		this.version = new MEVersion("0.0"); 
+		this.version = new MEVersion(); 
 		
 		setPaths();
+	}
+
+	private String getPlatform() {
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("win") >= 0)  return "Win" ;
+		if (os.contains("os x")) return "OSX" ;
+		if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0) {
+			return "Linux";
+		}
+		return "";
+	}
+	
+	private String[] programDirectories(String path) {
+		File file = new File(path);
+		return file.list(new FilenameFilter() {
+		  @Override
+		  public boolean accept(File current, String name) {
+		    return new File(current, name).isDirectory();
+		  }
+		});
+	}
+
+	private void setMEVersion(String path, String platform) {
+		String[] programDirectories = this.programDirectories(path);
+		for (String dir : programDirectories) {
+			String programPath = path + File.separator + dir;
+			MEVersion version = new MEVersion();
+			File file;		
+			if(platform.equals("Linux")) {
+				if(dir.contains("mep")) {
+					file = new File(programPath + File.separator + "metaedit");
+					if(file.exists()) {
+						version.setValuesFromLinuxPath(dir);
+						if(version.isSuperiorTo(this.version)) {
+							this.version = version;
+						}
+					}
+				}
+			} else {
+				if(dir.contains("MetaEdit+") && !dir.contains("Server"))
+				{
+					version.setValuesFromPath(dir);
+					if(platform.equals("Win")) {
+						programPath = programPath + File.separator + version.winProgramName();
+					}
+					if(platform.equals("OSX")) {
+						programPath = programPath + ".app";
+					}
+					file = new File(programPath);
+					if (file.exists() && version.isSuperiorTo(this.version)) {
+						this.version = version;
+		            }
+				}
+			}
+        }
 	}
 
 	/**
@@ -269,42 +317,18 @@ public class Settings extends Observable {
 		this.programPath = "metaedit";
 		this.workingDirectory = "~/metaedit";
 
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("win") >= 0) {
-			setWinPaths();
+		String os = this.getPlatform();
+		if (os.equals("Win")) {
+			this.setWinPaths();
 		}
-		if (os.contains("os x")) {
-			this.programPath = "/Applications/MetaEdit+ 5.1 Evaluation.app";
-			this.workingDirectory = System.getProperty("user.home") + "/Documents/MetaEdit+ 5.1";
-			
-			File f = new File(this.programPath);			
-			if (!f.exists()) {
-				this.programPath = "/Applications/MetaEdit+ 5.0 Evaluation.app";
-				this.workingDirectory = System.getProperty("user.home") + "/Documents/MetaEdit+ 5.0";
-			}
+		if (os.equals("OSX")) {
+			this.setOSXPaths();
 		}
-		if (os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0) {
-			this.programPath = "/usr/local/mep51eval/metaedit";
-			
-			File f = new File(this.programPath);
-			if (!f.exists()) {
-				this.programPath = "/usr/local/mep50eval/metaedit";				
-			}
-			this.workingDirectory = System.getProperty("user.home") + "/metaedit";
+		if (os.equals("Linux")) {
+			this.setLinuxPaths();
 		}
 	}
 
-    private String composeProgramPath(MEVersion version, String programFilesPath, String pathAddendum, String exeAddendum)
-    {
-        return programFilesPath + File.separator + "MetaEdit+ " + version.versionString() + pathAddendum + File.separator + "mep" + version.shortVersionString() + exeAddendum + ".exe";
-    }
-
-    private boolean checkExe(MEVersion version, String programFilesPath, String pathAddendum, String exeAddendum)
-    {
-    	File f = new File(this.composeProgramPath(version, programFilesPath, pathAddendum, exeAddendum));
-        return f.exists();
-    }
-	
 	/**
 	 * Searches for username and program files (x86) folder from environment variable
 	 * to form the MetaEdit+ exe file path and working directory as they were when default
@@ -324,62 +348,21 @@ public class Settings extends Observable {
 		if (x86) programFilesPath = variables.get("ProgramFiles(x86)");
 		else programFilesPath = variables.get("ProgramFiles");
 
-		File file = new File(programFilesPath);
-		String[] programFilesDirectories = file.list(new FilenameFilter() {
-		  @Override
-		  public boolean accept(File current, String name) {
-		    return new File(current, name).isDirectory();
-		  }
-		});
-
-        boolean isEval = false;
-        boolean isClient = false;
-        String pathAddendum = "";
-        String exeAddendum = "";
-		
-		for (String dir : programFilesDirectories) {
-            if(dir.contains("MetaEdit+") && !dir.contains("Server"))
-            {
-                MEVersion version = this.parseVersion(dir);
-                isEval = dir.contains("Evaluation");
-                isClient = dir.contains("Client");
-                if (version.isEqualWith(this.version))
-                {
-                    if (!isEval && !isClient && this.checkExe(version, programFilesPath, "", ""))
-                    {
-                        pathAddendum = "";
-                        exeAddendum = "";
-                    }
-                    if (pathAddendum == " Client" && isEval && checkExe(version, programFilesPath, " Evaluation", "eval"))
-                    {
-                        pathAddendum = " Evaluation";
-                        exeAddendum = "eval";
-                    }
-                }
-                if (version.isGreaterThan(this.version))
-                { 
-                    String tempPathAddendum = "";
-                    String tempExeAddendum = "";
-                    if (isEval)
-                    {
-                        tempPathAddendum = " Evaluation";
-                        tempExeAddendum = "eval";
-                    }
-                    if (isClient)
-                    {
-                        tempPathAddendum = " Client";
-                        tempExeAddendum = "m";
-                    }
-                    if(this.checkExe(version, programFilesPath, tempPathAddendum, tempExeAddendum)) {
-                    	this.version = version;
-                    	pathAddendum = tempPathAddendum;
-                    	exeAddendum = tempExeAddendum;
-                    }
-                }
-            }
-        }
-
-		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ " + this.version.versionString();
-		this.programPath = this.composeProgramPath(this.version, programFilesPath, pathAddendum, exeAddendum);
+		this.setMEVersion(programFilesPath, "Win");
+		this.programPath = programFilesPath + "\\MetaEdit+ " + this.version.versionString() + "\\" + this.version.winProgramName(); 
+		this.workingDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "MetaEdit+ " + this.version.versionNumberString();				
+	}
+	
+	private void setOSXPaths() {
+		this.programPath = "/Application";
+		this.setMEVersion(this.programPath, "OSX");
+		this.programPath = this.programPath + File.separator + this.version.osxProgramName();
+		this.workingDirectory = System.getProperty("user.home") + "/Documents/MetaEdit+ " + this.version.versionNumberString();
+	}
+	
+	private void setLinuxPaths() {
+		this.setMEVersion("/usr/local/", "Linux");
+		this.programPath = "/usr/local/" + this.version.linuxProgramName();				
+		this.workingDirectory = System.getProperty("user.home") + "/metaedit";
 	}
 }
