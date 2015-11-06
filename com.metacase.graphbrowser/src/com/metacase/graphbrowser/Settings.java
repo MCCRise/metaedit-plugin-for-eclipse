@@ -208,7 +208,12 @@ public class Settings extends Observable {
 		this.setHostname(reader.getSetting("hostname"));
 		this.setPort(Integer.valueOf(reader.getSetting("port")));
 		this.setLogging(reader.getSetting("logging").equals("true"));
-		this.setMEVersion(this.getProgramPath(), this.getPlatform());
+		this.setVersion(new MEVersion());
+		if(this.getPlatform().equals("Linux")) {
+			this.getVersion().setValuesFromLinuxPath(this.getProgramPath());
+		} else {
+			this.getVersion().setValuesFromPath(this.getProgramPath());			
+		}
 	}
 	
 	/**
@@ -264,48 +269,35 @@ public class Settings extends Observable {
 		return "";
 	}
 	
-	private String[] programDirectories(String path) {
+	private String[] meFileOrPathNames(String path) {
 		File file = new File(path);
 		return file.list(new FilenameFilter() {
-		  @Override
-		  public boolean accept(File current, String name) {
-		    return new File(current, name).isDirectory();
-		  }
+			@Override
+			public boolean accept(File current, String name) {
+				return ((name.contains("MetaEdit+") || name.contains("mep")) && !name.contains("Server"));
+			}
 		});
 	}
 
 	private void setMEVersion(String path, String platform) {
-		String[] programDirectories = this.programDirectories(path);
-		for (String dir : programDirectories) {
+		String[] fileOrPathNames = this.meFileOrPathNames(path);
+		for (String dir : fileOrPathNames) {
 			String programPath = path + File.separator + dir;
 			MEVersion version = new MEVersion();
 			File file;		
 			if(platform.equals("Linux")) {
-				if(dir.contains("mep")) {
-					file = new File(programPath + File.separator + "metaedit");
-					if(file.exists()) {
-						version.setValuesFromLinuxPath(dir);
-						if(version.isSuperiorTo(this.version)) {
-							this.version = version;
-						}
-					}
-				}
+				programPath = programPath + File.separator + "metaedit";
+				version.setValuesFromLinuxPath(dir);
 			} else {
-				if(dir.contains("MetaEdit+") && !dir.contains("Server"))
-				{
-					version.setValuesFromPath(dir);
-					if(platform.equals("Win")) {
-						programPath = programPath + File.separator + version.winProgramName();
-					}
-					if(platform.equals("OSX")) {
-						programPath = programPath + ".app";
-					}
-					file = new File(programPath);
-					if (file.exists() && version.isSuperiorTo(this.version)) {
-						this.version = version;
-		            }
+				version.setValuesFromPath(dir);
+				if(platform.equals("Win")) {
+					programPath = programPath + File.separator + version.winProgramName();
 				}
 			}
+			file = new File(programPath);
+			if (file.exists() && version.isSuperiorTo(this.version)) {
+				this.version = version;
+			}			
         }
 	}
 
@@ -354,7 +346,7 @@ public class Settings extends Observable {
 	}
 	
 	private void setOSXPaths() {
-		this.programPath = "/Application";
+		this.programPath = "/Applications";
 		this.setMEVersion(this.programPath, "OSX");
 		this.programPath = this.programPath + File.separator + this.version.osxProgramName();
 		this.workingDirectory = System.getProperty("user.home") + "/Documents/MetaEdit+ " + this.version.versionNumberString();

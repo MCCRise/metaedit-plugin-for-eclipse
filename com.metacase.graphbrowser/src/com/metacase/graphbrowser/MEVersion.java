@@ -7,6 +7,7 @@ public class MEVersion {
 
 	public String major;
 	public String minor;
+	public boolean isWorkbench;
 	public boolean isEvaluation;
 	public boolean isClient;
 	
@@ -14,6 +15,7 @@ public class MEVersion {
 	{
 		this.major = "0";
 		this.minor = "0";
+		this.isWorkbench = false;
 		this.isEvaluation = false;
 		this.isClient = false;
 	}
@@ -38,30 +40,40 @@ public class MEVersion {
 		return this.isClient;
 	}
 
-	public void setValuesFromPath(String path) {
-		String versionString = path.substring((path.indexOf("MetaEdit+") + 10));
+	public void setValuesFromPath(String fileOrPathName) {
+		String versionString = fileOrPathName.substring((fileOrPathName.indexOf("MetaEdit+") + 10));
         String[] tokens = versionString.split("[\\\\.\\s+]+");
-		this.major = tokens[0];
-		this.minor = tokens[1];
-        this.isEvaluation = path.contains("Evaluation");
-        this.isClient = path.contains("Client");
+        if(tokens.length>=2) {
+        	this.major = tokens[0];
+        	this.minor = tokens[1];
+        	this.isWorkbench = fileOrPathName.contains("Workbench");
+        	this.isEvaluation = fileOrPathName.contains("Evaluation");
+        	this.isClient = fileOrPathName.contains("Client");
+        }
 	}
 	
-	public void setValuesFromLinuxPath(String path) {
-		String versionString = path.substring((path.indexOf("mep") + 3));
+	public void setValuesFromLinuxPath(String pathName) {
+		String versionString = pathName.substring((pathName.indexOf("mep") + 3));
 		Pattern p = Pattern.compile("\\d+");
 		Matcher m = p.matcher(versionString);
-		m.find();
-		String versionNumber = m.group();
-		this.major = versionNumber.substring(0, 1);
-		this.minor = versionNumber.substring(1);
-        this.isEvaluation = path.contains("eval");
-        this.isClient = path.contains("client");		
+		if(m.find()) {
+			String versionNumber = m.group();
+			if(versionNumber.length()>=2) {
+				this.major = versionNumber.substring(0, 1);
+				this.minor = versionNumber.substring(1);
+				this.isWorkbench = pathName.contains("mwb");
+		        this.isEvaluation = pathName.contains("eval");
+		        this.isClient = pathName.contains("client");					
+			}
+		}
 	}	
 
 	public String versionString()
     {
 		String versionString = this.major + "." + this.minor;
+		if(this.isWorkbench) {
+			versionString = versionString + " Workbench";
+		}
 		if(this.isEvaluation) {
 			versionString = versionString + " Evaluation"; 
 		}
@@ -100,7 +112,10 @@ public class MEVersion {
 
     public String linuxProgramName()
     {
-    	String name = "mep" + this.shortVersionString();    	
+    	String name = "mep" + this.shortVersionString();
+    	if(this.isWorkbench) {
+    		name = name + "mwb";
+    	}
     	if(this.isEvaluation) {
     		name = name + "eval";
     	}
